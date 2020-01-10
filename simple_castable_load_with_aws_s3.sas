@@ -2,14 +2,14 @@ options cashost="sepviya35.aws.sas.com" casport=5570;
 
 cas mysess;
 
-caslib AWSCAS1 datasource=(srctype="s3",                    
+caslib s3aws datasource=(srctype="s3",                    
                    awsConfigPath="/opt/sas/viya/config/data/AWSdata/config",                   
 				   awsCredentialsPath="/opt/sas/viya/config/data/AWSdata/credentials",
                    awsCredentialsProfile="default",
                    region="US_East",
                    bucket="sas-eapsl",
                    objectpath="/frasep/"
-               );  
+               ) subdirs global;  
 
 caslib _all_ assign;
 
