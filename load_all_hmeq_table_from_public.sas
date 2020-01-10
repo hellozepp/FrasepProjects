@@ -1,0 +1,20 @@
+/* Loal all HMEQ data in memory */
+
+options cashost="sepviya35.aws.sas.com" casport=5570;
+
+cas mysess;
+
+caslib _all_ assign;
+
+proc cas;
+	table.fileinfo result=listfiles / caslib="public";
+	do row over listfiles.fileinfo[1:listfiles.fileinfo.nrows];
+		if (index(row.Name,'HMEQ')<>0) then do;
+			datafile=row.Name;
+			tablename=scan(row.Name,1);
+			table.loadTable / casout={caslib="public" name=tablename promote=true} caslib="public" path=datafile;
+		end;
+	end;
+run;
+
+cas mysess terminate;
