@@ -40,13 +40,13 @@ run;
     isfolder=N,    
 	modelname=%nrstr(Forest Astore),
     modeldesc=Forest,
+	target=BAD,
+    targetlevel=binary,
     /* projectVersion=%str(new), */
     rstore=public.state,
     miningAlgorithm=%nrstr(forest),
     miningFunction=classification,    
 	pkgfolder=/opt/shared/mmpkgs);
-/* PKGFOLDER =ZIP-package-folder
-specifies the location for the ZIP package that is built during the macro execution. 
-The ZIP file contains all the supporting component files, such as JSON, XML, and SAS files. */
+
 
 cas _CAS_PUBLIC_ terminate;
