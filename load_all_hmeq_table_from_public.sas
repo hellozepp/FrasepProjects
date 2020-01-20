@@ -15,6 +15,6 @@ proc cas;
 			table.loadTable / casout={caslib="public" name=tablename promote=true} caslib="public" path=datafile;
 		end;
 	end;
-run;
+quit;
 
 cas mysess terminate;
