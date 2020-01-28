@@ -1,9 +1,14 @@
+/******************************************************************/
+
 options cashost="sepviya35.aws.sas.com" casport=5570;
 cas _CAS_PUBLIC_;
 
 caslib _ALL_ assign;
 
-/* Create a Forest analytic store model and store the model in a CAS table. */
+/******************************************************************/
+/* Create a Forest analytic store model and store the model in a  */
+/* CAS table.                                                     */
+/******************************************************************/
 
 proc forest data=public.hmeq_train 
      seed=12345 loh=0 binmethod=QUANTILE maxbranch=2 
@@ -21,13 +26,6 @@ proc forest data=public.hmeq_train
 run;
 
 ods noproctitle;
-
-proc astore;
-	score data=PUBLIC.HMEQ_TRAIN out=CASUSER.HMEQ_SCORED rstore=PUBLIC.STATE;
-run;
-
-proc contents data=CASUSER.HMEQ_SCORED;
-run;
 
 /******************************************************************/
 /* REGISTER NEW TRAINED MODEL IN THE CENTRALIZED MODEL REPOSITORY */
@@ -54,3 +52,5 @@ run;
 	pkgfolder=/opt/shared/mmpkgs);
 
 cas _CAS_PUBLIC_ terminate;
+
+/******************************************************************/
