@@ -8,7 +8,7 @@ caslib _ALL_ assign;
 proc forest data=public.hmeq_train 
      seed=12345 loh=0 binmethod=QUANTILE maxbranch=2 
      assignmissing=USEINSEARCH minuseinsearch=1
-     ntrees=50
+     ntrees=100
      maxdepth=20
      inbagfraction=0.6
      minleafsize=5
@@ -18,15 +18,6 @@ proc forest data=public.hmeq_train
   input LOAN MORTDUE VALUE YOJ DEROG DELINQ CLAGE CLNO DEBTINC / level=interval;
   input REASON JOB NINQ / level=nominal;
   savestate rstore=public.state;
-run;
-
-ods noproctitle;
-
-proc astore;
-	score data=PUBLIC.HMEQ_TRAIN out=CASUSER.HMEQ_SCORED rstore=PUBLIC.STATE;
-run;
-
-proc contents data=CASUSER.HMEQ_SCORED;
 run;
 
 /******************************************************************/
