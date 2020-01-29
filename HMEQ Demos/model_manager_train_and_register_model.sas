@@ -34,7 +34,7 @@ run;
 %mm_import_astore_model(
     locationID=&myProjID,
     isfolder=N,    
-	modelname=%nrstr(Forest Astore),
+	modelname=%nrstr(Forest Astore SAS Studio),
     modeldesc=Forest,
 	target=BAD,
     targetlevel=binary,
