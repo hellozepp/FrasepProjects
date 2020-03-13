@@ -1,4 +1,5 @@
 options cashost="sepviya35.aws.sas.com" casport=5570;
+options set=CASCLIENTDEBUG=1;
 
 cas benchsess;
 
@@ -378,7 +379,7 @@ run;
 title;
 ods graphics off;
 
-cas _all_ terminate;
+cas benchsess terminate;
 
 
 
