@@ -1,18 +1,59 @@
-%let ACCESS_TOKEN=eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vbG9jYWxob3N0L1NBU0xvZ29uL3Rva2VuX2tleXMiLCJraWQiOiJsZWdhY3ktdG9rZW4ta2V5IiwidHlwIjoiSldUIn0.eyJqdGkiOiI3MTlmYTVjYTg3ODI0MWU3YjQzOGZlOTEyODQzNmIzMiIsInN1YiI6InNhcy5hZG1pbiIsImF1dGhvcml0aWVzIjpbImNsaWVudHMucmVhZCIsImNsaWVudHMuc2VjcmV0IiwidWFhLnJlc291cmNlIiwiY2xpZW50cy53cml0ZSIsInVhYS5hZG1pbiIsImNsaWVudHMuYWRtaW4iLCJzY2ltLndyaXRlIiwic2NpbS5yZWFkIl0sInNjb3BlIjpbInVhYS5hZG1pbiJdLCJjbGllbnRfaWQiOiJzYXMuYWRtaW4iLCJjaWQiOiJzYXMuYWRtaW4iLCJhenAiOiJzYXMuYWRtaW4iLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6ImM3NjM5NmRmIiwiaWF0IjoxNTg0NDYyNDM0LCJleHAiOjE1ODQ0OTg0MzQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3QvU0FTTG9nb24vb2F1dGgvdG9rZW4iLCJ6aWQiOiJ1YWEiLCJhdWQiOlsic2FzLioiLCJ1YWEiLCJzYXMuYWRtaW4iXX0.KCNGzg7rXCn3cgBbwgldLAktgNn8W9hzoz_HsVVa_dUsA1DV9yB1y7--fl2altj4pduxkRrk-lSEPluT-A2JIMtdrqC8D0rELqyxfKm_zgZ7N1-1dDOp4nJ2dE8hKVeI7L7wc6w1D_vYtjIxzPqFVkJ72diZwzUOYT72HXi4sUsGQqzdngt22mtH1PFZCVnWTSzH0H8E3ujx3hyKc5_nLmNm6H0DkAGhf5MP9XUgGlamZ-nMf6W3-iqt1fIYyWOJ_YimCIJ2kfB_YhcU3os-f8MTl6lae4Dle025B12Xjtl5vAHgyEoze723DBt-4YxzfIINKuUH2eGp6FROHxBBaA;
-%let BASE_URI=http://sepviya35.aws.sas.com;
-%let location=/tmp;
+options cashost="sepviya35.aws.sas.com" casport=5570;
 
-filename respb "&location/get_ref_b.json";
-filename resphdrb "&location/get_ref_b.txt";
+cas lineagesess;
 
-proc http url="&BASE_URI/relationships/relationships/?limit=1000000%str(&)depth=-1"
-		method='get' 
-	out=respb headerout=resphdrb headerout_overwrite;
-	debug level=0;
-	headers 'Authorization'="Bearer &ACCESS_TOKEN";
-run;
-quit;
+caslib _all_ assign;
 
-* Get the reference id from the file and store it in a file: *;
+%macro getlineagedata(BASE_URI, USERNAME, PASSWORD, NAME, limit, depth, CAS_OUTPUT_TABLE); 
+	*Use the Client ID to Get an Access Token;
+	*Submit this code once to get the access token or repeat if your access token has expired.;
+	options ls=max nodate;
+	ods _all_ close;
+/* 	Specify the new Client ID name; */
+	*! Name must be registered above - no spaces;
+	%let CLIENT_ID=frasepapp;
+/* 	Specify the secret for the new Client ID; */
+	%let CLIENT_SECRET=frasepsecret;
+/* 	FILEREFs for the response and the response headers; */
+	filename resp temp;
+	filename resp_hdr temp;
+/* 	Get access and refresh tokens in JSON format; */
 
-libname obj2 json "%sysfunc(pathname(respb))";
+	proc http url="&BASE_URI/SASLogon/oauth/token" method='post' in="grant_type=password%nrstr(&username=)&USERNAME%nrstr(&password=)&PASSWORD" username="&CLIENT_ID" password="&CLIENT_SECRET" out=resp auth_basic verbose;
+		debug level=3;
+		run;
+	quit;
+/* 	Get the access token from the JSON data and store it in the ACCESS_TOKEN macro variable. */
+	libname tokens json "%sysfunc(pathname(resp))";
+
+	proc sql noprint;
+		select access_token into:ACCESS_TOKEN from tokens.root;
+	quit;
+
+	filename respb "&location/get_ref_b.json";
+	filename resphdrb "&location/get_ref_b.txt";
+
+	proc http url="&BASE_URI/relationships/relationships/?filter=contains(resourceUri,&NAME)%str(&)limit=&limit%str(&)depth=&depth"
+			method='get' 
+		out=respb headerout=resphdrb headerout_overwrite;
+		debug level=0;
+		headers 'Authorization'="Bearer &ACCESS_TOKEN";
+	run;
+	quit;
+
+	libname obj2 json "%sysfunc(pathname(respb))";
+	data casuser.&CAS_OUPUT_TABLE;
+		set obj2.items;
+	run;
+
+	proc casutil;
+		PROMOTE CASDATA="&CAS_OUTPUT_TABLE"  CASOUT="&CAS_OUTPUT_TABLE" OUTCASLIB="public" DROP;
+	quit;
+	
+%mend getlineagedata;
+
+%let hostname=&http://sepviya35.aws.sas.com;
+
+%macro getlineagedata(&hostname, viyademo01, demopw, HMEQ_TRAIN, 100, 20, LINEAGE); 
+
+cas lineagesess terminate;
