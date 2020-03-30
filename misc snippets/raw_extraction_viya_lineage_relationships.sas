@@ -86,7 +86,7 @@ run;
 		data casuser.&CAS_OUTPUT_TAB_REL(append=YES);
 			format lineage_collection_date datetime.;
 			length resourceUri $ 160;
-			set &CAS_OUTPUT_LIB.&CAS_OUTPUT_TAB_REL;
+			set &CAS_OUTPUT_LIB..&CAS_OUTPUT_TAB_REL;
 			resourceUri=resourceUri;
 			lineage_collection_date=&currdt;
 		run;	
@@ -111,7 +111,7 @@ run;
 %if &truncate_flag=0 %then
 %do;
 		data casuser.&CAS_OUTPUT_TAB_REF(append=YES);
-			set &CAS_OUTPUT_LIB.&CAS_OUTPUT_TAB_REF;
+			set &CAS_OUTPUT_LIB..&CAS_OUTPUT_TAB_REF;
 			format lineage_collection_date datetime.;
 			lineage_collection_date=&currdt;
 		run;	
