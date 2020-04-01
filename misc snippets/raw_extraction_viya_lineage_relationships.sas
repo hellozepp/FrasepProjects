@@ -46,7 +46,6 @@ proc http url="&BASE_URI/SASLogon/oauth/token" method='post'
 		username="&CLIENT_ID" password="&CLIENT_SECRET" out=resp auth_basic verbose;
 	debug level=3;
 run;
-
 quit;
 
 /* 	Get the access token from the JSON data and store it in the ACCESS_TOKEN macro variable. */
