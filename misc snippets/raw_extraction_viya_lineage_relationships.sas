@@ -14,12 +14,13 @@ caslib _all_ assign;
 %let NAME=HMEQ_TRAIN;
 %let limit=100000;
 %let depth=1000;
-%let truncate_flag=1;
+%let truncate_flag=1; /* 1: purge previous table, 0:append new lineage data to existing table */
 %let CAS_OUTPUT_TAB_REL=relationships;
 %let CAS_OUTPUT_TAB_REF=references;
 %let CAS_OUTPUT_TAB_FACT=relationships_facts;
-
 %let CAS_OUTPUT_LIB=public;
+
+
 %let location=/tmp;
 
 %let OBJECT_URI=/casManagement/servers/cas-shared-default/caslibs/Public/tables/HMEQ_TRAIN;
