@@ -2,7 +2,7 @@
 /*****************************************************************************/
 
 cas mySession sessopts=(metrics=true);
-caslib myCaslib datasource=(srctype="dnfs") path="/data/data" sessref=mySession subdirs;
+caslib myCaslib datasource=(srctype="dnfs") path="/data/data/BDF_SMALL_DB" sessref=mySession subdirs;
 libname myCaslib cas;
 
 caslib _all_ assign;
