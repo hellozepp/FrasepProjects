@@ -1,7 +1,7 @@
 /* Loal all HMEQ data in memory */
 /* dhcjdshk */
 
-options cashost="sepviya35.aws.sas.com" casport=5570;
+options cashost="frasepviya35smp" casport=5570;
 
 cas mysess;
 
