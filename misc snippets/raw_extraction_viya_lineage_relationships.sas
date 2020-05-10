@@ -1,4 +1,4 @@
-options cashost="sepviya35.aws.sas.com" casport=5570;
+options cashost="frasepviya35smp" casport=5570;
 
 cas lineagesess;
 
@@ -8,7 +8,7 @@ caslib _all_ assign;
 /* GLOBAL PARAMETERS FOR LINEAGE EXTRACTION */
 /********************************************/
 
-%let BASE_URI=http://sepviya35.aws.sas.com;
+%let BASE_URI=http://frasepviya35smp;
 %let USERNAME=viyademo01;
 %let PASSWORD=demopw;
 %let NAME=HMEQ_TRAIN;
@@ -74,10 +74,11 @@ libname obj2 json "%sysfunc(pathname(respb))";
 %let currdt=%sysfunc(datetime());
 
 data casuser.&CAS_OUTPUT_TAB_REL;
-	length resourceUri $ 160;
+	length resourceUri $ 160 relatedResourceUri $ 160;
 	format lineage_collection_date datetime.;
 	set obj2.items;
 	resourceUri=resourceUri;
+	relatedResourceUri=relatedResourceUri;
 	lineage_collection_date=&currdt;
 run;
 
@@ -85,9 +86,10 @@ run;
 %do;
 		data casuser.&CAS_OUTPUT_TAB_REL(append=YES);
 			format lineage_collection_date datetime.;
-			length resourceUri $ 160;
+			length resourceUri $ 160 relatedResourceUri $ 160;
 			set &CAS_OUTPUT_LIB..&CAS_OUTPUT_TAB_REL;
 			resourceUri=resourceUri;
+			relatedResourceUri=relatedResourceUri;
 			lineage_collection_date=&currdt;
 		run;	
 %end;
@@ -103,16 +105,20 @@ libname obj2 clear;
 libname obj2 json "%sysfunc(pathname(respb))" ;
 
 data casuser.&CAS_OUTPUT_TAB_REF;
+	length resourceUri $ 160;
 	set obj2.items;
 	format lineage_collection_date datetime.;
+	resourceUri=resourceUri;
 	lineage_collection_date=&currdt;
 run;
 
 %if &truncate_flag=0 %then
 %do;
 		data casuser.&CAS_OUTPUT_TAB_REF(append=YES);
+			length resourceUri $ 160;
 			set &CAS_OUTPUT_LIB..&CAS_OUTPUT_TAB_REF;
 			format lineage_collection_date datetime.;
+			resourceUri=resourceUri;
 			lineage_collection_date=&currdt;
 		run;	
 %end;
