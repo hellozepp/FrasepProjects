@@ -20,7 +20,6 @@ caslib _all_ assign;
 %let CAS_OUTPUT_TAB_FACT=relationships_facts;
 %let CAS_OUTPUT_LIB=public;
 
-
 %let location=/tmp;
 
 %let OBJECT_URI=/casManagement/servers/cas-shared-default/caslibs/Public/tables/HMEQ_TRAIN;
