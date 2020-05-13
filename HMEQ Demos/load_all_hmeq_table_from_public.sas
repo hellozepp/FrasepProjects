@@ -1,5 +1,4 @@
 /* Loal all HMEQ data in memory */
-/* dhcjdshk */
 
 options cashost="frasepviya35smp" casport=5570;
 
