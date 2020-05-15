@@ -13,8 +13,7 @@ proc cas;
                   username="sqlserver",
                   password="demopw",
                   sqlserver_dsn="sqlserver_demodb",
-				  charMultiplier=2,
-				  catalog="demodb"}
+				  charMultiplier=2}
 	   session=FALSE;
    print r;
 quit;
