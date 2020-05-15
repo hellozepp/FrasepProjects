@@ -1,5 +1,6 @@
-cas mysess;
+options cashost="frasepviya35smp" casport=5570 CASNCHARMULTIPLIER=2;
 
+cas mysess;
 caslib SQLservercaslib desc='Microsoft SQL Server Caslib' 
      dataSource=(srctype='sqlserver', 
                  username='sqlserver', 
@@ -9,14 +10,14 @@ caslib SQLservercaslib desc='Microsoft SQL Server Caslib'
 libname sqls cas caslib="SQLservercaslib";
 
 data sqls.prdsal2(replace=yes);
-set sashelp.prdsal2;
+	set sashelp.prdsal2;
 run;
 
 data sqls.latin1test(replace=yes);
 input num1 num2 char1 $ num3;
 datalines;
-1 2 Ã©&#Ã¹Ã Ã Ã Ã Ã Ã Ã  3
-4 5 ÂµÂ£$Ãª 6
+1 2 &#ùààààçççç  3
+4 5 ùùùàààçççèèèêµ 6
 ;
 run;
 
