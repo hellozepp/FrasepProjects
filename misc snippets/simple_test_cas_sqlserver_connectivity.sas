@@ -1,6 +1,7 @@
 options cashost="frasepviya35smp" casport=5570 CASNCHARMULTIPLIER=2;
 
 cas mysess;
+
 caslib SQLservercaslib desc='Microsoft SQL Server Caslib' 
      dataSource=(srctype='sqlserver', 
                  username='sqlserver', 
