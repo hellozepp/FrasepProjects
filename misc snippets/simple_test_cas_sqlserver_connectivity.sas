@@ -8,11 +8,12 @@ data SQLSRV.prdsal2(replace=yes);
 	set sashelp.prdsal2;
 run;
 
+/* Ecriture de donnГ©es latin1 avec caracteres dans le code */
 data SQLSRV.latin1test(replace=yes);
 input num1 num2 char1 $ num3;
 datalines;
-1 2 &#щаааазззз  3
-4 5 щщщааазззииикµ 6
+1 2 &#пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 3
+4 5 пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 6
 ;
 run;
 
