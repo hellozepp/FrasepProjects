@@ -1,0 +1,1038 @@
+{
+	"version": 1,
+	"collections": [
+		{
+			"id": "5d21bf32-45c6-4681-85cf-1cb063114ae4",
+			"name": "SAS Viya AIW - MAS",
+			"description": null,
+			"auth": null,
+			"events": null,
+			"variables": [],
+			"order": [
+				"a487f19e-77d8-49f3-b046-af9fc3dc5a69",
+				"44d9b08a-43d7-430c-b48f-96d163c77535",
+				"4b976124-0a79-4f60-bc7a-c10e3a9c0d7f",
+				"57b107b8-947a-4a37-b639-f1fc934dfab2"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {},
+			"folders": [],
+			"requests": [
+				{
+					"id": "44d9b08a-43d7-430c-b48f-96d163c77535",
+					"name": "2) MAS.modules()",
+					"url": "{{domain}}/microanalyticScore/modules",
+					"description": null,
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"value": "application/vnd.sas.models.model.summary"
+						}
+					],
+					"method": "GET",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"events": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c54283a0-c2c4-4709-8740-7b5873ad8cc7",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0b83133f-da40-480a-b5ca-97e0b563491b",
+								"exec": [
+									"var x = pm.response.json().items; ",
+									"var y = x.map(function(i){return [i.name,i.id,i.links[0].href,i.links[0].type]});",
+									"console.log(y);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": null,
+					"tests": "var x = pm.response.json().items; \nvar y = x.map(function(i){return [i.name,i.id,i.links[0].href,i.links[0].type]});\nconsole.log(y);",
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{token}}"
+					},
+					"collectionId": "5d21bf32-45c6-4681-85cf-1cb063114ae4",
+					"headers": "Content-Type: application/vnd.sas.models.model.summary\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "4b976124-0a79-4f60-bc7a-c10e3a9c0d7f",
+					"name": "3) MAS.steps()",
+					"url": "{{domain}}/microanalyticScore/modules/{{moduleId}}/steps",
+					"description": null,
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"value": "application/vnd.sas.microanalytic.module.step"
+						}
+					],
+					"method": "GET",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"events": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b19300a9-bdfc-4c19-9cef-4e4ad8d05b19",
+								"exec": [
+									"pm.environment.set(\"moduleId\", \"frasepsklearnrandomforest\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "17671644-52d2-40d6-a501-a29d8421129c",
+								"exec": [
+									"var x = pm.response.json().items; ",
+									"var y = x.map(function(i){return [i.moduleId,i.id,i.inputs]});",
+									"console.log(y[0][2]);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": "pm.environment.set(\"moduleId\", \"frasepsklearnrandomforest\");",
+					"tests": "var x = pm.response.json().items; \nvar y = x.map(function(i){return [i.moduleId,i.id,i.inputs]});\nconsole.log(y[0][2]);\n",
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{token}}"
+					},
+					"collectionId": "5d21bf32-45c6-4681-85cf-1cb063114ae4",
+					"headers": "Content-Type: application/vnd.sas.microanalytic.module.step\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "57b107b8-947a-4a37-b639-f1fc934dfab2",
+					"name": "4) MAS.score()",
+					"url": "{{domain}}/microanalyticScore/modules/{{moduleId}}/steps/score",
+					"description": null,
+					"data": [],
+					"dataOptions": null,
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"value": "application/vnd.sas.microanalytic.module.step.input+json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"events": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a359712e-8f9b-4df3-962c-334af76efaa7",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "85c7d344-7054-4eee-8a4e-d59cdf6a2476",
+								"type": "text/javascript",
+								"exec": [
+									"",
+									""
+								]
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": null,
+					"tests": "\n",
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{token}}"
+					},
+					"collectionId": "5d21bf32-45c6-4681-85cf-1cb063114ae4",
+					"rawModeData": "{\n\"inputs\":[\n\t{\"name\":\"DebtIncRatio\",\"value\":10},\n\t{\"name\":\"LoanValue\",\"value\":50000},\n\t{\"name\":\"MortgageDue\",\"value\":50000},\n\t{\"name\":\"HomeValue\",\"value\":100000}\n\t]\n}",
+					"headers": "Content-Type: application/vnd.sas.microanalytic.module.step.input+json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "a487f19e-77d8-49f3-b046-af9fc3dc5a69",
+					"name": "1) CAS.login()",
+					"url": "{{domain}}/SASLogon/oauth/token",
+					"description": null,
+					"data": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "sasuser01",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text"
+						}
+					],
+					"dataOptions": null,
+					"dataMode": "urlencoded",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"value": "application/x-www-form-urlencoded"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "basic",
+						"basic": [
+							{
+								"key": "username",
+								"value": "sas.ec",
+								"type": "string"
+							}
+						]
+					},
+					"events": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c54283a0-c2c4-4709-8740-7b5873ad8cc7",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "88f95ed7-8967-4bbf-a858-a517fd4c761e",
+								"type": "text/javascript",
+								"exec": [
+									"pm.environment.set(\"token\", pm.response.json().access_token);"
+								]
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": null,
+					"tests": "pm.environment.set(\"token\", pm.response.json().access_token);",
+					"currentHelper": "basicAuth",
+					"helperAttributes": {
+						"id": "basic",
+						"username": "sas.ec"
+					},
+					"collectionId": "5d21bf32-45c6-4681-85cf-1cb063114ae4",
+					"headers": "Content-Type: application/x-www-form-urlencoded\n",
+					"pathVariables": {}
+				}
+			]
+		},
+		{
+			"id": "890f0bbf-2ac4-4cb4-903d-277e2ff123e4",
+			"name": "SAS Viya 35 API calls collection",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"variables": [],
+			"order": [
+				"b6a2d0b0-8f1b-47c4-a138-87a8ba3c12e8",
+				"e0ce33c6-72c6-4f3e-9c58-39a176bc416b",
+				"7f762688-ceed-4d0d-bbd0-369f2515dc4b",
+				"213d195f-3cfb-4170-8f45-0dfdaaf918b6",
+				"3ae62e7a-69f5-4572-aa92-83701ceda145",
+				"ec16b470-8d7f-4937-8f80-f6b969a2d037",
+				"7d7e9536-2e66-4455-b558-0ceabf3e46ad",
+				"c03716c9-7680-45eb-a671-db32b8edbf73",
+				"e9b6d930-bcd8-49db-8f51-80c274adebf0"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {},
+			"folders": [],
+			"requests": [
+				{
+					"id": "213d195f-3cfb-4170-8f45-0dfdaaf918b6",
+					"name": "(4) Get projects list",
+					"url": "https://{{domain}}/projects/projects",
+					"description": null,
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [
+						{
+							"key": "Accept",
+							"value": "application/vnd.sas.collection+json"
+						},
+						{
+							"key": "Accept-Item",
+							"value": "application/vnd.sas.project.summary+json",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "limit",
+							"value": "50",
+							"description": "",
+							"type": "text",
+							"enabled": false
+						}
+					],
+					"method": "GET",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"bearer": [
+							{
+								"key": "token",
+								"type": "string",
+								"value": "{{token}}"
+							}
+						],
+						"type": "bearer"
+					},
+					"events": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "076f3702-5559-4dc8-a879-8543be9730b8",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": null,
+					"tests": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{token}}"
+					},
+					"collectionId": "890f0bbf-2ac4-4cb4-903d-277e2ff123e4",
+					"headers": "Accept: application/vnd.sas.collection+json\nAccept-Item: application/vnd.sas.project.summary+json\n//limit: 50\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "3ae62e7a-69f5-4572-aa92-83701ceda145",
+					"name": "(4) Get projects activities",
+					"url": "https://{{domain}}/projects/activities?limit=100",
+					"description": null,
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [
+						{
+							"key": "Accept",
+							"value": "application/vnd.sas.collection+json"
+						}
+					],
+					"method": "GET",
+					"pathVariableData": [],
+					"queryParams": [
+						{
+							"key": "limit",
+							"value": "100",
+							"equals": true,
+							"description": null,
+							"enabled": true
+						}
+					],
+					"auth": {
+						"bearer": [
+							{
+								"key": "token",
+								"type": "string",
+								"value": "{{token}}"
+							}
+						],
+						"type": "bearer"
+					},
+					"events": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1214c87d-0523-4a39-a310-1b6e03dcc0fd",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": null,
+					"tests": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{token}}"
+					},
+					"collectionId": "890f0bbf-2ac4-4cb4-903d-277e2ff123e4",
+					"headers": "Accept: application/vnd.sas.collection+json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "7d7e9536-2e66-4455-b558-0ceabf3e46ad",
+					"name": "(10) CAS actions dropTable",
+					"url": "https://{{domain}}/cas-shared-default-http/cas/sessions/{{session}}/actions/dropTable",
+					"description": null,
+					"data": [],
+					"dataOptions": null,
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"events": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "96679875-ff84-48ae-859a-5dabd8fac24f",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": null,
+					"tests": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{token}}"
+					},
+					"collectionId": "890f0bbf-2ac4-4cb4-903d-277e2ff123e4",
+					"rawModeData": "{\n  \"name\":\"frasep_images_postman\",\n  \"caslib\":\"deploy\"\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "7f762688-ceed-4d0d-bbd0-369f2515dc4b",
+					"name": "(3) CAS caslibs",
+					"url": "https://{{domain}}/cas-shared-default-http/cas/caslibs",
+					"description": null,
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"value": "application/vnd.sas.cas.direct.results-table"
+						}
+					],
+					"method": "GET",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"events": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1f2f0835-8813-4578-af2f-bfa0c2e0e9bd",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": null,
+					"tests": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{token}}"
+					},
+					"collectionId": "890f0bbf-2ac4-4cb4-903d-277e2ff123e4",
+					"headers": "Content-Type: application/vnd.sas.cas.direct.results-table\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "b6a2d0b0-8f1b-47c4-a138-87a8ba3c12e8",
+					"name": "(1) CAS.login",
+					"url": "https://{{domain}}/SASLogon/oauth/token",
+					"description": "Used to get a oauth token for subsequent sessions.",
+					"data": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "username",
+							"value": "viyademo01",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "password",
+							"value": "demopw",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						}
+					],
+					"dataOptions": null,
+					"dataMode": "urlencoded",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"value": "application/x-www-form-urlencoded",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "basic",
+						"basic": [
+							{
+								"key": "password",
+								"value": "frasepsecret",
+								"type": "string"
+							},
+							{
+								"key": "username",
+								"value": "frasepapp",
+								"type": "string"
+							}
+						]
+					},
+					"events": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c90c4fc6-57c0-4529-a9de-e382e9c32ce5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "5f912f89-398f-4b92-8d0b-b76aeb2e40df",
+								"exec": [
+									"pm.environment.set(\"token\", pm.response.json().access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": null,
+					"tests": "pm.environment.set(\"token\", pm.response.json().access_token);",
+					"currentHelper": "basicAuth",
+					"helperAttributes": {
+						"id": "basic",
+						"username": "frasepapp",
+						"password": "frasepsecret"
+					},
+					"collectionId": "890f0bbf-2ac4-4cb4-903d-277e2ff123e4",
+					"headers": "Content-Type: application/x-www-form-urlencoded\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "c03716c9-7680-45eb-a671-db32b8edbf73",
+					"name": "(11) Execute SAS job (GenerateProfileV2)",
+					"url": "https://frasepviya35smp/SASJobExecution?_program=%2FPublic%2Fjob%2FGenerateProfile_v2",
+					"description": null,
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [],
+					"method": "GET",
+					"pathVariableData": [],
+					"queryParams": [
+						{
+							"key": "_program",
+							"value": "%2FPublic%2Fjob%2FGenerateProfile_v2",
+							"equals": true,
+							"description": "",
+							"enabled": true
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"events": null,
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{token}}"
+					},
+					"collectionId": "890f0bbf-2ac4-4cb4-903d-277e2ff123e4",
+					"headers": "",
+					"pathVariables": {}
+				},
+				{
+					"id": "e0ce33c6-72c6-4f3e-9c58-39a176bc416b",
+					"name": "(2) CAS.createSession",
+					"url": "https://{{domain}}/cas-shared-default-http/cas/sessions",
+					"description": null,
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"events": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8f5617fa-7385-4bbd-aa7a-4ff6f6f7b1cc",
+								"exec": [
+									"pm.environment.set(\"session\", pm.response.json().session);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": null,
+					"tests": "pm.environment.set(\"session\", pm.response.json().session);",
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{token}}"
+					},
+					"collectionId": "890f0bbf-2ac4-4cb4-903d-277e2ff123e4",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "e9b6d930-bcd8-49db-8f51-80c274adebf0",
+					"name": "(99) CAS.dropSession()",
+					"url": "https://{{domain}}/cas-shared-default-http/cas/sessions/{{session}}",
+					"description": null,
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [],
+					"method": "DELETE",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"events": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "620e84c2-43eb-4d05-b6d0-f0535937478b",
+								"exec": [
+									"pm.environment.unset(\"session\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": null,
+					"tests": "pm.environment.unset(\"session\");",
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{token}}"
+					},
+					"collectionId": "890f0bbf-2ac4-4cb4-903d-277e2ff123e4",
+					"headers": "",
+					"pathVariables": {}
+				},
+				{
+					"id": "ec16b470-8d7f-4937-8f80-f6b969a2d037",
+					"name": "(4) Get relationships references",
+					"url": "https://{{domain}}/relationships/references?limit=1000",
+					"description": null,
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [
+						{
+							"key": "Accept",
+							"value": "application/vnd.sas.collection+json"
+						}
+					],
+					"method": "GET",
+					"pathVariableData": [],
+					"queryParams": [
+						{
+							"key": "limit",
+							"value": "1000",
+							"equals": true,
+							"description": null,
+							"enabled": true
+						}
+					],
+					"auth": {
+						"bearer": [
+							{
+								"key": "token",
+								"type": "string",
+								"value": "{{token}}"
+							}
+						],
+						"type": "bearer"
+					},
+					"events": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "006ac303-7e4c-4fcd-ad13-cc54dd09c262",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": null,
+					"tests": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{token}}"
+					},
+					"collectionId": "890f0bbf-2ac4-4cb4-903d-277e2ff123e4",
+					"headers": "Accept: application/vnd.sas.collection+json\n",
+					"pathVariables": {}
+				}
+			]
+		},
+		{
+			"id": "98f613c3-0c20-455d-8f8b-f6e82ff95dfa",
+			"name": "deploymenthelperapps",
+			"description": null,
+			"auth": null,
+			"events": null,
+			"variables": [],
+			"order": [
+				"148a8edd-56cc-478c-8ee4-d53f8c0702fe",
+				"8b3c0434-5b48-4c7a-bd23-6622ca908a22",
+				"31b17574-7e40-4465-b33f-14ac601b7e3d"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {},
+			"folders": [],
+			"requests": [
+				{
+					"id": "148a8edd-56cc-478c-8ee4-d53f8c0702fe",
+					"name": "Get access token",
+					"url": "https://{{domain}}/SASLogon/oauth/token",
+					"description": null,
+					"data": [
+						{
+							"key": "username",
+							"value": "sasdemo",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Orion123",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						}
+					],
+					"dataOptions": null,
+					"dataMode": "urlencoded",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"value": "application/x-www-form-urlencoded",
+							"type": "text"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "basic",
+						"basic": [
+							{
+								"key": "password",
+								"value": "frasepsecret",
+								"type": "string"
+							},
+							{
+								"key": "username",
+								"value": "frasepapp",
+								"type": "string"
+							}
+						]
+					},
+					"events": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "89371adc-8805-4ade-8277-dc8fd4d258c8",
+								"exec": [
+									"pm.environment.set(\"access_token\", pm.response.json().access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"folder": null,
+					"preRequestScript": null,
+					"tests": "pm.environment.set(\"access_token\", pm.response.json().access_token);",
+					"currentHelper": "basicAuth",
+					"helperAttributes": {
+						"id": "basic",
+						"username": "frasepapp",
+						"password": "frasepsecret"
+					},
+					"collectionId": "98f613c3-0c20-455d-8f8b-f6e82ff95dfa",
+					"headers": "Content-Type: application/x-www-form-urlencoded\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "31b17574-7e40-4465-b33f-14ac601b7e3d",
+					"name": "Score model",
+					"url": "https://{{domain}}/microanalyticScore/modules/{{moduleId}}/steps/score",
+					"description": null,
+					"data": [],
+					"dataOptions": null,
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"value": "application/json",
+							"type": "text"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
+					"events": null,
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{access_token}}"
+					},
+					"collectionId": "98f613c3-0c20-455d-8f8b-f6e82ff95dfa",
+					"rawModeData": "{\r\n  \"inputs\": [\r\n    {\r\n      \"name\": \"collectcnt\",\r\n      \"value\": 123\r\n    },\r\n    {\r\n    \t\"name\": \"derogcnt\",\r\n    \t\"value\": 123\r\n    }\r\n  ],\r\n  \"version\": 1\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "8b3c0434-5b48-4c7a-bd23-6622ca908a22",
+					"name": "Get modules",
+					"url": "https://{{domain}}/microanalyticScore/modules",
+					"description": null,
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [],
+					"method": "GET",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
+					"events": null,
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "{{access_token}}"
+					},
+					"collectionId": "98f613c3-0c20-455d-8f8b-f6e82ff95dfa",
+					"headers": "",
+					"pathVariables": {}
+				}
+			]
+		}
+	],
+	"environments": [
+		{
+			"id": "c737a9af-44cc-491a-8e73-cf0fcc968c94",
+			"name": "Viya Login  - frasepviya35smp",
+			"values": [
+				{
+					"key": "domain",
+					"value": "frasepviya35smp",
+					"enabled": true
+				},
+				{
+					"key": "session",
+					"value": "c56924b6-86ce-0245-8a66-4cfa624303e1",
+					"enabled": false
+				},
+				{
+					"key": "token",
+					"value": "",
+					"enabled": true
+				},
+				{
+					"key": "access_token",
+					"value": "",
+					"enabled": true
+				},
+				{
+					"key": "moduleId",
+					"value": "",
+					"enabled": true
+				}
+			]
+		},
+		{
+			"id": "98c269a4-e180-4549-bd46-99b4dcc463e4",
+			"name": "My Workspace - globals",
+			"values": []
+		}
+	],
+	"headerPresets": [],
+	"globals": []
+}
