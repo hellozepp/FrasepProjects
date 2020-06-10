@@ -113,8 +113,7 @@ feature_engineering <- function(tbl_name, target, a, b, c, d, e, f, g) {
     loadActionSet(conn, "dataSciencePilot")
     target <<- target
     tbl_name <<- tbl_name
-    print('Feature engineering....')
-    cas.dataSciencePilot.featureMachine.help(conn)
+
     features <- cas.dataSciencePilot.featureMachine(
         conn,
         table                 = list(name =tbl_name),
@@ -127,8 +126,6 @@ feature_engineering <- function(tbl_name, target, a, b, c, d, e, f, g) {
         casOut                = list(name= paste0(tbl_name,"_TRANSFORMED"), replace = TRUE),
         saveState             = list(name= "ASTORE_OUT", replace = TRUE)
     )
-    
-    print('Feature engineering done.')
     
     return(get_table("FEATURE_OUT"))
 }
