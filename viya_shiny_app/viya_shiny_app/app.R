@@ -3,7 +3,8 @@
 
 
 
-setwd("C://my_local_data/github/frasepprojects/FrasepProjects/viya_shiny_app/viya_shiny_app")
+#setwd("C://my_local_data/github/frasepprojects/FrasepProjects/viya_shiny_app/viya_shiny_app")
+setwd("/home/viyademo01/github/FrasepProjects/viya_shiny_app/viya_shiny_app")
 library(dplyr)
 library(swat)
 library(ggplot2)
