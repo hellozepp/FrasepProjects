@@ -114,21 +114,20 @@ feature_engineering <- function(tbl_name, target, a, b, c, d, e, f, g) {
     loadActionSet(conn, "dataSciencePilot")
     target <<- target
     tbl_name <<- tbl_name
+
     features <- cas.dataSciencePilot.featureMachine(
         conn,
-        table                 = list(name =tbl_name, caslib="casuser"),
+        table                 = list(name =tbl_name),
         target                = target,
         explorationPolicy     = list(),
         screenPolicy          = list(),
-        copyVars = list(target),
-        transformationPolicy  = list(missing = a, cardinality = b,
-                                     entropy = c, iqv = d,
-                                     skewness = e, kurtosis = f, Outlier = g),
+        transformationPolicy  = list(missing = a, cardinality = b, entropy = c, iqv = d, skewness = e, kurtosis = f, Outlier = g),
         transformationOut     = list(name= "TRANSFORMATION_OUT", replace = TRUE),
         featureOut            = list(name= "FEATURE_OUT", replace = TRUE),
-        casOut                = list(name= paste(tbl_name,"_TRANSFORMED",sep=""), replace = TRUE),
+        casOut                = list(name= paste0(tbl_name,"_TRANSFORMED"), replace = TRUE),
         saveState             = list(name= "ASTORE_OUT", replace = TRUE)
     )
+    
     return(get_table("FEATURE_OUT"))
 }
 
