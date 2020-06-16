@@ -10,7 +10,7 @@ library(ggplot2)
 library(reshape2)
 library(shiny)
 library(plotly)
-options(cas.print.messages = FALSE)
+options(cas.print.messages = TRUE)
 options(shiny.maxRequestSize=30*1024^2)
 
 
@@ -24,7 +24,7 @@ conn <- 0
 # Open connection to CAS and import main functions
 connect <- function(username, password, lib) {
     
-    conn <<- CAS('frasepviya35smp', port=5570, caslib = 'casuser',   username = username,   password = password)
+    conn <<- CAS('frasepviya35smp', port=5570, caslib = 'fcasuser',   username = username,   password = password)
     
     return(cas.builtins.serverStatus(conn))
 }
@@ -57,7 +57,7 @@ upload_tbl <- function(tbl_path) {
     
     name = unlist(strsplit(as.character(tbl_path["name"]), split='.', fixed=TRUE))[1]
     
-    cas.table.dropTable(conn, caslib="casuser", name=name, quite=TRUE)
+    cas.table.dropTable(conn, caslib="casuser", name=name, quiet=TRUE)
     
     tbl <- cas.read.sas7bdat(conn, str1, casOut=list(name=name, caslib="casuser", replace = TRUE))
     tbl <- defCasTable(conn, table=name)
@@ -118,12 +118,10 @@ feature_engineering <- function(tbl_name, target, a, b, c, d, e, f, g) {
         conn,
         table                 = list(name =tbl_name),
         target                = target,
-        explorationPolicy     = list(),
-        screenPolicy          = list(),
         transformationPolicy  = list(missing = a, cardinality = b, entropy = c, iqv = d, skewness = e, kurtosis = f, Outlier = g),
         transformationOut     = list(name= "TRANSFORMATION_OUT", replace = TRUE),
         featureOut            = list(name= "FEATURE_OUT", replace = TRUE),
-        casOut                = list(name= paste0(tbl_name,"_TRANSFORMED"), replace = TRUE),
+        casout                = list(name= paste(tbl_name,"_TRANSFORMED",sep=""), replace = TRUE),
         saveState             = list(name= "ASTORE_OUT", replace = TRUE)
     )
     
@@ -162,7 +160,7 @@ auto_ml <- function(dt, rf, gb, nn) {
     model_tbl <<- paste(tbl_name, "_TRANSFORMED_part", sep ="")
     
     tbl <- defCasTable(conn, model_tbl)
-    colinfo <- head(cas.table.columnInfo(conn, table = tbl)$ColumnInfo, -1)
+    colinfo <- head(cas.table.columnInfo(conn, table = model_tbl)$ColumnInfo, -1)
     target <<- colinfo$Column[1]
     inputs <<- colinfo$Column[-1]
     nominals <<- c(target, subset(colinfo, Type == 'varchar')$Column)
