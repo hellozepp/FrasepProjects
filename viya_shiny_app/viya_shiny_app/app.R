@@ -1,10 +1,10 @@
 # Copyright © 2020, SAS Institute Inc., Cary, NC, USA.  All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-
-
 #setwd("C://my_local_data/github/frasepprojects/FrasepProjects/viya_shiny_app/viya_shiny_app")
-setwd("/home/viyademo01/github/FrasepProjects/viya_shiny_app/viya_shiny_app")
+#setwd("/home/viyademo01/github/FrasepProjects/viya_shiny_app/viya_shiny_app")
+
+setwd("H://github/FrasepProjects/FrasepProjects/viya_shiny_app/viya_shiny_app")
 library(dplyr)
 library(swat)
 library(ggplot2)
@@ -14,6 +14,7 @@ library(plotly)
 options(cas.print.messages = FALSE)
 options(shiny.maxRequestSize=30*1024^2)
 
+globalhostname <- "frasepviya35smp"
 
 #####################################
 # R code for data manipulation,
@@ -21,12 +22,19 @@ options(shiny.maxRequestSize=30*1024^2)
 #####################################
 
 conn <- 0
+lst_caslibs <- list()
+
+# List available caslibs
+list_caslib <- function() {
+    libs <- cas.table.caslibInfo(conn)
+    lst_names <- libs$CASLibInfo[,"Name"]
+    return(lst_names)
+}
 
 # Open connection to CAS and import main functions
 connect <- function(username, password, lib) {
-    
-    conn <<- CAS('frasepviya35smp', port=5570, caslib = 'casuser',   username = username,   password = password)
-    
+    conn <<- CAS(globalhostname, port=5570, caslib = 'casuser',   username = username,   password = password)
+    lst_caslibs <<- list_caslib()
     return(cas.builtins.serverStatus(conn))
 }
 
@@ -37,7 +45,8 @@ list_tables <- function(lib) {
     return(names)
 }
 
-# Generate summay statistics for a specific CAS Table
+
+# Generate summary statistics for a specific CAS Table
 explore_tbl <- function(tbl) {
     cols <- c("Column", "Min", "Max", "N", "NMiss", "Mean",	"Sum")
     summary_tbl <- data.frame(cas.simple.summary(conn, table={name=tbl}))[1:7]
@@ -119,8 +128,7 @@ feature_engineering <- function(tbl_name, target, a, b, c, d, e, f, g) {
         conn,
         table                 = list(name =tbl_name),
         target                = target,
-        explorationPolicy     = list(),
-        screenPolicy          = list(),
+        copyvars              =list(target),
         transformationPolicy  = list(missing = a, cardinality = b, entropy = c, iqv = d, skewness = e, kurtosis = f, Outlier = g),
         transformationOut     = list(name= "TRANSFORMATION_OUT", replace = TRUE),
         featureOut            = list(name= "FEATURE_OUT", replace = TRUE),
@@ -154,6 +162,48 @@ partition <- function(tbl) {
 # Then, scores on the 30% dataset
 # and runs assessment
 
+auto_ml_v2 <- function(trainingTable, targetVariable, dt,rf,gb,nn) {
+    
+    loadActionSet(s,"dataSciencePilot")
+    
+    # tbl_name : table d entrainement
+    
+    colinfo <- head(cas.table.columnInfo(conn, table = model_tbl)$ColumnInfo, -1)
+    target <<- targetVariable
+    inputs <<- colinfo$Column[-1]
+    nominals <<- c(target, subset(colinfo, Type == 'varchar')$Column)
+    
+    SelectedmodelTypes <- list()
+    if (dt) SelectedmodelTypes <- list("decisionTree")
+    if (rf) SelectedmodelTypes <- c(SelectedmodelTypes,"FOREST")
+    if (gb) SelectedmodelTypes <- c(SelectedmodelTypes,"GRADBOOST")
+    if (nn) SelectedmodelTypes <- c(SelectedmodelTypes,"NEURALNET")
+
+    cas.dataSciencePilot.dsAutoMl(
+        s,
+        table                 = list(name =trainingTable),
+        target                = targetVariable,
+#        explorationPolicy     = list(),
+#        screenPolicy          = list(),
+#        selectionPolicy       = list(),
+        transformationPolicy  = list(missing = True, cardinality = True,
+                                     entropy = True, iqv = True,
+                                     skewness = True, kurtosis = True, Outlier = True),
+        modelTypes            = SelectedmodelTypes,
+        objective             = "AUC",
+        sampleSize            = 20,
+        topKPipelines         = 20,
+        kFolds                = 5,
+        transformationOut     = list(name= "TRANSFORMATION_OUT", replace = True),
+        featureOut            = list(name= "FEATURE_OUT", replace = True),
+        pipelineOut           = list(name= "PIPELINE_OUT", replace = True),
+        saveState             = list(name= "ASTORE_OUT", replace = True)      
+    )
+    cas.fetch(table = list(name = "PIPELINE_OUT"))
+    cas.fetch(table = list(name = "FEATURE_OUT"))
+    cas.fetch(table = list(name = "TRANSFORMATION_OUT"))
+}
+
 auto_ml <- function(dt, rf, gb, nn) {
     loadActionSet(conn, "decisionTree")
     loadActionSet(conn, "neuralNet")
@@ -162,31 +212,36 @@ auto_ml <- function(dt, rf, gb, nn) {
     
     model_tbl <<- paste(tbl_name, "_TRANSFORMED_part", sep ="")
     
-    tbl <- defCasTable(conn, model_tbl)
-    colinfo <- head(cas.table.columnInfo(conn, table = tbl)$ColumnInfo, -1)
+    colinfo <- head(cas.table.columnInfo(conn, table = model_tbl)$ColumnInfo, -1)
+    print(colinfo)
     target <<- colinfo$Column[1]
     inputs <<- colinfo$Column[-1]
     nominals <<- c(target, subset(colinfo, Type == 'varchar')$Column)
-    
+
     models <- vector()
     scores <- vector()
     model_names <- vector()
+
+    print(target)
+    print(inputs)
+    print(nominals)
     
     if(dt) {
+        print("Executing decisiton tree...")
+        
         cas.decisionTree.dtreeTrain(conn,
                                     table = list(name = model_tbl, caslib = "casuser", where = "_PartInd_ = 0"),
                                     target = target,
                                     inputs = inputs,
                                     nominals = nominals,
                                     casOut = list(name = "dt_model", caslib="casuser", replace = TRUE))
-        
-        #print(defCasTable(conn, "dt_model", caslib="casuser"))
         models <- c(models, 'dt')
         scores <- c(scores, cas.decisionTree.dtreeScore)
         model_names <- c(model_names, 'Decision Tree')
     }
     
     if(rf) {
+        print("Executing random forest ...")
         cas.decisionTree.forestTrain(conn,
                                      table = list(name = model_tbl, caslib = "casuser", where = '_PartInd_ = 0'),
                                      target = target,
@@ -194,12 +249,12 @@ auto_ml <- function(dt, rf, gb, nn) {
                                      nominals = nominals,
                                      casOut = list(name = 'rf_model', caslib="casuser", replace = TRUE)
         )
-        #print(defCasTable(conn, 'rf_model'))
         models <- c(models, 'rf')
         scores <- c(scores, cas.decisionTree.forestScore)
         model_names <- c(model_names, 'Random Forest')
     }
     if(gb) {
+        print("Executing gb tree...")
         cas.decisionTree.gbtreeTrain(conn,
                                      table = list(name = model_tbl, caslib = "casuser", where = '_PartInd_ = 0'),
                                      target = target,
@@ -212,6 +267,7 @@ auto_ml <- function(dt, rf, gb, nn) {
         model_names <- c(model_names, 'Gradient Boosting')
     }
     if(nn) {
+        print("Executing neural network...")
         cas.neuralNet.annTrain(conn,
                                table = list(name = model_tbl, caslib = "casuser", where = '_PartInd_ = 0'),
                                target = target,
@@ -265,21 +321,26 @@ measure_models <- function(models, scores, model.names) {
         roc.df <- rbind(roc.df, tmp)
     }
     
-    compare <- subset(roc.df, round(roc.df$CutOff, 2) == 0.5)
+    compare <- subset(roc.df, round(as.numeric(roc.df$CutOff), 2) == 0.5)
+    print("OK")
+    str(roc.df)
+    print(compare)
     rownames(compare) <- NULL
     compare[,c('Model','TP','FP','FN','TN')]
-    
+    print("OK1")
     compare$Misclassification <- 1 - compare$ACC
+    print("OK2")
     miss <<- compare[order(compare$Misclassification), c('Model','Misclassification')]
     rownames(miss) <- NULL
+    print("O3")
     
     roc.df$Models <- paste(roc.df$Model, round(roc.df$C, 3), sep = ' - ')
-    
+    print("OK4")
     plot <- ggplot(data = roc.df[c('FPR', 'Sensitivity', 'Models')],
                    aes(x = as.numeric(FPR), y = as.numeric(Sensitivity), colour = Models)) +
         geom_line() + scale_y_continuous( limits = c(0,1), expand = c(0,0) ) +
         labs(x = 'False Positive Rate', y = 'True Positive Rate')
-    
+    print("OK5")
     return(plot)
 }
 
@@ -339,7 +400,8 @@ if (interactive()) {
             tabPanel(title = "Verify Data",
                      sidebarLayout(
                          sidebarPanel(
-                             textInput(label = "Library Name", inputId = "library_to_explore"),
+                             selectInput(inputId = "library_to_explore",label = "Library Name", lst_caslibs),
+                             #textInput(label = "Library Name", inputId = "library_to_explore"),
                              submitButton("List Tables", icon("wpexplorer"))
                          ),
                          mainPanel(
@@ -454,6 +516,37 @@ if (interactive()) {
                              tableOutput("missclass")
                          )
                      )
+            ),
+            tabPanel(title = "Auto ML v2",
+                     sidebarLayout(
+                         sidebarPanel(
+                             tags$head(tags$style(type="text/css", "
+                       #loading {
+                         position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        width: 100%;
+                        padding: 5px 0px 5px 0px;
+                        text-align: center;
+                        font-weight: bold;
+                        font-size: 100%;
+                        color: #000000;
+                        background-color: rgba(0,255,0,0.5);
+                       }")
+                             ),
+                             checkboxInput(inputId="dt", label="Decision Tree", value = FALSE, width = NULL),
+                             checkboxInput(inputId="rf", label="Random Forest", value = FALSE, width = NULL),
+                             checkboxInput(inputId="gb", label="Gradient Boosting", value = FALSE, width = NULL),
+                             checkboxInput(inputId="nn", label="Neural Network", value = FALSE, width = NULL),
+                             
+                             conditionalPanel(condition="$('html').hasClass('shiny-busy')",tags$div("Loading...",id="loading")),
+                             submitButton("Start auto ML", icon("wpexplorer"))
+                         ),
+                         mainPanel(
+                             tableOutput("automl_outputs")
+                         )
+                     )
             )
         )
     )
@@ -471,7 +564,9 @@ if (interactive()) {
         output$connection <- renderTable ({
             validate(need(input$username, ''))
             validate(need(input$pwd, ''))
-            connect(input$username, input$pwd, 'CASUSER')
+            c_out <- connect(input$username, input$pwd, 'CASUSER')
+            updateSelectInput(session, inputId = "library_to_explore",label = "Library Name",choices = lst_caslibs)
+            c_out
         })
         
         output$tbl_import <- renderTable({
@@ -503,13 +598,17 @@ if (interactive()) {
             feature_engineering(input$tbl_to_model,input$target_var, input$a, input$b, input$c, input$d, input$e, input$f, input$g)})
         
         output$model_perf <- renderPlotly({
-            validate(need(input$gb, ''))
+            validate(need(input$dt, ''))
             auto_ml(input$dt,input$rf,input$gb,input$nn)
         })
         
         output$missclass <- renderTable({
             validate(need(input$gb, ''))
             get_miss()
+        })
+        output$automl_outputs <- renderTable({
+            validate(need(input$dt, ''))
+            auto_ml_v2("HMEQ_TRAIN", "BAD", input$dt,input$rf,input$gb,input$nn)
         })
         
     }
