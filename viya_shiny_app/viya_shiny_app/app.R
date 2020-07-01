@@ -1,17 +1,17 @@
 # Copyright © 2020, SAS Institute Inc., Cary, NC, USA.  All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-#setwd("C://my_local_data/github/frasepprojects/FrasepProjects/viya_shiny_app/viya_shiny_app")
+setwd("C://my_local_data/github/frasepprojects/FrasepProjects/viya_shiny_app/viya_shiny_app")
 #setwd("/home/viyademo01/github/FrasepProjects/viya_shiny_app/viya_shiny_app")
 
-setwd("H://github/FrasepProjects/FrasepProjects/viya_shiny_app/viya_shiny_app")
+#setwd("H://github/FrasepProjects/FrasepProjects/viya_shiny_app/viya_shiny_app")
 library(dplyr)
 library(swat)
 library(ggplot2)
 library(reshape2)
 library(shiny)
 library(plotly)
-options(cas.print.messages = FALSE)
+options(cas.print.messages = TRUE)
 options(shiny.maxRequestSize=30*1024^2)
 
 globalhostname <- "frasepviya35smp"
@@ -67,7 +67,7 @@ upload_tbl <- function(tbl_path) {
     
     name = unlist(strsplit(as.character(tbl_path["name"]), split='.', fixed=TRUE))[1]
     
-    cas.table.dropTable(conn, caslib="casuser", name=name, quite=TRUE)
+    cas.table.dropTable(conn, caslib="casuser", name=name, quiet=TRUE)
     
     tbl <- cas.read.sas7bdat(conn, str1, casOut=list(name=name, caslib="casuser", replace = TRUE))
     tbl <- defCasTable(conn, table=name)
@@ -128,11 +128,11 @@ feature_engineering <- function(tbl_name, target, a, b, c, d, e, f, g) {
         conn,
         table                 = list(name =tbl_name),
         target                = target,
-        copyvars              =list(target),
+        copyVars              = list(target),
         transformationPolicy  = list(missing = a, cardinality = b, entropy = c, iqv = d, skewness = e, kurtosis = f, Outlier = g),
         transformationOut     = list(name= "TRANSFORMATION_OUT", replace = TRUE),
         featureOut            = list(name= "FEATURE_OUT", replace = TRUE),
-        casOut                = list(name= paste0(tbl_name,"_TRANSFORMED"), replace = TRUE),
+        casout                = list(name= paste(tbl_name,"_TRANSFORMED",sep=""), replace = TRUE),
         saveState             = list(name= "ASTORE_OUT", replace = TRUE)
     )
     
@@ -162,48 +162,6 @@ partition <- function(tbl) {
 # Then, scores on the 30% dataset
 # and runs assessment
 
-auto_ml_v2 <- function(trainingTable, targetVariable, dt,rf,gb,nn) {
-    
-    loadActionSet(s,"dataSciencePilot")
-    
-    # tbl_name : table d entrainement
-    
-    colinfo <- head(cas.table.columnInfo(conn, table = model_tbl)$ColumnInfo, -1)
-    target <<- targetVariable
-    inputs <<- colinfo$Column[-1]
-    nominals <<- c(target, subset(colinfo, Type == 'varchar')$Column)
-    
-    SelectedmodelTypes <- list()
-    if (dt) SelectedmodelTypes <- list("decisionTree")
-    if (rf) SelectedmodelTypes <- c(SelectedmodelTypes,"FOREST")
-    if (gb) SelectedmodelTypes <- c(SelectedmodelTypes,"GRADBOOST")
-    if (nn) SelectedmodelTypes <- c(SelectedmodelTypes,"NEURALNET")
-
-    cas.dataSciencePilot.dsAutoMl(
-        s,
-        table                 = list(name =trainingTable),
-        target                = targetVariable,
-#        explorationPolicy     = list(),
-#        screenPolicy          = list(),
-#        selectionPolicy       = list(),
-        transformationPolicy  = list(missing = True, cardinality = True,
-                                     entropy = True, iqv = True,
-                                     skewness = True, kurtosis = True, Outlier = True),
-        modelTypes            = SelectedmodelTypes,
-        objective             = "AUC",
-        sampleSize            = 20,
-        topKPipelines         = 20,
-        kFolds                = 5,
-        transformationOut     = list(name= "TRANSFORMATION_OUT", replace = True),
-        featureOut            = list(name= "FEATURE_OUT", replace = True),
-        pipelineOut           = list(name= "PIPELINE_OUT", replace = True),
-        saveState             = list(name= "ASTORE_OUT", replace = True)      
-    )
-    cas.fetch(table = list(name = "PIPELINE_OUT"))
-    cas.fetch(table = list(name = "FEATURE_OUT"))
-    cas.fetch(table = list(name = "TRANSFORMATION_OUT"))
-}
-
 auto_ml <- function(dt, rf, gb, nn) {
     loadActionSet(conn, "decisionTree")
     loadActionSet(conn, "neuralNet")
@@ -213,19 +171,26 @@ auto_ml <- function(dt, rf, gb, nn) {
     model_tbl <<- paste(tbl_name, "_TRANSFORMED_part", sep ="")
     
     colinfo <- head(cas.table.columnInfo(conn, table = model_tbl)$ColumnInfo, -1)
-    print(colinfo)
+
+    print(cas.table.columnInfo(conn, table = model_tbl)$ColumnInfo)
+    
     target <<- colinfo$Column[1]
     inputs <<- colinfo$Column[-1]
     nominals <<- c(target, subset(colinfo, Type == 'varchar')$Column)
-
+    #nominals <<- subset(colinfo, Type == 'varchar')$Column
+    
     models <- vector()
     scores <- vector()
     model_names <- vector()
-
-    print(target)
-    print(inputs)
-    print(nominals)
     
+
+    print("automl 1")
+
+    print("target:")
+    print(target)
+    print("inputs:")
+    print(inputs)
+        
     if(dt) {
         print("Executing decisiton tree...")
         
@@ -239,6 +204,8 @@ auto_ml <- function(dt, rf, gb, nn) {
         scores <- c(scores, cas.decisionTree.dtreeScore)
         model_names <- c(model_names, 'Decision Tree')
     }
+
+    print("automl 2")
     
     if(rf) {
         print("Executing random forest ...")
@@ -280,6 +247,12 @@ auto_ml <- function(dt, rf, gb, nn) {
         model_names <- c(model_names, 'Neural Network')
     }
     
+    print("models:")
+    print(models)
+
+    print("model_names")
+    print(model_names)
+    
     return(measure_models(models, scores, model_names))
     
 }
@@ -290,10 +263,12 @@ miss <- 0
 # ROC curve on all models selected
 # above
 
-measure_models <- function(models, scores, model.names) {
+measure_models <- function(models, scores, model_names) {
     loadActionSet(conn, "percentile")
     
     names(scores) <- models
+
+    print("OK1")
     
     score.params <- function(model){return(list(
         object       = defCasTable(conn, model_tbl),
@@ -302,45 +277,45 @@ measure_models <- function(models, scores, model.names) {
         assessonerow = TRUE,
         casOut       = list(name = paste0(model, '_scored'), replace = T)
     ))}
+    
+    print("OK2")
     lapply(models, function(x) {do.call(scores[[x]], score.params(x))})
     
+    print("OK3")
     assess.model <- function(model){
         cas.percentile.assess(conn,
                               table    = list(name = paste(model,'_scored', sep=""), 
                                               where = '_PartInd_ = 1', caslib="casuser"),
-                              inputs   = paste0('_', model, '_P_           1'),
+                              inputs   = paste0('_', model, '_P_1'),
                               response = target,
                               event    = '1')
     }
     
-    
+    print("OK4")
     roc.df <- data.frame()
     for (i in 1:length(models)){
         tmp <- (assess.model(models[i]))$ROCInfo
-        tmp$Model <- model.names[i] 
+        tmp$Model <- model_names[i] 
         roc.df <- rbind(roc.df, tmp)
     }
-    
+    print("OK5")
     compare <- subset(roc.df, round(as.numeric(roc.df$CutOff), 2) == 0.5)
-    print("OK")
     str(roc.df)
     print(compare)
     rownames(compare) <- NULL
+    print("OK6")
     compare[,c('Model','TP','FP','FN','TN')]
-    print("OK1")
+    print("OK64")
     compare$Misclassification <- 1 - compare$ACC
-    print("OK2")
+    print("OK65")
     miss <<- compare[order(compare$Misclassification), c('Model','Misclassification')]
     rownames(miss) <- NULL
-    print("O3")
-    
+    print("OK7")
     roc.df$Models <- paste(roc.df$Model, round(roc.df$C, 3), sep = ' - ')
-    print("OK4")
     plot <- ggplot(data = roc.df[c('FPR', 'Sensitivity', 'Models')],
                    aes(x = as.numeric(FPR), y = as.numeric(Sensitivity), colour = Models)) +
         geom_line() + scale_y_continuous( limits = c(0,1), expand = c(0,0) ) +
         labs(x = 'False Positive Rate', y = 'True Positive Rate')
-    print("OK5")
     return(plot)
 }
 
@@ -401,7 +376,6 @@ if (interactive()) {
                      sidebarLayout(
                          sidebarPanel(
                              selectInput(inputId = "library_to_explore",label = "Library Name", lst_caslibs),
-                             #textInput(label = "Library Name", inputId = "library_to_explore"),
                              submitButton("List Tables", icon("wpexplorer"))
                          ),
                          mainPanel(
@@ -410,7 +384,8 @@ if (interactive()) {
                      ),
                      sidebarLayout(
                          sidebarPanel(
-                             textInput(label = "Table Name", inputId = "tbl_to_profile"),
+                             selectInput(inputId = "tbl_to_profile",label = "Table Name", list()),
+                             #textInput(label = "Table Name", inputId = "tbl_to_profile"),
                              submitButton("Profile Data", icon("wpexplorer"))
                          ),
                          mainPanel(
@@ -436,7 +411,8 @@ if (interactive()) {
                         background-color: rgba(0,255,0,0.5);
                        }")
                              ),
-                             textInput(label = "Table Name", inputId = "tbl_to_explore"),
+                             selectInput(inputId = "tbl_to_explore",label = "Table Name", list()),
+                             #textInput(label = "Table Name", inputId = "tbl_to_explore"),
                              submitButton("Explore Data", icon("wpexplorer")),
                              conditionalPanel(condition="$('html').hasClass('shiny-busy')",
                                               tags$div("Loading...",id="loadmessage"))
@@ -465,8 +441,12 @@ if (interactive()) {
                           background-color: rgba(0,255,0,0.5);
                        }")
                              ),
-                             textInput(label = "Table Name", inputId = "tbl_to_model"),
+       
+                             selectInput(inputId = "tbl_to_model",label = "Table Name", list()),
+                             #actionButton(inputId = "Refresh_col", label = "Refresh colum"),
+                             #textInput(label = "Table Name", inputId = "tbl_to_model"),
                              textInput(label = "Target Variable", inputId = "target_var"),
+                             #selectInput(inputId = "target_var",label = "Target Variable", list()),
                              checkboxInput(inputId="a", label="Analyze Missing", value = FALSE, width = NULL),
                              checkboxInput(inputId="b", label="Analyze Cardinality", value = FALSE, width = NULL),
                              checkboxInput(inputId="c", label="Analyze Entropy", value = FALSE, width = NULL),
@@ -516,41 +496,12 @@ if (interactive()) {
                              tableOutput("missclass")
                          )
                      )
-            ),
-            tabPanel(title = "Auto ML v2",
-                     sidebarLayout(
-                         sidebarPanel(
-                             tags$head(tags$style(type="text/css", "
-                       #loading {
-                         position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        width: 100%;
-                        padding: 5px 0px 5px 0px;
-                        text-align: center;
-                        font-weight: bold;
-                        font-size: 100%;
-                        color: #000000;
-                        background-color: rgba(0,255,0,0.5);
-                       }")
-                             ),
-                             checkboxInput(inputId="dt", label="Decision Tree", value = FALSE, width = NULL),
-                             checkboxInput(inputId="rf", label="Random Forest", value = FALSE, width = NULL),
-                             checkboxInput(inputId="gb", label="Gradient Boosting", value = FALSE, width = NULL),
-                             checkboxInput(inputId="nn", label="Neural Network", value = FALSE, width = NULL),
-                             
-                             conditionalPanel(condition="$('html').hasClass('shiny-busy')",tags$div("Loading...",id="loading")),
-                             submitButton("Start auto ML", icon("wpexplorer"))
-                         ),
-                         mainPanel(
-                             tableOutput("automl_outputs")
-                         )
-                     )
             )
+
         )
     )
     
+ 
     ########################################
     #         Defining R Shiny Server
     #    Creating calls to R code and 
@@ -579,9 +530,16 @@ if (interactive()) {
             explore_tbl(input$tbl_to_profile)
         })
         
+
         output$tbl_list <- renderTable({
             validate(need(input$library_to_explore, ''))
-            list_tables(input$library_to_explore)})
+            lst_tab <<- list_tables(input$library_to_explore)
+            updateSelectInput(session, inputId = "tbl_to_profile",label = "Table Name",choices = lst_tab$Name)
+            updateSelectInput(session, inputId = "tbl_to_explore",label = "Table Name",choices = lst_tab$Name)
+            updateSelectInput(session, inputId = "tbl_to_model",label = "Table Name",choices = lst_tab$Name)
+            lst_tab
+        })
+
         
         output$tbl_explore <- renderPlotly({
             validate(need(input$tbl_to_explore, ''))
@@ -591,6 +549,7 @@ if (interactive()) {
         output$tbl_cardinality <- renderPlotly({
             validate(need(input$tbl_to_explore, ''))
             analyze_cardinality(input$tbl_to_explore)})
+
         
         output$transformed <- renderTable({
             validate(need(input$tbl_to_model, ''))
@@ -606,11 +565,6 @@ if (interactive()) {
             validate(need(input$gb, ''))
             get_miss()
         })
-        output$automl_outputs <- renderTable({
-            validate(need(input$dt, ''))
-            auto_ml_v2("HMEQ_TRAIN", "BAD", input$dt,input$rf,input$gb,input$nn)
-        })
-        
     }
 }
 
