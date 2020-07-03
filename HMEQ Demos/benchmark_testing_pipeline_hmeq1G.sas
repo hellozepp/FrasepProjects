@@ -1,7 +1,7 @@
-options cashost="sepviya35.aws.sas.com" casport=5570;
+options cashost="frasepviya35smp" casport=5570;
 options set=CASCLIENTDEBUG=1;
 
-cas benchsess;
+cas benchsess sessopts=(timeout=3600 metrics=true);
 
 /************************************************************************/
 /* This example illustrates various tools for assaying, assessing,      */
@@ -55,6 +55,7 @@ libname mycaslib cas caslib=casuser;
 %end;
 
 /* Grow volume of input training dataset to 5960000 records */
+/* On 16 cores, 128 Go : 100:64s / 1000: 416s */
 
 data mycaslib.hmeq(drop=i) ;
    set mycaslib.hmeq ;
