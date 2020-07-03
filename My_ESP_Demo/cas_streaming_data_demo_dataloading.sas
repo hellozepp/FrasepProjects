@@ -34,6 +34,11 @@ loadStreams.loadStream /
       espUri="trades/trades_cq/Trades"  
       casOut={caslib="public", name="streamTrades", promote=true};
 
+loadStreams.loadStream /
+      casLib="espStatic"
+      espUri="trades/trades_cq/TotalCost"  
+      casOut={caslib="public", name="streamTotalCost", promote=true};
+
 quit;
 
 cas mysess terminate;
