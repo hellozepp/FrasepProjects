@@ -52,7 +52,7 @@ proc cas ;
 
 	action loadStreams.loadStream session="background2" async="job2"/
 	      casLib="espStatic"
-	      espUri="trades/trades_cq/TotalCost"  
+	      espUri="trades/trades_cq/Scoring"
 	      casOut={caslib="public", name="streamTotalCost", promote=true}
 		  commitValue=1;
 	run;
@@ -68,6 +68,9 @@ proc cas ;
    print "end Streaming data. " timestamp() ;
 run ;
 quit ;
+
+
+
 
 cas _all_ terminate;
 
