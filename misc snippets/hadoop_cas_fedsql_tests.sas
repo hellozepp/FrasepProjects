@@ -1,18 +1,24 @@
-/* Test connexion hadoop */
+cas mySession sessopts=(caslib=casuser timeout=1800 locale="en_US");
 
-cas mysess01;
+caslib hdlib datasource=(
+	srctype="hadoop", 
+	dataTransferMode="serial", 
+	username="hive", 
+	password="hadoop"
+	uri="jdbc:hive2://192.168.1.50:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2",
+	hadoopjarpath="/sasinside/hadoop/jars", 
+	hadoopconfigdir="/sasinside/hadoop/sitexmls", 
+	schema="default");
 
+caslib _all_ assign;
 
-/* Test creation de table CAS à partir d une requete en passthrough */
+data hdlib.cars;
+	set sashelp.cars;
+run;
 
 proc cas;
- fedSql.execDirect query='                                  
-  select pos from connection to TDcaslib                      
-  ( select unique Pos from employees )';
-quit;
+	table.save / table={caslib='hdlib' name="cars"} caslib="hdlib" name="cars";
+run;
 
+cas mySession terminate;
 
-
-
-
-cas mysess01 terminate;
