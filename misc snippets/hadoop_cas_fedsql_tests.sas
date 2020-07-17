@@ -5,9 +5,9 @@ caslib hdlib datasource=(
 	dataTransferMode="serial", 
 	username="hive", 
 	password="hadoop"
-	uri="jdbc:hive2://192.168.1.50:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2",
-	hadoopjarpath="/sasinside/hadoop/jars", 
-	hadoopconfigdir="/sasinside/hadoop/sitexmls", 
+	uri="jdbc:hive2://86.238.107.157:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2",
+	hadoopjarpath="/opt/sas/hadoop/jars", 
+	hadoopconfigdir="/opt/sas/hadoop/sitexmls", 
 	schema="default");
 
 caslib _all_ assign;

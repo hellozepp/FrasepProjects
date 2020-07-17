@@ -11,10 +11,26 @@ proc cas;
       caslib="SQLSRV"
       datasource={srctype="sqlserver",
                   username="sqlserver",
-                  password="demopw",
+                  password="admin",
                   sqlserver_dsn="sqlserver_demodb",
 				  charMultiplier=2}
 	   session=FALSE;
    print r;
 quit;
 
+data SQLSRV.cars;
+	set sashelp.cars;
+run;
+
+proc cas;
+
+	table.fileinfo / caslib="SQLSRV";
+
+quit;
+
+proc cas;
+	table.save / table={caslib='SQLSRV' name="cars"} caslib="SQLSRV" name="cars";
+run;
+
+
+cas mysess terminate;
