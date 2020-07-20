@@ -16,13 +16,21 @@ Components :
 How to install :
 ****************
 
-import the report
+- copy all the files on the server in a single directory like for example : /opt/demo/trades_esp
+- import the report in Viya through EV
+- import the sas program used or open it in sas studio
+- 
+
+How to run the demo :
+
+- log in with sas installer user
 - launch esp studio and import the project
 - start the esp server with start_esp_server.sh
 - import the model
 - publish the trades generator by executing publish_trades_generator.sh
-- launch the trade generator by executing launch_trade_generator.sh (by default : 1,000,000 events, with 100 per seconds)
 - in esp studio launch the trades project in test mode and verify th event coming in
-- 
+- launch the trade generator by executing launch_trade_generator.sh (by default : 1,000,000 events, with 100 per seconds)
+- start the SAS script to substribe to the stream and populate on the fly the two CAS tables used in reporting : streamTrades and streamTotalcost in public
+
 
 
