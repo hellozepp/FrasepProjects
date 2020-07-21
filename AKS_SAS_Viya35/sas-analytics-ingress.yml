@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: user-viyademo01-ing-sasprogramming
+ namespace: user-viyademo01
+spec:
+ rules:
+ - host: viyademo01-sas-programming.company.com
+   http:
+    paths:
+      - backend:
+         serviceName: sas-programming
+         servicePort: 80
+ - host: viyademo01-sas-cas.company.com
+   http:
+    paths:
+      - backend:
+         serviceName: sas-programming
+         servicePort: 5570
