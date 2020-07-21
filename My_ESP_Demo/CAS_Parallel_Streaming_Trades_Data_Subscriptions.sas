@@ -3,9 +3,9 @@
 
 options cashost="frasepviya35smp" casport=5570;
 
-cas master sessopts=(caslib="casuser" timeout=1800) ;
-cas background1 sessopts=(caslib="casuser" timeout=1800) ;
-cas background2 sessopts=(caslib="casuser" timeout=1800) ;
+cas master sessopts=(caslib="casuser" timeout=10) ;
+cas background1 sessopts=(caslib="casuser" timeout=10) ;
+cas background2 sessopts=(caslib="casuser" timeout=10) ;
 
 options sessref=master ;
 
@@ -68,9 +68,6 @@ proc cas ;
    print "end Streaming data. " timestamp() ;
 run ;
 quit ;
-
-
-
 
 cas _all_ terminate;
 
