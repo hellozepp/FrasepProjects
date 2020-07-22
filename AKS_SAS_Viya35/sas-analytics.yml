@@ -7,7 +7,6 @@ data:
  poac.DEPLOYMENT_NAME: "viyademo01"
  poac.CASKEY: "unique-key"
  poac.SAS_DEBUG: "0"
-26 Chapter 4 / Deploying SAS Viya
  poac.SETINIT_TEXT: |
  contents-of-license-file
  poac.PRE_DEPLOY_SCRIPT: ""
