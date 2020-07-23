@@ -5,17 +5,29 @@ caslib _ALL_ assign;
 data casuser.one;
 	input chaine $50.;
 	datalines;
-	député,çàù
-	opérateur,èà
-	éà@ds,7890
+député,çàù
+opérateur,èà
+éà@ds,7890
 ;
 run;
 
 proc print data=casuser.one; run;
 
 proc fedsql sessref=mysess;
-	select length(chaine),scan(chaine,1,','),substr(chaine,1,3) from casuser.one where scan(chaine,1,',')='député';
+	select chaine, length(chaine),scan(chaine,1,','),substr(chaine,1,3) from casuser.one;
 quit;
+
+proc fedsql sessref=mysess;
+	select chaine, length(chaine) as A,scan(chaine,1,',') as B,substr(chaine,1,3) as C from casuser.one where trim(scan(chaine,1,','))='député';
+quit;
+
+proc fedsql sessref=mysess;
+	select chaine, length(chaine) as A,scan(chaine,1,',') as B,substr(chaine,1,3) as C from casuser.one where substr(trim(chaine),1,3)='dép';
+quit;
+
+
+
+proc print data=casuser.out0; run;
 
 proc cas;
 	fedsql.execdirect / query="select length(chaine), scan(chaine,1,','), substr(chaine,1,3) from casuser.one";
