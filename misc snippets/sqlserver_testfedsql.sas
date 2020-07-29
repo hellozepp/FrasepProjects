@@ -32,7 +32,7 @@ proc cas;
 quit;
 
 proc cas;
-	table.save / caslib="SQLSRV" name="test001" table={caslib="SQLSRV", name="test001"} replace=true;
+	table.save / caslib="SQLSRV" name="test001" table={caslib="CASUSER", name="test001"} replace=true;
 quit;
 
 
