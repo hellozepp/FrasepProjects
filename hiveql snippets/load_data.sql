@@ -1,0 +1,1 @@
+LOAD DATA INPATH '/user/hive/random_values.csv' OVERWRITE INTO TABLE TESTBDF;
