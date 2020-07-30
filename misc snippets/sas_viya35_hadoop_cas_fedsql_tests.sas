@@ -2,14 +2,15 @@ cas mySession sessopts=(caslib=casuser timeout=1800 locale="en_US" metrics=true)
 
 caslib hdlib datasource=(
 	srctype="hadoop",
-	dataTransferMode="serial",
+	dataTransferMode="auto",
 	username="hive",
 	dbmaxText=255,
 	password="admin",
 	uri="jdbc:hive2://master.hadoop.com:2181/default;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2",
 	hadoopjarpath="/opt/sas/hadoop/jars",
 	hadoopconfigdir="/opt/sas/hadoop/sitexmls",
-	schema="default");
+	schema="default"
+);
 
 caslib _all_ assign;
 
@@ -67,9 +68,25 @@ quit;
 | norme_comptable_indiv             | string         |          |
 | actif                             | string         |          |
 +-----------------------------------+----------------+----------+
-
 */
 
+/* Test raw loadtable from hive to cas table */
+proc cas;
+	table.loadtable / caslib="hdlib" path="testbdf" casout={caslib="hdlib", name="testbdf", replace=true} readahead=true datasourceoptions={dbmaxtext=255};
+	table.tabledetails / caslib="hdlib"  name="testbdf";
+	table.columninfo / table={caslib="hdlib", name="testbdf"};
+quit;
+/*
+NOTE: Action 'table.loadTable' used (Total process time):
+NOTE:       real time               7.778578 seconds
+NOTE:       cpu time                1.589287 seconds (20.43%)
+NOTE:       total nodes             1 (32 cores)
+NOTE:       total memory            117.88G
+NOTE:       memory                  19.39M (0.02%)
+*/
+
+
+/* Create a cas table from an hiveql query in explicit passthrough */
 proc cas;
 	fedSql.execDirect cntl={optimizeVarcharPrecision=TRUE} query="create table casuser.testbdf{options replace=true} as (select * from connection to hdlib(SELECT * from testbdf limit 100000))";
 quit;
@@ -93,18 +110,15 @@ NOTE:       total memory            117.88G
 NOTE:       memory                  185.85M (0.15%)
 */
 
-proc cas; output log;
+proc cas; 
+	output log;
 	columninfo table={caslib="casuser", name='testbdf'} extended=true;
-quit;
-
-proc cas;
-	columninfo table={caslib="casuser" ,name='testbdf'} extended=true;
-quit;
-
-proc cas;
+	output ods;
+	columninfo table={caslib="casuser" ,name='testbdf'};
 	table.tabledetails / caslib="casuser" name="testbdf";
 quit;
 
+/* Create a cas table from an hiveql query in explicit passthrough */
 proc cas;
 	fedSql.execDirect query="create table casuser.testbdf{options replace=true} as (select * from connection to hdlib(SELECT * from testbdf limit 100000))";
 quit;
@@ -127,16 +141,18 @@ NOTE:       total memory            117.88G
 NOTE:       memory                  179.13M (0.15%)
 */
 
-proc cas; output log;
+proc cas;
+	output log;
 	columninfo table={caslib="casuser", name='testbdf'} extended=true;
-quit;
+	output ods;
+	columninfo table={caslib="casuser" ,name='testbdf'};
+	table.tabledetails result=r/ caslib="casuser" name="testbdf";
+	
+	out_table = newtable("CAS Table size", {"Size in MB", "Number of rows"}, {"integer", "integer");
+	addrow(out_table, {})
+	size_in_MB = (string)r.TableDetails[1].Datasize/1024/1024;
 
-proc cas;
-	columninfo table={caslib="casuser" ,name='testbdf'} extended=true;
-quit;
-
-proc cas;
-	table.tabledetails / caslib="casuser" name="testbdf";
+	print "CAS Table size : " || size_in_MB || " MB    CAS Table number of records : " ||  r.TableDetails[1].Rows;
 quit;
 
 proc cas;
