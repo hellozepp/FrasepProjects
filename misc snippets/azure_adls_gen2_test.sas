@@ -1,6 +1,6 @@
 cas mysess;
 
-caslib "Azure Data Lake Storage Gen 2" 
+caslib "AzureDL" 
 	datasource=(
 		srctype="adls"
 			accountname='frasepstorage '
@@ -11,17 +11,17 @@ caslib "Azure Data Lake Storage Gen 2"
 			/* dnsSuffix=dfs.core.windows.net */
 			timeout=50000
 	)
-	path="/" subdirs global	libref=AzureDL;
+	path="/" subdirs global;
 
 caslib _all_ assign;
 
 
 data AzureDL.cars;
-set sashelp.cars;
+	set sashelp.cars;
 run;
 
 proc cas;
-	table.save / caslib="Azure Data Lake Storage Gen 2" name="cars.orc" table={caslib="Azure Data Lake Storage Gen 2",name="cars"};
+	table.save / caslib="AzureDL" name="cars.csv" table={caslib="AzureDL",name="cars"};
 quit;
 
 caslib _all_ assign;
