@@ -17,4 +17,10 @@ proc cas;
 	end;
 quit;
 
+
+proc cas;
+	table.columnInfo / table={caslib="public" name="hmeq"} extended="true";
+	table.tabledetails / caslib="public" name="hmeq";
+quit;
+
 cas mysess terminate;

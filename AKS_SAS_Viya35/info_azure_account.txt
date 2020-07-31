@@ -1,0 +1,44 @@
+[
+  {
+    "cloudName": "AzureCloud",
+    "homeTenantId": "b1c14d5c-3625-45b3-a430-9552373a0c2f",
+    "id": "1aed5c38-bcda-4e4b-b4a1-d5264c92d138",
+    "isDefault": true,
+    "managedByTenants": [],
+    "name": "sas-frasep",
+    "state": "Enabled",
+    "tenantId": "b1c14d5c-3625-45b3-a430-9552373a0c2f",
+    "user": {
+      "name": "Sebastien.Poussart@sas.com",
+      "type": "user"
+    }
+  },
+  {
+    "cloudName": "AzureCloud",
+    "homeTenantId": "b1c14d5c-3625-45b3-a430-9552373a0c2f",
+    "id": "2d13aadf-beda-4363-995a-be6a8efa78fd",
+    "isDefault": false,
+    "managedByTenants": [],
+    "name": "EYAP-AZURE-HANDSON",
+    "state": "Enabled",
+    "tenantId": "b1c14d5c-3625-45b3-a430-9552373a0c2f",
+    "user": {
+      "name": "Sebastien.Poussart@sas.com",
+      "type": "user"
+    }
+  },
+  {
+    "cloudName": "AzureCloud",
+    "homeTenantId": "b1c14d5c-3625-45b3-a430-9552373a0c2f",
+    "id": "43b071e6-8c0e-4b8b-9c74-a63db44bfb0e",
+    "isDefault": false,
+    "managedByTenants": [],
+    "name": "sas-suksnb",
+    "state": "Enabled",
+    "tenantId": "b1c14d5c-3625-45b3-a430-9552373a0c2f",
+    "user": {
+      "name": "Sebastien.Poussart@sas.com",
+      "type": "user"
+    }
+  }
+]
