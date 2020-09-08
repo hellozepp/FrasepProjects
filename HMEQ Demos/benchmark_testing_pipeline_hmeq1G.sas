@@ -1,4 +1,4 @@
-options cashost="frasepviya35smp" casport=5570;
+options cashost="localhost" casport=5570;
 options set=CASCLIENTDEBUG=1;
 
 cas benchsess sessopts=(timeout=3600 metrics=true);
