@@ -8,7 +8,7 @@ caslib "AzureDL"
 	datasource=(
 		srctype="adls"
 			accountname='frasepstorage'
-			filesystem="adls-1"
+			filesystem="datalake"
 			tenantid="b1c14d5c-3625-45b3-a430-9552373a0c2f"
 			applicationId="e7af42e8-3ca8-47bb-97ce-ac764019be3a"
 			timeout=50000

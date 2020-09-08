@@ -1,7 +1,7 @@
 /* Launch streaming data subscriptions in parallel sessions to trade demo on all necessary windows */
 /* output : streamTrades and streamTotalCost in caslib public */
 
-options cashost="frasepviya35smp" casport=5570;
+options cashost="frasepviya35smp.cloud.com" casport=5570;
 
 cas master sessopts=(caslib="casuser" timeout=10) ;
 cas background1 sessopts=(caslib="casuser" timeout=10) ;
@@ -30,7 +30,7 @@ proc cas ;
    action table.addCaslib session="background1" async="job1" /
 	      dataSource={
 				port=5555,
-				server="frasepviya35smp.c.sas-frasep.internal",
+				server="frasepviya35smp.cloud.com",
 				srcType="esp"}
 	      name="espStatic";
 	run;
@@ -38,7 +38,7 @@ proc cas ;
    action table.addCaslib session="background2" async="job2" /
 	      dataSource={
 				port=5555,
-				server="frasepviya35smp.c.sas-frasep.internal",
+				server="frasepviya35smp.cloud.com",
 				srcType="esp"}
 	      name="espStatic";
 	run;
