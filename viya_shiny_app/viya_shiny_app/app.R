@@ -14,7 +14,10 @@ library(plotly)
 options(cas.print.messages = TRUE)
 options(shiny.maxRequestSize=30*1024^2)
 
-globalhostname <- "127.0.0.1"
+
+
+Sys.setenv(CAS_CLIENT_SSL_CA_LIST = "C://Users/frasep/OneDrive - SAS/Mes Documents/Dossiers/Demoing/my_orders/frasepviya35smp/azure_viya35smp_cacerts/cacerts/trustedcerts.pem")
+globalhostname <- "frasepviya35smp.cloud.com"
 
 #####################################
 # R code for data manipulation,
