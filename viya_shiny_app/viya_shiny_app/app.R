@@ -14,7 +14,7 @@ library(plotly)
 options(cas.print.messages = TRUE)
 options(shiny.maxRequestSize=30*1024^2)
 
-globalhostname <- "frasepviya35smp"
+globalhostname <- "127.0.0.1"
 
 #####################################
 # R code for data manipulation,
