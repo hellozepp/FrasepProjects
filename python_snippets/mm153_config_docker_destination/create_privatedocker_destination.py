@@ -19,8 +19,8 @@ import requests
 import json
 
 viya_host = "frasepviya35smp.cloud.com"
-port = ":443"
-host_url="https://" + viya_host + port
+port = ":80"
+host_url="http://" + viya_host + port
 destination_url = host_url + "/modelPublish/destinations/"
 
 mm_auth = mmAuthorization.mmAuthorization("myAuth")
