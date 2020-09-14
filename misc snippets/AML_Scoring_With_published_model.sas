@@ -1,4 +1,5 @@
-cas sessionsep01;
+options set=CASCLIENTDEBUG=1;
+cas sessionsep01 sessopts=(timeout=3600 metrics=true);
 
 caslib _all_ assign;
 
@@ -31,7 +32,8 @@ run;
 
 /* Save physical table in AML core model */
 proc cas;
-	table.save / caslib="psql" path="party_score" table={caslib="psql" name="party_score"} replace=true;	
+	table.deletesource / caslib="psql" source="party_score" quiet=true;
+	table.save / caslib="psql"  name="party_score" table={caslib="psql" name="party_score"};	
 quit;
 
 cas sessionsep01 terminate;
