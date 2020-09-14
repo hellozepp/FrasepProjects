@@ -44,9 +44,9 @@ destination_attrs = {
     "name":dest_name,
     "destinationType":"privateDocker",
      "properties": [{"name": "baseRepoUrl",
-                     "value": "xx.xx.xx.xx"},
+                     "value": "90.127.115.247"},
                     {"name": "dockerHost",
-                     "value": "tcp://yy.yy.yy.yy:2375"}
+                     "value": "tcp://90.127.115.247:5000"}
                    ]
 }
 
