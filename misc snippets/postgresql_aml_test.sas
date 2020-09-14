@@ -6,7 +6,9 @@ caslib amldb desc='PostgreSQL Caslib'
                  username='sep'
                  password='Orion123'
                  database="tenant2"
-                 schema='public');
+                 schema='public'
+				 conopts="sslmode=require"
+				 INSERTBUFF="1000");
 
 
 caslib _all_ assign;
@@ -15,6 +17,14 @@ caslib _all_ assign;
 data amldb.FSC_PARTY_DIM_TEST001;
 set DNFSDATA.TABLE_FSC_PARTY_DIM;
 run;
+
+data DNFSDATA.FSC_PARTY_DIM_TEST001;
+set DNFSDATA.TABLE_FSC_PARTY_DIM;
+run;
+
+proc cas;
+	table.save / caslib="DNFSDATA" name="FSC_PARTY_DIM_TEST001.csv" table={caslib="DNFSDATA", name="FSC_PARTY_DIM_TEST001"} replace=true;
+quit;
 
 
 proc cas;
