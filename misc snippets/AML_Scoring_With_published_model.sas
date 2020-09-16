@@ -29,11 +29,9 @@ data psql.party_score(promote=yes);
 				else score_fccr=4;
 run;
 
-
 /* Save physical table in AML core model */
 proc cas;
-	table.deletesource / caslib="psql" source="party_score" quiet=true;
-	table.save / caslib="psql"  name="party_score" table={caslib="psql" name="party_score"};	
+	table.save / caslib="psql"  name="party_score" table={caslib="psql" name="party_score"} replace=true;	
 quit;
 
 cas sessionsep01 terminate;
