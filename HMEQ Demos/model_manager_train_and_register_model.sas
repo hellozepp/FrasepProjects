@@ -1,4 +1,8 @@
-/******************************************************************/
+/******************************************************************************/
+/* DEMO HMEQ : SAS Random Forest training code and model registering in the   */
+/* central model repository of SAS Viya                                       */
+/******************************************************************************/
+
 %let viyahost=frasepviya35smp.cloud.com
 
 options cashost=&viyahost casport=5570;
@@ -6,10 +10,9 @@ cas _CAS_PUBLIC_;
 
 caslib _ALL_ assign;
 
-/******************************************************************/
-/* Create a Forest analytic store model and store the model in a  */
-/* CAS table.                                                     */
-/******************************************************************/
+/******************************************************************************/
+/* Create a Forest analytic store model and store the model in a  CAS table.  */
+/******************************************************************************/
 
 proc forest data=public.hmeq_train 
      seed=12345 loh=0 binmethod=QUANTILE maxbranch=2 
