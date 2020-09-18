@@ -1,0 +1,64 @@
+
+<p>Viya API Helper is a tool to support the API usage of SAS Viya. It provides a user interface to use API's like getting all mas modules and seding events </p>
+
+<div class="bd-example">
+  <div class="form-row">
+    <div class="form-group col-sm-6">
+      <label for="inputEmail4">User</label>
+      <input type="text" class="form-control form-control-sm" id="username" >
+    </div>
+    <div class="form-group col-sm-6">
+      <label for="inputPassword4">Password</label>
+      <input type="password" class="form-control form-control-sm" id="password" placeholder="Password">
+    </div>
+  </div>
+  
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="inputState">Select Viya Server</label>
+      <select class="form-control form-control-sm" id="viyaRestUrlDropDown" onchange="onChangeUrl(this);">
+        <option selected="">Choose...</option>
+        <option value="sva8.sas.com" >sva8.sas.com</option>
+		<option value="dach-viya33-smp.viya33.sas.com" >dach-viya33-smp.viya33.sas.com</option>
+        <option value="frv33.ps-cp.sashq-r.openstack.sas.com">frv33.ps-cp.sashq-r.openstack.sas.com</option>
+        <option value="pdcesx15048.exnet.sas.com">pdcesx15048.exnet.sas.com</option>
+        <option value="pdcesx17075.exnet.sas.com">pdcesx17075.exnet.sas.com</option>
+      </select>
+    </div>
+
+  
+    <div class="form-group col-md-6">
+      <label for="inputAddress">Enter Viya Server</label>
+      <input type="text" class="form-control form-control-sm" id="viyaRestUrl">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <div class="form-check">
+      
+      <label class="form-check-label" for="gridCheck">
+        <input  type="checkbox" id="sslCheck">&nbsp; Use SSL 
+      </label>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" id="btn_verifyLogin" onclick="getToken(this);">Get Token</button>
+  <img src="/static/img/ajax_loader_green_32.gif" id="imgLoad_verifyLogin" style="display:none">
+</div>
+
+
+<br><br>
+
+
+<div class="alert alert-primary tenantDetails" role="alert" style="display:none">
+    Connection established successfully - token generated<br><br>
+  <dl class="row" >
+    <dt class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Token Type</dt>
+    <dd class="col-lg-8 col-md-8 col-sm-8 col-xs-8"><span id="tokenType"></span></dd>
+    <dt class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Expires in</dt>
+    <dd class="col-lg-3 col-md-3 col-sm-3 col-xs-3"><span id="expiresIn"></span></dd>
+  </dl>
+</div>
+
+<div class="alert alert-danger loginwrong" role="alert" style="display:none">
+    <span id="errorText"></span>
+</div>

@@ -1,0 +1,68 @@
+<br>		
+
+
+<div class="bd-example">
+<div class="row">
+    <div class="form-group col-lg-2 col-md-6 col-sm-12 col-xs-12">
+      <button type="submit" class="btn btn-sm btn-secondary" style="width:100%" onclick="getModules(this);">
+        <span class="oi oi-reload"></span>&nbsp; Get Modules
+      </button>
+    </div>
+      
+    <div class="form-group col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        <select id="descriptors" class="form-control form-control-sm" onchange="getModuleDetails()">
+        </select>
+    </div>
+  </div>
+    
+</div>
+</div>
+
+
+
+<br><br>
+<div class="row">
+  <div id="mas_input" class="col-md-6" style="display:none">
+    
+    <div class="alert alert-secondary">
+      <p><b> Input</b> </p>
+      <div id="inputParameters"></div>
+      <div class="form-group col-md-12">
+        <span class="descriptor_details" > 
+        <button id="btn_calldecision" type="submit" 
+            class="btn btn-secondary float-right col-lg-3 col-md-4 col-sm-6 col-xs-6" onclick="callDecision();">
+          <span class="oi oi-caret-right"></span>&nbsp; Call
+        </button>
+        </span>
+        <img src="/static/img/ajax_loader_green_32.gif" id="imgLoad_calldecision" class="float-right" style="display:none">
+      </div>
+    </div>
+  </div>
+  <br>
+
+  <div id="mas_output" class="col-md-6" style="display:none">
+    
+    <div class="alert alert-primary">
+      <p><b> Output</b> </p>
+      <div id="outputParameters"></div>
+      <div class="form-group col-md-12">
+        <button id="btn_show_json" type="submit" 
+            class="btn btn-secondary float-left col-lg-3 col-md-4 col-sm-5 col-xs-5" onclick="openModalJson();">
+          <span class="oi oi-document"></span>&nbsp; JSON
+        </button>
+
+        <button id="btn_show_javascript" type="submit" 
+            class="btn btn-secondary float-right col-lg-3 col-md-4 col-sm-5 col-xs-5" onclick="openModalJavascriptCode();">
+          <span class="oi oi-document"></span>&nbsp; Javascript
+        </button>     
+      </div>
+    </div>
+    <br>
+  </div>
+
+</div><!-- end row -->
+
+
+
+
+<br>
