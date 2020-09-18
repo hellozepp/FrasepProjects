@@ -1,0 +1,47 @@
+
+
+  <script id="templateInputVar" type="text/x-handlebars-template">
+    <div class="form-row">
+      <div class="form-group col-sm-5">
+        <label >{{name}} ({{type}})</label>
+      </div>
+      <div class="form-group col-sm-7">
+        <input id="{{name}}" name="{{type}}" class="form-control form-control-sm inputvar"></input>
+      </div>
+    </div>
+  </script>
+  
+  <script id="templateOutputVar" type="text/x-handlebars-template">
+    <div class="form-row">
+      <div class="form-group col-sm-5">
+        <label >{{name}}</label>
+      </div>
+      <div class="form-group col-sm-7">
+        <input id="{{name}}"  class="form-control form-control-sm outputvar" value="{{value}}"></input>
+      </div>
+    </div>
+  </script>
+
+  <script id="templateOutputVarGrid" type="text/x-handlebars-template">
+    <div class="form-row">
+      <div class="form-group col-sm-5">
+        <label >{{name}} 
+          <button class="btn-sm" style="color: #fff;background-color: #85a6c8;border-color: #85a6c8;" 
+                  onclick="openModalGrid('{{name}}','{{metadata}}','{{data}}')">Open Datagrid
+          </button>
+        </label>
+      </div>
+      <!--<div class="form-group col-sm-7">
+        <input id="{{name}}"  class="form-control form-control-sm outputvar" value="{{value}}"></input>
+      </div>-->
+    </div>
+  </script>
+  
+
+    <script type="text/javascript">
+        var htmlTemplates = {};
+        $("script[type='text/x-handlebars-template']").each(function(elem) {
+            htmlTemplates[this.id] = Handlebars.compile($(this).html());
+        });
+    </script>
+

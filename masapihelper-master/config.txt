@@ -1,0 +1,6 @@
+# user and password
+username = sasdemo
+password = Orion123
+
+# viya server(s) - separate server urls with space
+baseurl =  racesxXXXXX.exnet.sas.com
