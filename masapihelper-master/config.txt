@@ -1,6 +1,6 @@
 # user and password
-username = sasdemo
-password = Orion123
+username = viyademo01
+password = demopw
 
 # viya server(s) - separate server urls with space
-baseurl =  racesxXXXXX.exnet.sas.com
+baseurl =  frasepviya35smp.cloud.com
