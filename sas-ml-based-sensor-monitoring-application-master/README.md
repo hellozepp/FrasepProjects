@@ -14,3 +14,9 @@ Deployment note :
 All the HTML files, SAS Viya jobs and url in SAS VA report, contain a reference
 to the development hostname. You have to change this reference to the correct 
 hostname.
+
+Demo flow :
+***********
+Hint : use chrome (last chromium edge is not working wall with custom job execution - not giving back end after execution in the dialog -)
+load all necessary data (abt and sensor all)
+open the report
