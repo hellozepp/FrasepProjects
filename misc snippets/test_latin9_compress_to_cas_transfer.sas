@@ -9,7 +9,7 @@ libname sasdest "/opt/sas/data/sasdata";
 proc cas;
    upload path="/opt/sas/data/sasdata/latin9/assu_prestations_sante_light.sas7bdat"
    casout={caslib="casuser", name="test_sas_utf8_nocomp_varchar", replace=True, replication=0}
-   importOptions={charMultiplier=2,fileType="basesas",varcharConversion=20};
+   importOptions={charMultiplier=2,fileType="basesas",varcharConversion=16};
 run;
 quit;
 
