@@ -1,44 +1,44 @@
-options cashost="frasepviya35smp" casport=5570;
+cas mysess;
 
-cas mgmtsess;
+/**********************************************************/
+/* As a supersuer, get all sessions of the cas controller */
+/**********************************************************/
 
-caslib _all_ assign;
+proc cas;
+	accessControl.assumeRole / adminRole="superuser";
+	session.listSessions;
+quit;
 
-/********************************************/
-/* GLOBAL PARAMETERS FOR LINEAGE EXTRACTION */
-/********************************************/
-
-%let BASE_URI=http://frasepviya35smp;
+%let idletime_threshold=300;
+%let BASE_URI=http://frasepviya35smp.cloud.com;
 %let USERNAME=viyademo01;
 %let PASSWORD=demopw;
-%let NAME=HMEQ_TRAIN;
-%let limit=100000;
-%let depth=1000;
-%let truncate_flag=1; /* 1: purge previous table, 0:append new lineage data to existing table */
-%let CAS_OUTPUT_TAB_REL=relationships;
-%let CAS_OUTPUT_TAB_REF=references;
-%let CAS_OUTPUT_TAB_FACT=relationships_facts;
-%let CAS_OUTPUT_LIB=public;
-
-%let location=/tmp;
-
-%let OBJECT_URI=/casManagement/servers/cas-shared-default/caslibs/Public/tables/HMEQ_TRAIN;
-
-*Use the Client ID to Get an Access Token;
-*Submit this code once to get the access token or repeat if your access token has expired.;
-options ls=max nodate;
-ods _all_ close;
-
-/* 	Specify the new Client ID name; */
-*! Name must be registered above - no spaces;
 %let CLIENT_ID=frasepapp;
-
-/* 	Specify the secret for the new Client ID; */
-	%let CLIENT_SECRET=frasepsecret;
+%let CLIENT_SECRET=frasepsecret;
+%let location=/tmp;
 
 /* 	FILEREFs for the response and the response headers; */
 filename resp temp;
 filename resp_hdr temp;
+
+options ls=max nodate;
+ods _all_ close;
+
+%macro get_detailed_cas_session_list();
+	proc http url="&BASE_URI/cas-shared-default-http/cas/sessions" 
+		method='get' out=respb headerout=resphdrb headerout_overwrite;
+		debug level=0;
+		headers 'Authorization'="Bearer &ACCESS_TOKEN";
+	run;
+%mend get_detailed_cas_session_list;
+
+%macro drop_session(session_uuid);
+	proc http url="&BASE_URI/cas-shared-default-http/cas/sessions/&session_uuid" 
+		method='delete' out=respb headerout=resphdrb headerout_overwrite;
+		debug level=0;
+		headers 'Authorization'="Bearer &ACCESS_TOKEN";
+	run;
+%mend drop_session;
 
 /* 	Get access and refresh tokens in JSON format; */
 proc http url="&BASE_URI/SASLogon/oauth/token" method='post' 
@@ -55,113 +55,36 @@ proc sql noprint;
 	select access_token into:ACCESS_TOKEN from tokens.root;
 quit;
 
-%put &ACCESS_TOKEN;
 filename respb "&location/get_ref_b.json";
 filename resphdrb "&location/get_ref_b.txt";
 
-/* resourceUri=&OBJECT_URI%str(&) */
+%get_detailed_cas_session_list();
 
-proc http url="&BASE_URI/cas-shared-default-http/cas/sessions" 
-		method='get' out=respb headerout=resphdrb headerout_overwrite;
-	debug level=0;
-	headers 'Authorization'="Bearer &ACCESS_TOKEN";
-run;
 
-quit;
+/************************************************************************************************/
+/* Get all sessions with idle time greater than the theshold defined in idletime_threshod macro */
+/* variable or disconnected */
+/************************************************************************************************/
 libname obj2 json "%sysfunc(pathname(respb))";
 
-%let currdt=%sysfunc(datetime());
+proc sql;
+	create table detailed_session_list
+	as 
+	select A.uuid, A.name, A.state, A.user, (B.seconds+B.minutes*60+B.hours*3600) as idletime 
+	from obj2.root as A, obj2.idletime as B 
+	where A.ordinal_root=B.ordinal_root and 
+	((B.seconds+B.minutes*60+B.hours*3600)>&idletime_threshold or A.clientcount=0);
+quit;
 
-data casuser.&CAS_OUTPUT_TAB_REL;
-	length resourceUri $ 160 relatedResourceUri $ 160;
-	format lineage_collection_date datetime.;
-	set obj2.items;
-	resourceUri=resourceUri;
-	relatedResourceUri=relatedResourceUri;
-	lineage_collection_date=&currdt;
+/**********************************************************/
+/* Terminate all sessions identified in the previous step */
+/**********************************************************/
+data _null_;
+	set detailed_session_list;
+	%drop_session(uuid);
 run;
 
-%if &truncate_flag=0 %then
-%do;
-		data casuser.&CAS_OUTPUT_TAB_REL(append=YES);
-			format lineage_collection_date datetime.;
-			length resourceUri $ 160 relatedResourceUri $ 160;
-			set &CAS_OUTPUT_LIB..&CAS_OUTPUT_TAB_REL;
-			resourceUri=resourceUri;
-			relatedResourceUri=relatedResourceUri;
-			lineage_collection_date=&currdt;
-		run;	
-%end;
+/* Drop a specific session even for another user as superuser role is assumed in the current session */
+%drop_session(27eba82c-6ba9-324b-b16b-b2669d1d84a7);
 
-proc http url="&BASE_URI/relationships/references?limit=&limit" 
-		method='get' out=respb headerout=resphdrb headerout_overwrite;
-	debug level=0;
-	headers 'Authorization'="Bearer &ACCESS_TOKEN";
-run;
-quit;
-
-libname obj2 clear;
-libname obj2 json "%sysfunc(pathname(respb))" ;
-
-data casuser.&CAS_OUTPUT_TAB_REF;
-	length resourceUri $ 160;
-	set obj2.items;
-	format lineage_collection_date datetime.;
-	resourceUri=resourceUri;
-	lineage_collection_date=&currdt;
-run;
-
-%if &truncate_flag=0 %then
-%do;
-		data casuser.&CAS_OUTPUT_TAB_REF(append=YES);
-			length resourceUri $ 160;
-			set &CAS_OUTPUT_LIB..&CAS_OUTPUT_TAB_REF;
-			format lineage_collection_date datetime.;
-			resourceUri=resourceUri;
-			lineage_collection_date=&currdt;
-		run;	
-%end;
-
-proc casutil;
-	DROPTABLE CASDATA="&CAS_OUTPUT_TAB_REF" INCASLIB="&CAS_OUTPUT_LIB" QUIET;
-	PROMOTE CASDATA="&CAS_OUTPUT_TAB_REF" CASOUT="&CAS_OUTPUT_TAB_REF" 
-		OUTCASLIB="&CAS_OUTPUT_LIB" DROP;
-
-proc casutil;
-	DROPTABLE CASDATA="&CAS_OUTPUT_TAB_REL" INCASLIB="&CAS_OUTPUT_LIB" QUIET;
-	PROMOTE CASDATA="&CAS_OUTPUT_TAB_REL" CASOUT="&CAS_OUTPUT_TAB_REL" 
-		OUTCASLIB="&CAS_OUTPUT_LIB" DROP;
-	quit;
-
-quit;
-
-proc casutil;
-	droptable casdata="&CAS_OUTPUT_TAB_FACT" incaslib="&CAS_OUTPUT_LIB" quiet;
-quit;
-
-* Create Star Schema;
-
-proc cas; 
-
-	fact_table="&CAS_OUTPUT_TAB_FACT";
-	ref_table="&CAS_OUTPUT_TAB_REF";
-	rel_table="&CAS_OUTPUT_TAB_REL";
-	out_cas_lib="&CAS_OUTPUT_LIB";
-	table.droptable caslib=out_cas_lib name=fact_table quiet=true;
-
-	table.view / caslib='casuser' name=fact_table replace=true
-	tables={
-		{caslib=out_cas_lib name=rel_table, 
-		varlist={'createdBy','creationTimeStamp','id','lineage_collection_date','modifiedBy','modifiedTimeStamp','ordinal_items','ordinal_root','relatedResourceUri','resourceUri','source','type'}, as='link'},
-		{keys={'link_resourceUri = resource_resourceUri'},
-	    caslib=out_cas_lib name=ref_table,  varlist={'contentType','createdBy','modifiedBy','name','resourceUri','source'},as='resource'},
-		{keys={'link_relatedResourceUri = relatedResource_resourceUri'},
-	    caslib=out_cas_lib name=ref_table,  varlist={'contentType','createdBy','modifiedBy','name','resourceUri','source'},as='relatedResource'}
-		};
-
-	table.promote targetcaslib=out_cas_lib sourcecaslib='casuser' name=fact_table;
-
-quit;
-
-
-cas mgmtsess terminate;
+cas mysess terminate;
