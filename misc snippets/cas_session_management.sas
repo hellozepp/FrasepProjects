@@ -3,7 +3,6 @@ cas mysess;
 /**********************************************************/
 /* As a supersuer, get all sessions of the cas controller */
 /**********************************************************/
-
 proc cas;
 	accessControl.assumeRole / adminRole="superuser";
 	session.listSessions;
