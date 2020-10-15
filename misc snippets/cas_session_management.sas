@@ -1,12 +1,23 @@
-cas mysess;
+cas sessiomgmt001;
 
 /**********************************************************/
 /* As a supersuer, get all sessions of the cas controller */
 /**********************************************************/
-
 proc cas;
+	session sessiomgmt001;
 	accessControl.assumeRole / adminRole="superuser";
-	session.listSessions;
+
+   	session.listSessions result=r;
+   	actstat = 0;
+   	uuid = "";
+   	do i=1 to r.Session.nrows;
+   		name = substr(r.Session[i][1], 1, index(r.Session[i][1], ":") - 1);
+    	uuid = r.Session[i]["UUID"];
+    	session.actionstatus result=r_act / uuid=uuid;
+    	actstat = r_act.status[1]["Active"];
+    	print name || ":" || actstat ;
+		*if actstasession.endSession sessref=name;
+  	end;
 quit;
 
 %let idletime_threshold=300;
@@ -87,4 +98,4 @@ run;
 /* Drop a specific session even for another user as superuser role is assumed in the current session */
 %drop_session(27eba82c-6ba9-324b-b16b-b2669d1d84a7);
 
-cas mysess terminate;
+cas sessiomgmt001 terminate;

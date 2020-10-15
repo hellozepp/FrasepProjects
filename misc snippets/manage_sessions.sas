@@ -23,7 +23,7 @@ quit;
 /* Recuperation des sessions sans action en cours */
 
 proc cas;
-   session casauto;
+   session sessiomgmt001;
 
    session.listSessions result=r;                    /*  */
    actstat = 0;
@@ -34,7 +34,7 @@ proc cas;
     session.actionstatus result=r_act / uuid=uuid;  /*  */
     actstat = r_act.status[1]["Active"];
     print name || ":" || actstat ;
-	if actstasession.endSession sessref=name;
+	*if actstasession.endSession sessref=name;
   end;
 run;
 quit;
