@@ -1,3 +1,7 @@
+options sastrace=',,,d' sastraceloc=saslog nostsuffix;
+options dbidirectexec sql_ip_trace=note msglevel=i;
+option fullstimer;
+
 options set=SAS_HADOOP_JAR_PATH="/opt/sas/hadoop/jars";
 options set=SAS_HADOOP_CONFIG_PATH="/opt/sas/hadoop/sitexmls";
 
@@ -5,57 +9,34 @@ libname hdplib hadoop
 user="hive" 
 password="Orion123" 
 uri="jdbc:hive2://frasephdp.cloud.com:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2"
-properties="hive.fetch.task.conversion=more;hive.fetch.task.conversion.threshold=-1;hive.execution.engine=tez" READ_METHOD=HDFS_SELSTAR
-server="frasephdp.cloud.com";
+properties="hive.fetch.task.conversion=more;hive.fetch.task.conversion.threshold=-1;hive.execution.engine=tez" 
+READ_METHOD=HDFS_SELSTAR
+server="frasephdp.cloud.com"
+SQL_FUNCTIONS=ALL
+dbmax_text=128
+DBCREATE_TABLE_OPTS='STORED AS ORC';
 
-options sastrace=',,,d' sastraceloc=saslog nostsuffix;
-options dbidirectexec sql_ip_trace=note msglevel=i;
+/* implicit passthrough */
 
 proc sql;
-	drop table hdplib.megagg5;
-	create table hdplib.megagg5 as
+	drop table hdplib.megagg;
+	create table hdplib.megagg as
 	(select min(year(date)), facility, product 
 	from hdplib.megacorp_small 
 	group by product, facility);
 quit;
 
+/* Explicit passthrough */
 
 proc sql;
-	Connect To hadoop (SERVER="frasephdp.cloud.com"
-	User="hive"
-	password="Orion123"
-	dbmax_text=255
-	uri='jdbc:hive2://frasephdp.cloud.com:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2'
-	properties="hive.fetch.task.conversion=more;hive.fetch.task.conversion.threshold=-1;hive.execution.engine=tez" READ_METHOD=HDFS
-	);
 	
-	create table hdplib.cars2 as select * from connection to hadoop (select * from cars limit 10);
+	drop table hdplib.megaagg2;
 
-    disconnect from hadoop;
-quit;
-
-proc sql;
-	connect using hdplib as hdp;
-	create table hdplib.cars3 as select * from connection to hdp (select * from cars2);
-    disconnect from hdp;
-quit;
-
-
-proc sql;
 	connect using hdplib;
-	create table hdplib.cars4 as select * from connection to hdplib (select * from cars3);
-    disconnect from hdplib;
-quit;
-
-proc sql;
-	connect using hdplib;
-	create table hdplib.cars4 as select * from connection to hdplib (select * from cars3);
-    disconnect from hdplib;
-quit;
-
-
-proc sql;
-	connect using hdplib;
-	select * from connection to hdplib (select min(year(`date`)), facility, product from megacorp_small group by product, facility);
-    disconnect from hdplib;
+	
+	create table hdplib.megaagg2 as select * from connection to hdplib (
+		select min(year(`date`)), facility, product from megacorp_small group by facility, product
+	);
+    
+	disconnect from hdplib;
 quit;
