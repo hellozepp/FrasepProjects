@@ -1,0 +1,10 @@
+digraph "Web Service" {
+	graph [fontcolor="#2D3436" fontname="Sans-Serif" fontsize=15 label="Web Service" nodesep=0.60 pad=2.0 rankdir=LR ranksep=0.75 splines=ortho]
+	node [fixedsize=true fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13 height=1.4 imagescale=true labelloc=b shape=box style=rounded width=1.4]
+	edge [color="#7B8894"]
+	d425f0d1b78942a3a4a2760d6a926995 [label=lb height=1.9 image="C:\ProgramData\Anaconda3\lib\site-packages\resources/aws/network\elastic-load-balancing.png" shape=none]
+	a6685f8ae7f745d3b0df60469f0e3caf [label=web height=1.9 image="C:\ProgramData\Anaconda3\lib\site-packages\resources/aws/compute\ec2.png" shape=none]
+	d425f0d1b78942a3a4a2760d6a926995 -> a6685f8ae7f745d3b0df60469f0e3caf [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"21bec445c21d4187a5d79bc092a6f230" [label=userdb height=1.9 image="C:\ProgramData\Anaconda3\lib\site-packages\resources/aws/database\rds.png" shape=none]
+	a6685f8ae7f745d3b0df60469f0e3caf -> "21bec445c21d4187a5d79bc092a6f230" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+}
