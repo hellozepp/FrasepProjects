@@ -1,6 +1,7 @@
 /* Loal all HMEQ data in memory */
 
-options cashost="frasepviya35smp" casport=5570;
+*options cashost="frasepviya35smp" casport=5570;
+options cashost="frasep.local.fr" casport=5570;
 
 cas mysess;
 
