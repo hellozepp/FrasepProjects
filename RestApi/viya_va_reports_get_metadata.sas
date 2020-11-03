@@ -5,7 +5,8 @@ FILENAME rptFile TEMP ENCODING='UTF-8';
 PROC HTTP METHOD = "GET" oauth_bearer=sas_services OUT = rptFile
 /* get a list of reports, say created by sbjciw, or report name is 'Report 2' */
 /*      URL = "&BASE_URI/reports/reports?filter=eq(createdBy,'sbjciw')" */
-     URL = "&BASE_URI/reports/reports?filter=eq(name,'Report 2')";
+/*     URL = "&BASE_URI/reports/reports?filter=eq(name,'Retail Insights')"; */
+ URL = "&BASE_URI/reports/reports";
 	HEADERS "Accept" = "application/vnd.sas.collection+json"
 			"Accept-Item" = "application/vnd.sas.summary+json";
 
@@ -52,6 +53,27 @@ run;
 	run;
 
 %MEND save_VA_Report_Path;
+
+/* Possible filters on rules :
+    principal (eq, ne, startsWith, endsWith, contains)
+    type (eq, ne)
+    principalType (eq, ne)
+    permissions (in)
+    objectUri (eq, ne, startsWith, endsWith, contains)
+    containerUri (eq, ne, startsWith, endsWith, contains)
+    mediaType (eq, ne, startsWith, endsWith, contains)
+    enabled (eq, ne)
+*/
+FILENAME rulFile TEMP ENCODING='UTF-8';
+PROC HTTP METHOD = "GET" oauth_bearer=sas_services OUT = rulFile
+/* URL = "&BASE_URI/authorization/rules?filter=eq(objectUri,'/reports/reports/aaea273e-aa15-43c9-9213-d85280f61ed8')"; */
+URL = "&BASE_URI/authorization/rules";
+	HEADERS "Accept" = "application/vnd.sas.collection+json"
+			"Accept-Item" = "string";
+
+RUN;
+LIBNAME rulFile json;
+
 
 
 DATA _null_;
