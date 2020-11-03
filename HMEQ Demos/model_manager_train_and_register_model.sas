@@ -3,12 +3,8 @@
 /* central model repository of SAS Viya                                       */
 /******************************************************************************/
 
-/*
 %let cashost=frasepviya35smp.cloud.com;
 %let mmbaseurl=http://frasepviya35smp.cloud.com;
-*/
-%let cashost=frasep.local.fr;
-%let mmbaseurl=http://frasep.local.fr;
 
 options cashost=&cashost casport=5570;
 
