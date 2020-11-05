@@ -6,7 +6,7 @@
  </resources>
  <init>
   <value name='tradeID'>i64(0)</value>
-  <value name='time'>product(i64(timeGmtToLocal(timeCurrent())),1000000)</value>
+  <value name='time'>product(i64(timeParse('08/01/2016 00:00:00','%m/%d/%Y %H:%M:%S')),1000000)</value>
   <value name='numBrokers'>listSize(#brokers)</value>
   <value name='numSymbols'>listSize(#symbols)</value>
  </init>
@@ -16,6 +16,6 @@
   <field name='quantity'>random(1000,5000)</field>
   <field name='price'>random(1.5,200.0)</field>
   <field name='traderID'>listItem(#brokers,random(0,$numBrokers))</field>
-  <field name='time'>i64(sum($time, random(0,300)))</field>
+  <field name='time'>i64(sum($time,random(0,3000000)))</field>
  </fields>
 </event-generator>
