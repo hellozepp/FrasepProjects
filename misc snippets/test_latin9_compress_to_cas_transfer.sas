@@ -2,9 +2,9 @@ cas stst001 sessopts=(metrics=true);
 
 caslib _all_ assign;
 
-libname sassrc "/opt/sas/data/sasdata/latin9" cvpmultiplier=2;
+libname sassrc "/opt/demo/sasdata/lat9" cvpmultiplier=2;
 
-libname sasdest "/opt/sas/data/sasdata";
+libname sasdest "/opt/demo/sasdata/utf8";
 
 
 /* 5.6 G */
