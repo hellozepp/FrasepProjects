@@ -2,19 +2,18 @@
   <metadata>
     <meta id="layout">{"trades_cq":{"AddEspTimestamp":{"x":625,"y":-10},"AddTraderName":{"x":375,"y":305},"BySecurity":{"x":360,"y":665},"LargeTrades":{"x":625,"y":130},"Scoring":{"x":-25,"y":640},"TotalCost":{"x":370,"y":475},"Traders":{"x":255,"y":-170},"Trades":{"x":625,"y":-180}}}</meta>
     <meta id="studioModifiedBy">viyademo01</meta>
-    <meta id="studioModified">1604581835013</meta>
+    <meta id="studioModified">1594155709580</meta>
     <meta id="studioUploadedBy">viyademo01</meta>
-    <meta id="studioUploaded">1604391036708</meta>
-    <meta id="mm_linked_module1">c314a57f-f0cf-4fe6-9a5c-785d8ed0b6b9,80a7ddff-4ded-4688-a981-760212e30036,ds2MultiType,Trade_ML001,outliers_svdd,2</meta>
-    <meta id="mm_astore_module1_0">_41D333D85B784BD0DC5C30F16_AST,file:///models/astores/viya/_41D333D85B784BD0DC5C30F16_AST.astore</meta>
+    <meta id="studioUploaded">1593609109335</meta>
+    <meta id="mm_linked_module1">b503a6a7-1be9-48ce-aa3b-08e7af38cecc,91167713-f017-473d-a268-a458fa1b3587,ds2MultiType</meta>
+    <meta id="mm_astore_module1_0">_8EA3D352D21A923E1F50B6254_AST,file:///models/astores/viya/_8EA3D352D21A923E1F50B6254_AST.astore</meta>
   </metadata>
   <mas-modules>
-    <mas-module module="module1" language="ds2" func-names="init,score" mas-store="c314a57f-f0cf-4fe6-9a5c-785d8ed0b6b9_champion_b2eb0585-0b9d-49fd-9aeb-6303bab30a16" mas-store-version="0.1">
-      <description><![CDATA[Project: Trade_ML001; model: outliers_svdd; version: 2]]></description>
+    <mas-module module="module1" language="ds2" func-names="init,score" mas-store="b503a6a7-1be9-48ce-aa3b-08e7af38cecc_champion_f47673f9-8a53-4f8c-9271-1ceb7cc3173f" mas-store-version="0.1">
       <code-file><![CDATA[dmcas_packagescorecode.sas]]></code-file>
       <module-members>
-        <module-member member="astore_0" type="astore" SHAkey="41D333D85B784BD0DC5C30F16EB17DE0E9D8D954">
-          <code-file><![CDATA[_41D333D85B784BD0DC5C30F16_AST]]></code-file>
+        <module-member member="astore_0" type="astore" SHAkey="8EA3D352D21A923E1F50B6254F529C0787519B93">
+          <code-file><![CDATA[_8EA3D352D21A923E1F50B6254_AST]]></code-file>
         </module-member>
       </module-members>
     </mas-module>
@@ -45,7 +44,7 @@
             <connector class="fs" name="tradersFile">
               <properties>
                 <property name="type"><![CDATA[pub]]></property>
-                <property name="fsname"><![CDATA[/home/viyademo01/FrasepProjects/My_ESP_Demo/traders.csv]]></property>
+                <property name="fsname"><![CDATA[/opt/demo/trades_esp/traders.csv]]></property>
                 <property name="fstype"><![CDATA[csv]]></property>
               </properties>
             </connector>
