@@ -87,10 +87,16 @@ proc sql;
 run;
 quit;
 
+
+proc print data=ds_rfld; run;
+
+proc print data=ds_fldperms; run;
+
+
 /******************************************************************************/
 /* Write and promote cas tables containing folders and permissions            */
 /******************************************************************************/
-
+/*
 cas mysess sessopts=(timeout=30);
 
 caslib _all_ assign;
@@ -111,3 +117,5 @@ proc cas;
 quit;
 
 cas mysess terminate;
+
+*/
