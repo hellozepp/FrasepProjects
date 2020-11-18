@@ -8,6 +8,11 @@
 %let fullpath=/;
 
 /******************************************************************************/
+/******************************************************************************/
+/* Build the folders list with the complete path in the SAS Content           */
+/******************************************************************************/
+/******************************************************************************/
+
 FILENAME rFold TEMP ENCODING='UTF-8';
 proc http 
 	url="&BASE_URI/folders/folders?limit=999999" method='get' oauth_bearer=sas_services out=rFold;
@@ -16,15 +21,12 @@ run;
 quit;
 LIBNAME rFold json;
 
-data ds_rfld (keep=fldUri name id memberCount parentFolderUri createdBy creationTimeStamp modifiedTimeStamp);
-	length fldUri $ 60 fldPath $ 200;
-	set rFold.items;
-	fldUri='/folders/folders/' || id;
-	fldPath = '/'||name;
+data ds_rfld (keep=name id memberCount parentFolderUri createdBy creationTimeStamp modifiedTimeStamp);
+	set rFold.items(where=(trim(parentFolderUri) ne ""));
 run;
 
 /******************************************************************************/
-%MACRO save_VA_Object_Path(objectURI);
+%MACRO get_Object_Path(objectURI);
 	FILENAME fldFile TEMP ENCODING='UTF-8';
 	%let locURI = &objectURI;
 
@@ -36,45 +38,49 @@ run;
 	LIBNAME fldFile json;
 
 	%let fldname="";
-	/* 	generate the path from the returned folders above */
-	proc sql noprint ;
-		select name into :fldname separated by '/'
-		from fldFile.ancestors 
-		order by ordinal_ancestors desc;
-	quit;
 	
+	/* 	generate the path from the returned folders above */
+	proc sql noprint;
+		select name into :fldname separated by '/' from fldFile.ancestors order by ordinal_ancestors desc;
+	quit;
+
 	data tmpsave;
 		length cc $ 36;
 		set ds_rfld;
 		cc = "&locURI";
 		if trim(id) = trim(cc) then 
-			fldPath=resolve('&fullpath.&fldname.');
+			fldPath=resolve('&fullpath.&fldname.')||'/'||name;
 		drop cc;
 	run;
 	
 	data ds_rfld;
 		set tmpsave;
 	run;
-%MEND save_VA_Object_Path;
+%MEND get_Object_Path;
 
 DATA _null_;
 	set ds_rfld;
-	call execute('%save_VA_Object_Path('||id||')');
+	call execute('%get_Object_Path('||id||')');
 RUN;
+
 /******************************************************************************/
-/* Get all permissions for folders                                            */
+/******************************************************************************/
+/* Get all authorization rules for folders                                    */
+/******************************************************************************/
 /******************************************************************************/
 
 FILENAME rRul TEMP ENCODING='UTF-8';
 proc http url="&BASE_URI/authorization/rules" 
 	method='get' oauth_bearer=sas_services 
 	out=rRul 
-	query=("limit"="999999" "filter"="startsWith(objectUri,'/folders/folders')");
+	query=("limit"="999999");
+	*query=("limit"="999999" "filter"="startsWith(objectUri,'/folders/folders')");
 	debug level=1;
 run;
 quit;
 LIBNAME rRul json;
 
+/*
 proc sql;
 	create table ds_fldperms as 
 	(select A.objectUri as ruleUri, A.'condition'n, A.containerUri as foldersUri , A.contentType, A.createdBy, A.createdTimestamp, 
@@ -86,12 +92,23 @@ proc sql;
 		A.ordinal_items=B.ordinal_items);
 run;
 quit;
+*/
 
+proc sql;
+	create table ds_fldperms2 as 
+	(select C.fldpath,A.objectUri as ruleUri, A.'condition'n, A.containerUri as foldersUri , A.contentType, A.createdBy, A.createdTimestamp, 
+		A.creationTimeStamp, A.description, A.enabled, A.modifiedBy, A.modifiedTimeStamp, 
+		A.principal, A.principalType, A.reason, A.'type'n , 
+		B.permissions1,B.permissions2,B.permissions3,B.permissions4,B.permissions5,B.permissions6,B.permissions7
+	from 
+		rRul.items as A, rRul.items_permissions as B, work.ds_rFld as C where 
+		A.ordinal_items=B.ordinal_items and A.objectUri='/folders/folders/'||C.id||'/**');
+run;
+quit;
 
 proc print data=ds_rfld; run;
 
-proc print data=ds_fldperms; run;
-
+proc print data=ds_fldperms2; run;
 
 /******************************************************************************/
 /* Write and promote cas tables containing folders and permissions            */
