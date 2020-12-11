@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.2">
+	<Registration>
+	<Name>Open source code task</Name>
+	<Description>Task to embed and execute Open source code in the workflow. It is based on javaobject SAS base </Description>
+	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
+	<Procedures>TBD</Procedures>
+	<Version>3.7</Version>
+	<Links>
+		<Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.7&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+	</Links>
+	</Registration>
+	
+	<Metadata>
+		<DataSources>	
+		</DataSources>
+
+		<Options>
+			<Option inputType="string" name="OPTIONSTAB">OPTIONS</Option>
+			<Option defaultValue="C:\tmp" indent="1" inputType="inputtext" missingMessage="Missing value." name="tmp_dir" promptMessage="pathname." required="true">Type the pathname for temporary files</Option>
+			<Option defaultValue="C:\ProgramData\Anaconda3\python.exe" indent="1" inputType="inputtext" missingMessage="Missing value." name="Python_exec" promptMessage="pathname+filename." required="true">Type the pathname of Open source executable including path and filename</Option>
+			<Option name="srccodefile" inputType="sasserverpath" defaultFileName="myProgramFile.py" pathType="file">Select an opensource existing source code file</Option>
+		</Options>
+	</Metadata>
+	
+	<UI>
+		<Container option="OPTIONSTAB">
+			<OptionItem option="tmp_dir"/>
+			<OptionItem option="Python_exec"/>
+			<OptionItem option="srccodefile"/>
+		</Container>
+	</UI>
+	
+  	<CodeTemplate>
+		<![CDATA[
+
+%let WORK_DIR = $tmp_dir;	
+%let EXEC_COMMAND = $Python_exec; 
+%let SRCCODEFILENAME = $srccodefile["fullPath"];
+
+options linesize = MAX;
+ods html close; 
+ods listing;
+
+/****************************************************************************/
+/* Embed Open source code in the workflow                                   */
+/****************************************************************************/
+
+#include $srccodefile["fullPath"];
+
+/****************************************************************************/
+/* Execute Open source code in the workflow                                 */
+/****************************************************************************/
+
+data _null_;
+	length rtn_val 8;
+	r_pgm = "&SRCCODEFILENAME";
+	r_arg1 = "&WORK_DIR";
+	r_call = cat('"', trim(r_pgm), '" "', trim(r_arg1), '"');
+	declare javaobj j("dev.SASJavaExec", "&EXEC_COMMAND", r_call);
+	j.callIntMethod("executeProcess", rtn_val);
+run;
+		]]>
+	</CodeTemplate>
+</Task>
+
