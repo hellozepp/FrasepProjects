@@ -1,7 +1,7 @@
 # Copyright © 2020, SAS Institute Inc., Cary, NC, USA.  All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-setwd("C://my_local_data/github/frasepprojects/FrasepProjects/viya_shiny_app/viya_shiny_app")
+setwd("C://my_local_data/github/FrasepProjects/viya_shiny_app/viya_shiny_app")
 #setwd("/home/viyademo01/github/FrasepProjects/viya_shiny_app/viya_shiny_app")
 
 #setwd("H://github/FrasepProjects/FrasepProjects/viya_shiny_app/viya_shiny_app")
@@ -15,9 +15,9 @@ options(cas.print.messages = TRUE)
 options(shiny.maxRequestSize=30*1024^2)
 
 
-
-Sys.setenv(CAS_CLIENT_SSL_CA_LIST = "C://Users/frasep/OneDrive - SAS/Mes Documents/Dossiers/Demoing/my_orders/frasepviya35smp/azure_viya35smp_cacerts/cacerts/trustedcerts.pem")
+Sys.setenv(CAS_CLIENT_SSL_CA_LIST = "C://Users/frasep/OneDrive - SAS/Mes Documents/Dossiers/Demoing/My_Local_Environments/frasepviya35smp/frasepviya35smp.cloud.com/cacerts/trustedcerts.pem")
 globalhostname <- "frasepviya35smp.cloud.com"
+
 
 #####################################
 # R code for data manipulation,
