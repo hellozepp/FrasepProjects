@@ -9,7 +9,7 @@ proc cas;
 	runModelLocal / 
 		outTable={caslib="casuser", name="TMP_SCORED_HMEQ_DATA"},
 		intable={caslib="public" name="HMEQ_TEST"},
-		modelName="Forest_Astore_SAS_Studio_on_HMEQ_TRAIN" ,
+		modelName="Random_forest_model_prod" ,
 		modelTable={caslib="public" name="sas_model_table"};
 	run;
 quit;
