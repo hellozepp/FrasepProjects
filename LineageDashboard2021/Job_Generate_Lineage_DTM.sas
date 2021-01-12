@@ -1,3 +1,4 @@
+ods _all_ close;
 /* Job parameters */
 %global cashostname truncate_flag limit;
 
@@ -129,3 +130,6 @@ proc cas;
 quit;
 
 cas lineagesess terminate;
+ods html;
+ods text="Generation of local dependancy network done. See local network tab for result.";
+ods _all_ close;
