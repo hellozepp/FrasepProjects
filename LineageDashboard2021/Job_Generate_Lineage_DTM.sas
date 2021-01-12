@@ -1,12 +1,5 @@
 /* Job parameters */
-%global cashostname truncate_flag src_object_id limit depth;
-
-/* Unit test parameter setting. Comment before deployment */
-%let limit=10;
-%let cashostname=frasepviya35smp.cloud.com;
-%let depth 4;
-%let truncate_flag=1;
-%let src_object_id=70d3f6cf-c9a0-43fb-8926-a3f7eef245b3;
+%global cashostname truncate_flag limit;
 
 /* Global variables settingq */
 %let BASE_URI=%sysfunc(getoption(SERVICESBASEURL));
@@ -26,9 +19,7 @@ FILENAME obj2 TEMP ENCODING='UTF-8'; /* file to get json response content */
 FILENAME respHdr TEMP ENCODING='UTF-8'; /* file to get json response header */
 filename fbody temp ENCODING='UTF-8';
 
-%let REST_QUERY_URI=&REST_BASE_URI%str(&)referenceId=&src_object_id.%str(&)depth=&depth.;
-
-%put &REST_QUERY_URI;
+%let REST_QUERY_URI=&REST_BASE_URI;
 
 /* Execute the get  */
 PROC HTTP 
