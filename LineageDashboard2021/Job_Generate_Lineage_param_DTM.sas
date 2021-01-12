@@ -1,3 +1,4 @@
+ods _all_ close;
 /* Job parameters */
 %global cashostname truncate_flag src_object_uri limit depth;
 
@@ -19,7 +20,7 @@ FILENAME obj2 TEMP ENCODING='UTF-8'; /* file to get json response content */
 FILENAME respHdr TEMP ENCODING='UTF-8'; /* file to get json response header */
 filename fbody temp ENCODING='UTF-8';
 
-%let REST_QUERY_URI=&REST_BASE_URI%str(&)referenceUri=&src_object_uri.%str(&)depth=&depth.;
+%let REST_QUERY_URI=&REST_BASE_URI%str(&)resourceUri=&src_object_uri.%str(&)depth=&depth.%str(&)direction=both;
 
 %put &REST_QUERY_URI;
 
@@ -131,3 +132,6 @@ proc cas;
 quit;
 
 cas lineagesess terminate;
+ods html;
+ods text="Generation of local dependancy network done. See local network tab for result.";
+ods _all_ close;
