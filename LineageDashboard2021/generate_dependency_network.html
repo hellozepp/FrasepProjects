@@ -94,7 +94,7 @@
 		// Event handler used upper : retrieve three value from the report, resource Id respectively 
         function onDataReceived(resultData)
         {
-            document.getElementById('mainForm').elements['src_source_uri'].value = resultData.data[0][0];
+            document.getElementById('mainForm').elements['src_object_uri'].value = resultData.data[0][0];
 	    }
 				
      </script>
@@ -112,7 +112,7 @@
             <input type="hidden" name="_action"      value="wait,execute">
             <ul>
                 <li>
-                    <input type="text" id="src_source_uri" name="src_source_uri" class="field-style field-split align-left" />
+                    <input type="text" id="src_object_uri" name="src_object_uri" class="field-style field-split align-left" />
                     <input type="text" id="depth" name="depth" class="field-style field-split align-right" />
 	            </li>
 	            <li>
