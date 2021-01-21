@@ -14,9 +14,7 @@
         function onDataReceived(resultData)
         {
             // Role 1 : uri source object
-            document.getElementById('mainForm').elements['src_object_uri'].value = resultData.data[0][0];
-            // Role 2 : name source object
-            document.getElementById('src_object_name').value = resultData.data[0][1];
+            document.getElementById('mainForm').elements['CASLIBSRC'].value = resultData.data[0][0];
             }
      </script>
      <meta charset="utf-8" http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -27,25 +25,13 @@
 
     <body>
         <div class="container-fluid" style="text-align: center; margin-top: 0px;">
-            <h2><p>Selected object :</p></h2>
-            <input type=text class="form-control" style="margin-bottom: 5px;" id="src_object_name" disabled>
-            <br>
             <form id="mainForm" action="/SASJobExecution/" enctype="multipart/form-data">
-                <input type="hidden" name="_program" value="/public/Job definition/Job_Generate_Lineage_param_DTM">
+                <input type="hidden" name="_program" value="/public/Job definition/Job_Generate_Profiling_DTM">
+                <input type="hidden" name="CASLIBSRC" id="CASLIBSRC">
                 <input type="hidden" name="cashostname" value="frasepviya35smp.cloud.com">
-                <input type="hidden" name="limit" value="1000">
                 <input type="hidden" name="_action" value="wait,execute">
-                <input type="hidden" id="src_object_uri" name="src_object_uri"/>
-                <h3><p>Select the depth of network analysis below :</p></h3>
-                <select name="depth" id="depth" style="margin-bottom: 5px;" class="form-control">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
                 <br>
-                <input type="submit" class="btn btn-primary" value="Click to generate local dependency network data (Close to cancel)" />
+                <input type="submit" class="btn btn-primary" value="Click to profile data in the selected caslib (Close to cancel)" />
             </form>
         </div>
     </body>
