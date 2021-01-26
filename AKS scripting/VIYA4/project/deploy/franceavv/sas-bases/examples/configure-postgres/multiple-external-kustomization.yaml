@@ -1,0 +1,36 @@
+# To specify multiple external PostgreSQL instances for your SAS deployment,
+# add the following into your kustomization.yaml file. In this example, two
+# PostgreSQL services, 'postgres' and 'foopostgres', are added. Ensure you
+# adjust the values here as described in
+# $deploy/sas-bases/overlays/external-postgres/README.md.
+
+transformers:
+- sas-bases/overlays/external-postgres/external-postgres-transformer.yaml
+
+secretGenerator:
+- name: postgres-sas-user  # DEFAULT 'postgres' DATABASE USER CREDENTIALS
+  literals:
+  - username={{ EXTERNAL-POSTGRES-ADMIN-USERNAME }}
+  - password={{ EXTERNAL-POSTGRES-ADMIN-PASSWORD }}
+- name: foopostgres-sas-user  # ADDITIONAL 'foopostgres' DATABASE USER CREDENTIALS
+  literals:
+  - username={{ EXTERNAL-FOOPOSTGRES-ADMIN-USERNAME }}
+  - password={{ EXTERNAL-FOOPOSTGRES-ADMIN-PASSWORD }}
+
+configMapGenerator:
+- name: sas-postgres-config  # DEFAULT 'postgres' DATABASE CONFIG AND 'sas-data-server-utility' CONFIG
+  behavior: merge
+  literals:
+  - DATASERVER_LIST="foopostgres"  # SPACE DELIMITED LIST OF ADDITIONAL SERVERS
+  - DATABASE_HOST={{ EXTERNAL-POSTGRES-HOST }}
+  - DATABASE_PORT={{ EXTERNAL-POSTGRES-PORT }}
+  - DATABASE_SSL_ENABLED="true"  # 'true' INDICATES SSL-ENABLED SERVER
+  - DATABASE_NAME=SharedServices
+  - EXTERNAL_DATABASE="true"  # 'true' INDICATES AN EXTERNALLY MANAGED POSTGRES
+- name: sas-foopostgres-config  # ADDITIONAL 'foopostgres' DATABASE CONFIG
+  literals:
+  - DATABASE_HOST={{ EXTERNAL-FOOPOSTGRES-HOST }}
+  - DATABASE_PORT={{ EXTERNAL-FOOPOSTGRES-PORT }}
+  - DATABASE_SSL_ENABLED="true"  # 'true' INDICATES SSL-ENABLED SERVER
+  - DATABASE_NAME=SharedServices
+  - EXTERNAL_DATABASE="true"  # 'true' INDICATES AN EXTERNALLY MANAGED POSTGRES

@@ -1,0 +1,12 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-certframe-config-map-certificate-secret-name-removal
+patch: |-
+  - op: replace
+    path: /data/SAS_CA_CERTIFICATE_SECRET_NAME
+    value: ""
+target:
+  kind: ConfigMap
+  name: sas-certframe-user-config

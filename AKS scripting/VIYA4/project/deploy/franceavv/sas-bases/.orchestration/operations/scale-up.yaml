@@ -1,0 +1,124 @@
+apiVersion: orchestration.sas.com/v2beta3
+kind: LifecycleOperation
+metadata:
+  name: scale-up
+spec:
+  args:
+  - name: namespace
+  steps:
+  - args:
+    - scale
+    - --namespace
+    - $namespace
+    - deployments
+    - $resource.Name
+    - --replicas
+    - (.LastAppliedConfigurationValue $resource "{.spec.replicas}" "1")
+    cmd: kubectl
+    withClusterResources:
+      group: apps
+      labelSelector: sas.com/deployment=sas-viya,sas.com/zero-scale-phase!=never
+      namespace: $namespace
+      resource: deployments
+  - args:
+    - scale
+    - --namespace
+    - $namespace
+    - statefulsets
+    - $resource.Name
+    - --replicas
+    - (.LastAppliedConfigurationValue $resource "{.spec.replicas}" "1")
+    cmd: kubectl
+    withClusterResources:
+      group: apps
+      labelSelector: sas.com/deployment=sas-viya,sas.com/zero-scale-phase!=never
+      namespace: $namespace
+      resource: statefulsets
+  - args:
+    - patch
+    - --namespace
+    - $namespace
+    - cronjobs
+    - $resource.Name
+    - --patch
+    - (print "{\"spec\":{\"suspend\":" (.LastAppliedConfigurationValue $resource "{.spec.suspend}" "false") "}}")
+    cmd: kubectl
+    withClusterResources:
+      group: batch
+      labelSelector: sas.com/deployment=sas-viya,sas.com/zero-scale-phase!=never
+      namespace: $namespace
+      resource: cronjobs
+      version: v1beta1
+  - args:
+    - patch
+    - --namespace
+    - $namespace
+    - casdeployments
+    - $resource.Name
+    - --type
+    - json
+    - --patch
+    - '(print "[{\"op\":\"replace\", \"path\": \"/spec/shutdown\", \"value\":" (.LastAppliedConfigurationValue $resource "{.spec.shutdown}" "false") "}]" )'
+    cmd: kubectl
+    when: .ClusterHasGroup "viya.sas.com"
+    withClusterResources:
+      group: viya.sas.com
+      labelSelector: sas.com/deployment=sas-viya,sas.com/zero-scale-phase!=never
+      namespace: $namespace
+      resource: casdeployments
+      version: v1alpha1
+  - args:
+    - patch
+    - --namespace
+    - $namespace
+    - daemonsets
+    - $resource.Name
+    - --patch
+    - (print "{\"spec\":{\"template\":{\"spec\":{\"nodeSelector\":{\"sas.com/scale-class\":\"" (.LastAppliedConfigurationValue $resource "{.spec.template.spec.nodeSelector.sas\\.com/scale-class}" "ignored") "\"}}}}}" )
+    cmd: kubectl
+    withClusterResources:
+      group: apps
+      labelSelector: sas.com/deployment=sas-viya,sas.com/zero-scale-phase!=never
+      lastAppliedConfiguration:
+        jsonPath: '{.spec.template.spec.nodeSelector.sas\\.com/scale-class}'
+      namespace: $namespace
+      resource: daemonsets
+      version: v1
+  - args:
+    - patch
+    - --namespace
+    - $namespace
+    - daemonsets
+    - $resource.Name
+    - --type
+    - json
+    - --patch
+    - '[{"op":"remove", "path": "/spec/template/spec/nodeSelector/sas.com~1scale-class"}]'
+    cmd: kubectl
+    withClusterResources:
+      group: apps
+      labelSelector: sas.com/deployment=sas-viya,sas.com/zero-scale-phase!=never
+      lastAppliedConfiguration:
+        isMissing: true
+        jsonPath: '{.spec.template.spec.nodeSelector.sas\\.com/scale-class}'
+      namespace: $namespace
+      resource: daemonsets
+      version: v1
+  - args:
+    - patch
+    - --namespace
+    - $namespace
+    - pgclusters
+    - $resource.Name
+    - --type
+    - json
+    - --patch
+    - '(print "[{\"op\":\"replace\", \"path\": \"/spec/shutdown\", \"value\":" (.LastAppliedConfigurationValue $resource "{.spec.shutdown}" "false") "}]" )'
+    cmd: kubectl
+    when: .ClusterHasGroup "crunchydata.com"
+    withClusterResources:
+      group: crunchydata.com
+      labelSelector: sas.com/deployment=sas-viya,sas.com/zero-scale-phase!=never
+      namespace: $namespace
+      resource: pgclusters
+      version: v1

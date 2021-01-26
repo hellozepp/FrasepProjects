@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="sas.css"/>
+        <title>Lifecycle Operation: Deploy</title>
+    </head>
+    <body>
+        <h1 id="lifecycle-operation-deploy">Lifecycle Operation: Deploy</h1>
+<h2 id="overview">Overview</h2>
+<p>The <code>deploy</code> lifecycle operation runs the recommended sequence of
+<code>kubectl apply</code> commands necessary to deploy the software.</p>
+<p>For general lifecycle operation execution details, please
+see the README file at <code>$deploy/sas-bases/examples/kubernetes-tools/README.md</code> (for Markdown)
+or <code>$deploy/sas-bases/docs/using_kubernetes_tools_from_the_sas-orchestration_image.htm</code> (for HTML).</p>
+<h2 id="example">Example</h2>
+<p>The following example assumes:</p>
+<ul>
+<li>A site.yaml exists in /deploy</li>
+<li>A kubeconfig file exists in /home/user/kubernetes</li>
+<li>The orchestration image has been pulled and has the local tag &lsquo;sas-orch&rsquo;</li>
+<li>Downloaded deployment assets exist in /deploy/sas-bases</li>
+</ul>
+<pre class="highlight"><code>docker run --rm \
+  -v /deploy:/deploy \
+  -v /home/user/kubernetes:/kubernetes \
+  -e "KUBECONFIG=/kubernetes/config" \
+  sas-orch \
+  lifecycle run \
+    --operation deploy \
+    --deployment-dir /deploy/sas-bases \
+    -- \
+    --manifest /deploy/site.yaml \
+    --namespace default</code></pre>
+
+<p><strong>Note:</strong> To see the commands that would be executed from the operation without
+making any changes to the cluster, add <code>-e "DISABLE_APPLY=true"</code> to the container.</p>
+    </body>
+</html>

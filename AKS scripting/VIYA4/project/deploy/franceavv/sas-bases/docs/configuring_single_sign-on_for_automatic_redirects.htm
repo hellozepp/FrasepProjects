@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="sas.css"/>
+        <title>Configuring Single Sign-On for Automatic Redirects</title>
+    </head>
+    <body>
+        <h1 id="configuring-single-sign-on-for-automatic-redirects">Configuring Single Sign-On for Automatic Redirects</h1>
+<p>This README describes the steps to configure your SAS Viya deployment to automatically
+redirect sign-ins to an external identity provider you have already configured for single sign-on.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>You must configure SAS Viya for single sign-on with an external SAML or OIDC provider using the
+steps described in the SAS Viya Administration guide. Make sure you have tested single sign-on
+before proceeding with this installation.</p>
+<p><strong>Note:</strong> If you use the default transformer provided in this example, you cannot sign in as sasboot unless you manually go to <code>/SASLogon/login</code>.</p>
+<h2 id="installation">Installation</h2>
+<ol>
+<li>
+<p>Copy the files in the <code>$deploy/sas-bases/examples/sas-logon-app</code> directory to the <code>$deploy/site-config/sas-logon-app</code> directory. Create the target directory, if it does not already exist.</p>
+</li>
+<li>
+<p>Modify the snippet in <code>$deploy/site-config/sas-logon-app/login-hint-transformer.yaml</code>.</p>
+<ul>
+<li>For example, you can replace example.com with an email address domain matching one configured for the external identity provider.</li>
+<li>Add any additional clauses to the NGINX snippet configuration as desired. For example you can preclude the login_hint parameter from certain requests.</li>
+<li>Only one server-snippet is allowed per host. Make sure this transformer includes any existing server-snippet. You can view the existing server-snippet using the following command:</li>
+</ul>
+<pre class="highlight"><code>kubectl get ingress -o yaml sas-logon-app | grep nginx.ingress.kubernetes.io/server-snippet</code></pre>
+
+</li>
+<li>
+<p>Add site-config/sas-logon-app/login-hint-transformer.yaml to the transformers block of the base kustomization.yaml file in the $deploy directory.</p>
+</li>
+<li>
+<p>Use the deployment commands described in <a href="http://documentation.sas.com/?cdcId=itopscdc&amp;cdcVersion=default&amp;docsetId=dplyml0phy0dkr&amp;docsetTarget=titlepage.htm">SAS Viya Deployment Guide</a> to apply the new settings.</p>
+</li>
+</ol>
+    </body>
+</html>

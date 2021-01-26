@@ -1,0 +1,32 @@
+## Example SecretGenerator to generate the secret to be used by nginx ingress objects
+##
+## In the following code, the locations that require user specified values are indicated by a capitalized and
+## hyphenated name set off by curly braces and a space at each end. You should replace this token with the
+## actual value.
+## Replace the curly braces, interior spaces, and the variable name.
+## For instance, "{{ INGRESS_CERTIFICATE_FILE_NAME }}"
+## should be replaced by the path to a .pem file containing your ingress certificate.
+## If you use the suggested example, the correct, final syntax would be:
+## - tls.crt=site-config/security/sas-nginx-ingress.crt
+## - tls.key=site-config/security/sas-nginx-ingress.key
+##
+##  Special Note:  the name of the kubernetes secret which will contain the certificate and key can be
+##  renamed.  However, the name provided below "sas-ingress-certificate" is referenced in other kustomization
+##  files.  If you change the name below, you will need to change all the other references: All the ingress objects' spec.tls.secretName
+##  and the sas-certframe-ingress-certificate-config config map's SAS_INGRESS_CERTIFICATE_SECRET_NAME environment variable.
+##  Use the sas-bases/overlays/network/ingress/security/transformers/ingress-tls-transformers.yaml as guidance.
+---
+apiVersion: builtin
+kind: SecretGenerator
+metadata:
+  name: sas-ingress-certificate
+#if you are using nginx ingress, this file defines the certificate and key that will be used in establishing TLS connections to the SAS Services
+#the files below must exist in a directory or subdirectory under your kustomization.yaml and must be there when you run the kustomize build command.
+#They must be readable by the userid that is running the kustomize command.
+#The certificate file must contain the server certificate plus any intermediate certificates in the chain and should also include the root CA certificate.
+#The key will be copied into the kubernetes secret generator.
+#The files can be deleted subsequent to running kustomize
+files:
+  - tls.crt={{ INGRESS_CERTIFICATE_FILE_NAME }} # For example: site-config/security/sas-nginx-ingress.crt
+  - tls.key={{ INGRESS_KEY_FILE_NAME }} # For example: site-config/security/sas-nginx-ingress.key
+type: "kubernetes.io/tls"

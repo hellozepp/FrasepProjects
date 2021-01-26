@@ -1,0 +1,35 @@
+## Example ConfigMapGenerator to generate the ConfigMap to contain sas-certframe configuration settings
+##
+## In the following code, the locations that require user specified values are indicated by a capitalized and
+## hyphenated name set off by curly braces and a space at each end. You should replace this token with the
+## actual value.
+## Replace the curly braces, interior spaces, and the variable name.
+## For instance,
+## "{{ CERTIFICATE_DURATION_IN_HOURS }}" should be replaced by your desired certificate time to expiry in hours.
+## "{{ SAS_CERTIFICATE_ADDITIONAL_SAN_DNS }}" should be replaced by a list of space separated, additional SAN DNS entries, specific to you ingress architecture, that you want added to certificates issued by the sas-viya-issuer.  For example, the aliases of an external load balancer
+## "{{ SAS_CERTIFICATE_ADDITIONAL_SAN_IP }}" should be replaced by a list of space separated, additional SAN IP addresses, specific to you ingress architecture, that you want added to certificates issued by the sas-viya-issuer.  For example, the IP address of an external load balancer
+##
+## Each of the lines listed after the "literals:" line is optional.
+## You should only supply lines that have the settings you want to override.  Delete lines that contain
+## configuration settings that you want to leave set to their default values.
+## The default values are
+## 2 year certificate duration
+## Include in the certificates all required SAN DNS aliases and IP values that are known to the cluster
+##
+##
+## Assuming you wanted to override default values for all settings, the correct, final syntax would be:
+##
+## - SAS_CERTIFICATE_DURATION=26280h # 3 years
+## - SAS_CERTIFICATE_ADDITIONAL_SAN_DNS=myhostalias.mydomain.com myhostalias myotheralias
+## - SAS_CERTIFICATE_ADDITIONAL_SAN_IP=10.20.30.40 10.20.30.41
+##
+---
+apiVersion: builtin
+kind: ConfigMapGenerator
+metadata:
+  name: sas-certframe-user-config
+behavior: merge
+literals:
+- SAS_CERTIFICATE_DURATION={{ CERTIFICATE_DURATION_IN_HOURS }}
+- SAS_CERTIFICATE_ADDITIONAL_SAN_DNS={{ ADDITIONAL_SAN_DNS_ENTRIES }}
+- SAS_CERTIFICATE_ADDITIONAL_SAN_IP={{ ADDITIONAL_SAN_IP_ENTRIES }}
