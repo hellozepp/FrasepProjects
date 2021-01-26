@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="sas.css"/>
+        <title>Granting Security Context Constraints on an OpenShift Cluster</title>
+    </head>
+    <body>
+        <h1 id="granting-security-context-constraints-on-an-openshift-cluster">Granting Security Context Constraints on an OpenShift Cluster</h1>
+<p>The <code>/$deploy/sas-bases/examples/crunchydata/openshift</code> directory contains a file to 
+grant Security Context Constraints for fsgroup 26 on an OpenShift cluster. A
+Kubernetes cluster administrator should add these Security Context Constraints 
+to their OpenShift cluster prior to deploying SAS Viya 4. Use one of the 
+following commands:</p>
+<pre class="highlight"><code class="language-yaml">kubectl apply -f pgo-scc.yaml</code></pre>
+
+<p>or</p>
+<pre class="highlight"><code class="language-yaml">oc create -f pgo-scc.yaml</code></pre>
+    </body>
+</html>

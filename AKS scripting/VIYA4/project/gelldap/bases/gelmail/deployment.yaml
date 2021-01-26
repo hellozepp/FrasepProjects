@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gelmail-server
+  labels:
+    app: gelmail-server
+    app.kubernetes.io/part-of: gelmail
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gelmail-server
+  template:
+    metadata:
+      labels:
+        app: gelmail-server
+        app.kubernetes.io/part-of: gelmail
+    spec:
+      containers:
+        - name: gelmail-server
+          image: mailhog/mailhog
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 1025
+              name: gelmail-smtp
+            - containerPort: 8025
+              name: gelmail-http
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
+

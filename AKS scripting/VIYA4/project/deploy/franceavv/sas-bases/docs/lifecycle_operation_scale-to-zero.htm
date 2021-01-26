@@ -1,0 +1,148 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="sas.css"/>
+        <title>Lifecycle Operation: Scale-to-zero</title>
+    </head>
+    <body>
+        <h1 id="lifecycle-operation-scale-to-zero">Lifecycle Operation: Scale-to-zero</h1>
+<h2 id="overview">Overview</h2>
+<p>The <code>scale-to-zero</code> lifecycle operation runs the recommended sequence of
+<code>kubectl</code> commands necessary to scale the software to zero. Note that the
+<code>scale-up</code> lifecycle operation must be run to return the software to a running
+state.</p>
+<p>For general lifecycle operation execution details, please see the README file at
+<code>$deploy/sas-bases/examples/kubernetes-tools/README.md</code> (for Markdown) or
+<code>$deploy/sas-bases/docs/using_kubernetes_tools_from_the_sas-orchestration_image.htm</code>
+(for HTML).</p>
+<h2 id="example">Example</h2>
+<h3 id="local-execution">Local Execution</h3>
+<p>The <code>scale-to-zero</code> operation can be run locally (outside the cluster) using the
+following command. The command looks up the definition of the <code>scale-to-zero</code>
+operation in the namespace specified in the first <code>--namespace</code> argument and
+then performs the operation on the namespace specified in the second
+<code>--namespace</code> argument. The following example assumes:</p>
+<ul>
+<li>A kubeconfig file exists in <code>/home/user/kubernetes</code></li>
+<li>The orchestration image has been pulled and has the local tag <code>sas-orch</code></li>
+<li>The software to be scaled has been deployed into the namespace <code>default</code></li>
+</ul>
+<p>Here is the command:</p>
+<pre class="highlight"><code>docker run --rm \
+  -v /home/user/kubernetes:/kubernetes \
+  -e "KUBECONFIG=/kubernetes/config" \
+  sas-orch \
+  lifecycle run \
+    --operation scale-to-zero \
+    --namespace default \
+    -- \
+    --namespace default</code></pre>
+
+<p><strong>Note:</strong> To see the commands that would be executed from the operation without
+making any changes to the cluster, add <code>-e "DISABLE_APPLY=true"</code> to the container.</p>
+<h3 id="remote-execution">Remote Execution</h3>
+<p>The <code>scale-to-zero</code> operation can be run remotely (inside the cluster) using the
+following script. The script looks up the appropriate image and imagePullSecret
+and then creates the Kubernetes resources necessary to run the <code>scale-to-zero</code>
+operation as described in the <code>Local Execution</code> example above using a Kubernetes
+<code>Job</code> to provide the execution. The following example assumes:</p>
+<ul>
+<li>The software to be scaled has been deployed into the namespace <code>default</code></li>
+<li>These kubernetes resources are to be deployed into the same namespace as the
+  software to be scaled</li>
+</ul>
+<p>Here is the script:</p>
+<pre class="highlight"><code class="language-bash">#!/bin/bash
+
+namespace=default
+image=$(kubectl -n ${namespace}  get configmap --selector "orchestration.sas.com/lifecycle=image" -o jsonpath="{.items[0].data.image}" 2&gt; /dev/null )
+secretName=$(kubectl -n ${namespace} get secrets | awk '/sas-image-pull-secrets/ {print $1}')
+
+kubectl -n ${namespace} apply -f - &lt;&lt;EOF
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sas-lifecycle
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sas-lifecycle
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  - apps
+  - batch
+  - crunchydata.com
+  - viya.sas.com
+  resources:
+  - casdeployments
+  - configmaps
+  - cronjobs
+  - daemonsets
+  - deployments
+  - deployments/scale
+  - pgclusters
+  - pods
+  - statefulsets
+  - statefulsets/scale
+  verbs:
+  - get
+  - list
+  - patch
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sas-lifecycle
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: sas-lifecycle
+subjects:
+  - kind: ServiceAccount
+    name: sas-lifecycle
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: scale-to-zero-$(date +%s)
+spec:
+  template:
+    spec:
+      serviceAccountName: sas-lifecycle
+      imagePullSecrets:
+      - name: ${secretName}
+      containers:
+      - env:
+        - name: DISABLE_APPLY
+          value: "false"
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        name: scale-to-zero
+        image: ${image}
+        command:
+        - orchestration
+        - lifecycle
+        - run
+        - --operation
+        - scale-to-zero
+        - --namespace
+        - \$(NAMESPACE)
+        - --
+        - --namespace
+        - \$(NAMESPACE)
+      restartPolicy: Never
+  backoffLimit: 0
+EOF</code></pre>
+    </body>
+</html>

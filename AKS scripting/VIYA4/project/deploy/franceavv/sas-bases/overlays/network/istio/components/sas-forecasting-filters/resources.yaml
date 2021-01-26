@@ -1,0 +1,41 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: sas-forecasting-filters
+spec:
+  host: sas-forecasting-filters
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        httpCookie:
+          name: sas-ingress-istio
+          path: /forecastingFilters/
+          ttl: 0s
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-filters
+    sas.com/admin: namespace
+  name: sas-forecasting-filters
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /forecastingFilters
+    - uri:
+        prefix: /forecastingFilters/
+    route:
+    - destination:
+        host: sas-forecasting-filters
+    timeout: 300s
+

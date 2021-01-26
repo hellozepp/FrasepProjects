@@ -1,0 +1,319 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gelldap-bootstrap-users
+  labels:
+    app.kubernetes.io/part-of: gelldap
+data:
+  bootstrap.ldif: |
+    version: 1
+
+    dn: ou=users,dc=gelldap,dc=com
+    objectClass: organizationalUnit
+    objectClass: top
+    ou: users
+
+    dn: ou=groups,dc=gelldap,dc=com
+    objectClass: organizationalUnit
+    objectClass: top
+    ou: groups
+
+    dn: uid=sasldap,ou=users,dc=gelldap,dc=com
+    objectClass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixAccount
+    objectClass: person
+    objectClass: top
+    cn: sasldap
+    gidNumber: 1003
+    sn: LDAP
+    displayName: SAS LDAP Service Account
+    givenName: SAS LDAP
+    l: Cary
+    mail: sasldap@gelldap.com
+    o: GELLDAP
+    uid: sasldap
+    uidNumber: 1003
+    homeDirectory: /home/sasldap
+    userPassword: lnxsas
+
+    dn: uid=sas,ou=users,dc=gelldap,dc=com
+    objectClass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixAccount
+    objectClass: top
+    cn: sas
+    gidNumber: 1001
+    homeDirectory: /home/sas
+    sn: Installer
+    uid: sas
+    uidNumber: 1001
+    displayName: SAS System Account
+    givenName: SAS
+    l: Cary
+    loginShell: /bin/bash
+    mail: sas@gelldap.com
+    o: GELLDAP
+    userPassword: lnxsas
+
+    dn: uid=cas,ou=users,dc=gelldap,dc=com
+    objectClass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixAccount
+    objectClass: top
+    cn: cas
+    gidNumber: 1001
+    homeDirectory: /home/cas
+    sn: System Account
+    uid: cas
+    uidNumber: 1002
+    displayName: CAS System Account
+    givenName: CAS
+    l: Cary
+    loginShell: /bin/bash
+    mail: cas@gelldap.com
+    o: GELLDAP
+    userPassword: lnxsas
+
+    dn: cn=sasldap_grp,ou=groups,dc=gelldap,dc=com
+    objectClass: extensibleObject
+    objectClass: groupOfNames
+    objectClass: posixGroup
+    objectClass: top
+    cn: sasldap_grp
+    description: SAS LDAP Service Accounts
+    displayName: SAS LDAP Service Accounts
+    gidNumber: 1003
+    name: SASLDAP
+    member: uid=sasldap,ou=users,dc=gelldap,dc=com
+    memberUid: sasldap
+    o: GELLDAP
+
+    dn: cn=sas_grp,ou=groups,dc=gelldap,dc=com
+    objectClass: extensibleObject
+    objectClass: groupOfNames
+    objectClass: posixGroup
+    objectClass: top
+    cn: sas_grp
+    displayName: SAS
+    gidNumber: 1001
+    name: sas
+    member: uid=cas,ou=users,dc=gelldap,dc=com
+    member: uid=sas,ou=users,dc=gelldap,dc=com
+    memberUid: cas
+    memberUid: sas
+    o: GELLDAP
+
+    dn: cn=cas_grp,ou=groups,dc=gelldap,dc=com
+    objectClass: extensibleObject
+    objectClass: groupOfNames
+    objectClass: posixGroup
+    objectClass: top
+    cn: cas_grp
+    displayName: CAS
+    gidNumber: 1002
+    name: cas
+    member: uid=cas,ou=users,dc=gelldap,dc=com
+    memberUid: cas
+    o: GELLDAP
+
+    dn: uid=sasadm,ou=users,dc=gelldap,dc=com
+    objectClass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixAccount
+    objectClass: top
+    cn: sasadm
+    gidNumber: 2002
+    homeDirectory: /home/sasadm
+    sn: Admin
+    uid: sasadm
+    uidNumber: 2002
+    displayName: SAS Administrator
+    givenName: SAS
+    l: Cary
+    loginShell: /bin/bash
+    mail: sasadm@gelldap.com
+    o: GELLDAP
+    userPassword: lnxsas
+
+    dn: uid=frapas,ou=users,dc=gelldap,dc=com
+    objectclass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixaccount
+    objectClass: top
+    cn: fraPAS
+    gidNumber: 2002
+    homedirectory: /home/frapas
+    givenName: Pascal
+    sn: Scribe
+    uid: frapas
+    uidNumber: 6020
+    displayName: Pascal SCRIBE
+    employeeNumber: G211020
+    l: Paris
+    loginshell: /bin/bash
+    mail: frapas@gelldap.com
+    o: GELLDAP
+    title: SAS Viya Admin
+    userPassword: Pascal2021
+    
+    dn: uid=frasep,ou=users,dc=gelldap,dc=com
+    objectclass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixaccount
+    objectClass: top
+    cn: fraPAS
+    gidNumber: 2003
+    homedirectory: /home/frasep
+    givenName: Sebastien
+    sn: Poussart
+    uid: frasep
+    uidNumber: 6021
+    displayName: Sebastien Poussart
+    employeeNumber: G211020
+    l: Paris
+    loginshell: /bin/bash
+    mail: frasep@gelldap.com
+    o: GELLDAP
+    title: SAS Viya Admin
+    userPassword: SAS2021
+    
+    dn: uid=frademo,ou=users,dc=gelldap,dc=com
+    objectclass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixaccount
+    objectClass: top
+    cn: fraPAS
+    gidNumber: 2004
+    homedirectory: /home/frademo
+    givenName: demo
+    sn: demo
+    uid: frademo
+    uidNumber: 6022
+    displayName: Compte Demo
+    employeeNumber: G211020
+    l: Paris
+    loginshell: /bin/bash
+    mail: frademo@gelldap.com
+    o: GELLDAP
+    title: SAS Demo Admin
+    userPassword: SAS2021
+    
+    dn: uid=sahbi,ou=users,dc=gelldap,dc=com
+    objectclass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixaccount
+    objectClass: top
+    cn: fraPAS
+    gidNumber: 2004
+    homedirectory: /home/sahbi
+    givenName: demo
+    sn: demo
+    uid: sahbi
+    uidNumber: 6023
+    displayName: Sahbi Chaieb 
+    employeeNumber: G211020
+    l: Paris
+    loginshell: /bin/bash
+    mail: sahbi@gelldap.com
+    o: GELLDAP
+    title: Sahbi Chaieb
+    userPassword: SAS2021
+
+
+    dn: cn=sasadmins,ou=groups,dc=gelldap,dc=com
+    objectClass: extensibleObject
+    objectClass: groupOfNames
+    objectClass: posixGroup
+    objectClass: top
+    cn: sasadmins
+    member: uid=geladm,ou=users,dc=gelldap,dc=com
+    member: uid=sas,ou=users,dc=gelldap,dc=com
+    member: uid=sasadm,ou=users,dc=gelldap,dc=com
+    member: uid=frapas,ou=users,dc=gelldap,dc=com
+    member: uid=frademo,ou=users,dc=gelldap,dc=com
+    member: uid=frasep,ou=users,dc=gelldap,dc=com
+    memberOf: cn=gelldap,ou=groups,dc=gelldap,dc=com
+    displayName: IT Admins
+    gidNumber: 2002
+    memberUid: geladm
+    memberUid: sas
+    memberUid: sasadm
+    memberuid: frapas
+    name: SASAdmins
+    o: GELLDAP
+
+    dn: cn=sasusers,ou=groups,dc=gelldap,dc=com
+    objectClass: extensibleObject
+    objectClass: groupOfNames
+    objectClass: posixGroup
+    objectClass: top
+    cn: sasusers
+    member: cn=gelldap,ou=groups,dc=gelldap,dc=com
+    member: uid=geladm,ou=users,dc=gelldap,dc=com
+    member: uid=sasadm,ou=users,dc=gelldap,dc=com
+    member: uid=sas,ou=users,dc=gelldap,dc=com
+    member: uid=frapas,ou=users,dc=gelldap,dc=com
+    member: uid=frasep,ou=users,dc=gelldap,dc=com
+    member: uid=frademo,ou=users,dc=gelldap,dc=com
+    member: uid=sahbi,ou=users,dc=gelldap,dc=com
+    displayName: SAS Users
+    gidNumber: 2003
+    memberUid: gelldap
+    memberUid: geladm
+    memberUid: sas
+    memberUid: sasadm
+    memberuid: frapas
+    memberuid: frasep
+    memberuid: frademo
+    memberuid: sahbi
+    name: SASUsers
+    o: GELLDAP
+
+    dn: uid=geladm,ou=users,dc=gelldap,dc=com
+    objectClass: inetOrgPerson
+    objectClass: organizationalPerson
+    objectClass: posixAccount
+    objectClass: top
+    cn: geladm
+    gidNumber: 2002
+    homeDirectory: /home/geladm
+    sn: geladm
+    uid: geladm
+    uidNumber: 4000
+    displayName: geladm
+    employeeNumber: P301
+    l: Cary
+    loginShell: /bin/bash
+    mail: geladm@gelldap.com
+    o: GELLDAP
+    title: Platform Administrator
+    userPassword: lnxsas
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gelldap-memberof-overlay
+  labels:
+    app.kubernetes.io/part-of: gelldap
+data:
+  03-memberOf.ldif: |
+    # Load memberof module
+    dn: cn=module{0},cn=config
+    changetype: modify
+    add: olcModuleLoad
+    olcModuleLoad: memberof
+
+    # Backend memberOf overlay
+    dn: olcOverlay={0}memberof,olcDatabase={1}{{ LDAP_BACKEND }},cn=config
+    changetype: add
+    objectClass: olcOverlayConfig
+    objectClass: olcMemberOf
+    olcOverlay: {0}memberof
+    olcMemberOfDangling: ignore
+    olcMemberOfRefInt: TRUE
+    olcMemberOfGroupOC: posixGroup
+    olcMemberOfMemberAD: member
+    olcMemberOfMemberOfAD: memberOf

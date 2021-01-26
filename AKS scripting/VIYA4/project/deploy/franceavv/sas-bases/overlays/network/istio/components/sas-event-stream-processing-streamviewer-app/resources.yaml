@@ -1,0 +1,41 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: sas-event-stream-processing-streamviewer-app
+spec:
+  host: sas-event-stream-processing-streamviewer-app
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        httpCookie:
+          name: sas-ingress-istio
+          path: /SASEventStreamProcessingStreamviewer/
+          ttl: 0s
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-event-stream-processing-streamviewer-app
+    sas.com/admin: namespace
+  name: sas-event-stream-processing-streamviewer-app
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /SASEventStreamProcessingStreamviewer
+    - uri:
+        prefix: /SASEventStreamProcessingStreamviewer/
+    route:
+    - destination:
+        host: sas-event-stream-processing-streamviewer-app
+    timeout: 300s
+

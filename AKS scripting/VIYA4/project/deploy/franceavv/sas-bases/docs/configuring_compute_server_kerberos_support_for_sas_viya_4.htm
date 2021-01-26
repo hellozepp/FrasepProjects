@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="sas.css"/>
+        <title>Configuring Compute Server Kerberos support for SAS Viya 4</title>
+    </head>
+    <body>
+        <h1 id="configuring-compute-server-kerberos-support-for-sas-viya-4">Configuring Compute Server Kerberos support for SAS Viya 4</h1>
+<p>This README describes the steps necessary to configure your SAS Viya 4 deployment SAS Compute Server for
+using Kerberos.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Read and follow the instructions in <code>$deploy/sas-bases/examples/kerberos/sas-servers/README.md</code>.  These steps only need to be performed once as they apply to all SAS Servers.</p>
+<h2 id="installation">Installation</h2>
+<ol>
+<li>Make the following changes to the base kustomization.yaml file in the <code>$deploy</code> directory.
+    * If TLS enabled: Add sas-bases/overlays/kerberos/sas-compute-server/compute-server-kerberos-tls.yaml to the transformers block.
+    * If TLS not enabled: Add sas-bases/overlays/kerberos/sas-compute-server/compute-server-kerberos-no-tls.yaml to the transformers block.</li>
+<li>
+<p>Check <code>$deploy/sas-bases/overlays/kerberos</code> for additional SAS Servers and follow instructions in the respective <code>README.md</code> files.</p>
+</li>
+<li>
+<p>Once all SAS Servers are configured in the base kustomization.yaml, use the deployment commands described in <a href="http://documentation.sas.com/?cdcId=itopscdc&amp;cdcVersion=default&amp;docsetId=dplyml0phy0dkr&amp;docsetTarget=titlepage.htm">SAS Viya Deployment Guide</a> to apply the new settings.</p>
+</li>
+</ol>
+    </body>
+</html>

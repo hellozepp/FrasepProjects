@@ -1,0 +1,311 @@
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+    sas.com/registry-sync: default
+    sas.com/registry-tags: proxy
+  labels:
+    app.kubernetes.io/name: sas-forecasting-services
+    sas.com/admin: namespace
+  name: sas-forecasting-data-definition
+spec:
+  ports:
+  - name: vfdatadef
+    port: 80
+    protocol: TCP
+    targetPort: vfdatadef
+  selector:
+    app.kubernetes.io/name: sas-forecasting-services
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+    sas.com/registry-providers: analyticsGateway-provider,analyticsGateway-provider-forecasting,jobExecution-provider,jobExecution-provider-forecasting,jobExecution-provider-forecastingSegmentation
+    sas.com/registry-sync: default
+    sas.com/registry-tags: proxy
+  labels:
+    app.kubernetes.io/name: sas-forecasting-services
+    sas.com/admin: namespace
+  name: sas-forecasting-gateway
+spec:
+  ports:
+  - name: vfgateway
+    port: 80
+    protocol: TCP
+    targetPort: vfgateway
+  selector:
+    app.kubernetes.io/name: sas-forecasting-services
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+    sas.com/registry-sync: default
+    sas.com/registry-tags: proxy
+  labels:
+    app.kubernetes.io/name: sas-forecasting-services
+    sas.com/admin: namespace
+  name: sas-forecasting-overrides
+spec:
+  ports:
+  - name: vfoverrides
+    port: 80
+    protocol: TCP
+    targetPort: vfoverrides
+  selector:
+    app.kubernetes.io/name: sas-forecasting-services
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+    sas.com/registry-sync: default
+    sas.com/registry-tags: proxy
+  labels:
+    app.kubernetes.io/name: sas-forecasting-services
+    sas.com/admin: namespace
+  name: sas-forecasting-strategies
+spec:
+  ports:
+  - name: vfstrategies
+    port: 80
+    protocol: TCP
+    targetPort: vfstrategies
+  selector:
+    app.kubernetes.io/name: sas-forecasting-services
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    sas.com/certificate-file-format: jks
+    sas.com/kustomize-base: spring
+    sas.com/pod-uses-liveness-probe: http
+    sas.com/pod-uses-readiness-probe: http
+    sas.com/pod-uses-startup-probe: http
+    sidecar.istio.io/proxyCPU: 15m
+    sidecar.istio.io/proxyMemory: 115Mi
+  labels:
+    app.kubernetes.io/name: sas-forecasting-services
+    sas.com/admin: namespace
+    sas.com/deployment-base: spring
+    workload.sas.com/class: stateless
+  name: sas-forecasting-services
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sas-forecasting-services
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /internal/metrics
+        prometheus.io/port: "10445"
+        prometheus.io/scheme: http
+        prometheus.io/scrape: "true"
+        sas.com/certificate-file-format: jks
+        sas.com/kustomize-base: spring
+        sas.com/pod-uses-liveness-probe: http
+        sas.com/pod-uses-readiness-probe: http
+        sas.com/pod-uses-startup-probe: http
+        seccomp.security.alpha.kubernetes.io/pod: runtime/default
+        sidecar.istio.io/proxyCPU: 15m
+        sidecar.istio.io/proxyMemory: 115Mi
+      labels:
+        app: sas-forecasting-services
+        app.kubernetes.io/name: sas-forecasting-services
+        workload.sas.com/class: stateless
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: workload.sas.com/class
+                operator: In
+                values:
+                - stateless
+            weight: 100
+          - preference:
+              matchExpressions:
+              - key: workload.sas.com/class
+                operator: NotIn
+                values:
+                - compute
+                - cas
+                - stateful
+                - connect
+            weight: 50
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.azure.com/mode
+                operator: NotIn
+                values:
+                - system
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - sas-forecasting-services
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      automountServiceAccountToken: false
+      containers:
+      - env:
+        - name: SAS_K8S_DEPLOYMENT_NAME
+          value: sas-forecasting-services
+        - name: JAVA_OPTION_SERVER_PORT
+        - name: MANAGEMENT_SERVER_PORT
+          value: ${sas.${spring.application.name}.management.server.port:10445}
+        - name: LOGGING_LEVEL_COM_SAS_COMMONS_REST_BOOT_INITIALIZATION
+          value: TRACE
+        - name: LOGGING_LEVEL_COM_SAS_COMMONS_DB
+          value: TRACE
+        envFrom:
+        - configMapRef:
+            name: sas-java-config
+        - configMapRef:
+            name: sas-shared-config
+        - secretRef:
+            name: sas-consul-client
+        - configMapRef:
+            name: sas-spring-management-config
+        image: sas-forecasting-services
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - sh
+              - -c
+              - sleep 5
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /internal/live
+            port: http-internal
+            scheme: HTTP
+          periodSeconds: 10
+        name: sas-forecasting-services
+        ports:
+        - containerPort: 10445
+          name: http-internal
+          protocol: TCP
+        - containerPort: 8081
+          name: vfgateway
+          protocol: TCP
+        - containerPort: 8082
+          name: vfdatadef
+          protocol: TCP
+        - containerPort: 8083
+          name: vfstrategies
+          protocol: TCP
+        - containerPort: 8084
+          name: vfoverrides
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /internal/ready
+            port: http-internal
+            scheme: HTTP
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 800Mi
+          requests:
+            cpu: 50m
+            memory: 650Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add: []
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        startupProbe:
+          failureThreshold: 180
+          httpGet:
+            path: /internal/live
+            port: http-internal
+            scheme: HTTP
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /opt/sas/viya/config/tmp
+          name: tmp
+      imagePullSecrets: []
+      securityContext:
+        runAsNonRoot: true
+      tolerations:
+      - effect: NoSchedule
+        key: workload.sas.com/class
+        operator: Equal
+        value: stateful
+      - effect: NoSchedule
+        key: workload.sas.com/class
+        operator: Equal
+        value: stateless
+      volumes:
+      - emptyDir: {}
+        name: tmp
+
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  annotations:
+    sas.com/ha-class: centralized
+    sas.com/kustomize-base: base
+  name: sas-forecasting-services
+spec:
+  minAvailable: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sas-forecasting-services
+
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    sas.com/ha-class: centralized
+    sas.com/kustomize-base: spring
+  name: sas-forecasting-services
+spec:
+  maxReplicas: 1
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 80
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sas-forecasting-services
