@@ -1,6 +1,13 @@
 options sastrace='d,d,,d' sastraceloc=saslog nostsuffix sql_ip_trace=(note,source) msglevel=i fullstimer ;
 
-libname mongosas mongo server="192.168.1.32" port=27017 db='db' trace=YES TRACEFLAGS=ALL TRACEFILE="/tmp/test_mongo.trc";
+libname mongosas mongo server="192.168.1.32" port=27017 db='db' trace=YES TRACEFLAGS=ALL TRACEFILE="/tmp/test_mongo.trc" SCHEMA_COLLECTION='$temp$';
+
+/******************************/
+/* Refresh default sas schema */
+
+proc fedsql;
+   execute (refresh) by mongosas;
+quit;
 
 cas mysess;
 
@@ -14,26 +21,26 @@ quit;
 
 PROC SQL;
      CREATE TABLE CALCUL_R84_2020M12 as 
-     select item from mydb.inventory2_flat where status="D";
+     select * from mongosas.inventory2 where status="D";
 QUIT;
 
+/***************************/
 /* FEDSQL on SAS 9 libname */
 
-proc fedsql libs=(mongosas);
-     create table inventory as
-     select * from connection to mongosas
-	 (inventory2.find({"status":"D"}));
-quit;
-
 proc fedsql;
-   execute (refresh) by mongosas;
+     select * from connection to mongosas(db.inventory2.find({}));
 quit;
 
+/****************************/
 /* FEDSQL on CASLIB libname */
 /* pas de passthrough fedsql ? */
+
 proc fedsql sessref=mysess;
-     create table casuser.inventory as
-     select * from connection to mongocas(db.inventory2.find({"status":"D"}));
+     select * from connection to mongocas(inventory2.find({"status":"D"}));
+quit;
+
+proc cas;
+fedsql.execdirect / query="" requireFullPassThrough=TRUE;
 quit;
 
 
