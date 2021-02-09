@@ -47,14 +47,14 @@ proc cas ;
 	      casLib="espStatic"
 	      espUri="trades/trades_cq/Trades"  
 	      casOut={caslib="public", name="streamTrades", promote=true}
-		  commitValue=1;
+		  commitValue=10;
 	run;
 
 	action loadStreams.loadStream session="background2" async="job2"/
 	      casLib="espStatic"
 	      espUri="trades/trades_cq/Scoring"
 	      casOut={caslib="public", name="streamTotalCost", promote=true}
-		  commitValue=1;
+		  commitValue=10;
 	run;
  
    job = wait_for_next_action(0) ;
