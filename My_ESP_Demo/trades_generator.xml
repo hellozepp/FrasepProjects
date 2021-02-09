@@ -16,6 +16,6 @@
   <field name='quantity'>random(1000,5000)</field>
   <field name='price'>random(1.5,200.0)</field>
   <field name='traderID'>listItem(#brokers,random(0,$numBrokers))</field>
-  <field name='time'>i64(sum($time, random(0,300)))</field>
+  <field name='time'>i64(sum($time, random(0,20000)))</field>
  </fields>
 </event-generator>
