@@ -1,0 +1,5 @@
+generators:
+  - generators/truststore-only-tls-generators.yaml
+
+configurations:
+  - kustomizeconfig.yaml

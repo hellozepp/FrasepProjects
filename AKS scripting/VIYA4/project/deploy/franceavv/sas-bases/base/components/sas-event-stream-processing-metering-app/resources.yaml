@@ -1,0 +1,101 @@
+
+---
+kind: Service
+apiVersion: v1 
+metadata:
+  name: sas-event-stream-processing-metering-app
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-event-stream-processing-metering-app
+spec:
+  selector:
+    app: sas-event-stream-processing-metering-app               # target any pod with the app=espmeter label
+  ports:
+    - protocol: TCP             # TCP
+      targetPort: 31415         # the port esp exposes on the pod it runs in
+      port: 80                  # the port within the K8 cluster
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sas-event-stream-processing-metering-app
+  annotations:
+    sas.com/database-consumer: "true"
+    sas.com/certificate-file-format: jks
+    sas.com/pod-uses-readiness-probe: http
+  labels: 
+    workload.sas.com/class: stateless
+    app.kubernetes.io/name: sas-event-stream-processing-metering-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sas-event-stream-processing-metering-app
+  template:
+    metadata:
+      annotations:
+        sas.com/certificate-file-format: jks
+        sas.com/pod-uses-readiness-probe: http
+      labels:
+        app: sas-event-stream-processing-metering-app
+        workload.sas.com/class: stateless
+        app.kubernetes.io/name: sas-event-stream-processing-metering-app
+    spec:
+      tolerations:
+        - key: "workload.sas.com/class"
+          operator: "Equal"
+          value: "stateful"
+          effect: "NoSchedule"
+        - key: "workload.sas.com/class"
+          operator: "Equal"
+          value: "stateless"
+          effect: "NoSchedule"
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: workload.sas.com/class
+                operator: In
+                values:
+                - stateless
+              matchFields: []
+            weight: 100
+          - preference:
+              matchExpressions:
+              - key: workload.sas.com/class
+                operator: NotIn
+                values:
+                - compute
+                - cas
+                - stateful
+              matchFields: []
+            weight: 50
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.azure.com/mode
+                operator: NotIn
+                values:
+                - system
+      containers:
+      - name: sas-event-stream-processing-metering-app
+        image: sas-event-stream-processing-metering-app
+        env:
+          - name: server_port
+            value: "31415"
+          - name: file_encoding
+            value: "UTF-8"
+          - name: application_schema
+            value: espmetering
+        ports:
+          - containerPort: 31415
+            name: http
+        readinessProbe:
+          httpGet:
+            httpHeaders: []
+            path: /internal/ready
+            port: http

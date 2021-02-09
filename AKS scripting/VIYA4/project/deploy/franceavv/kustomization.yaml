@@ -1,0 +1,89 @@
+---
+namespace: franceavv
+resources:
+    - sas-bases/base
+    - sas-bases/overlays/cert-manager-issuer # TLS
+    - sas-bases/overlays/network/ingress
+    - sas-bases/overlays/network/ingress/security # TLS
+    #  - sas-bases/overlays/internal-postgres
+    #  - sas-bases/overlays/crunchydata
+    - sas-bases/overlays/cas-server
+    - sas-bases/overlays/update-checker # added update checker
+    - sas-bases/overlays/cas-server/auto-resources # CAS-related
+configurations:
+    - sas-bases/overlays/required/kustomizeconfig.yaml # required for 0.6
+transformers:
+    - sas-bases/overlays/network/ingress/security/transformers/product-tls-transformers.yaml # TLS
+    - sas-bases/overlays/network/ingress/security/transformers/ingress-tls-transformers.yaml # TLS
+    - sas-bases/overlays/network/ingress/security/transformers/backend-tls-transformers.yaml # TLS
+    - sas-bases/overlays/required/transformers.yaml
+    #  - sas-bases/overlays/internal-postgres/internal-postgres-transformer.yaml
+    - sas-bases/overlays/external-postgres/external-postgres-transformer.yaml
+    - site-config/security/cert-manager-provided-ingress-certificate.yaml # TLS
+    - sas-bases/overlays/cas-server/auto-resources/remove-resources.yaml # CAS-related
+    # - sas-bases/overlays/scaling/zero-scale/phase-0-transformer.yaml
+    # - sas-bases/overlays/scaling/zero-scale/phase-1-transformer.yaml
+
+    - site-config/cas-manage-workers.yaml
+    - site-config/patches/mirror.yaml
+# set a custom Storage Class for PersistentVolumeClaims, as it's not currently possible to change the default SC in AKS
+# a new SC is required to support ReadWriteMany access
+# Note: annotationSelector is how we limit which PV use azurefiles/RWX versus default RWO.
+patches:
+    - path: site-config/patches/storage-class.yaml
+      target:
+        kind: PersistentVolumeClaim
+        annotationSelector: sas.com/component-name in (sas-cas-operator,sas-backup-job,sas-event-stream-processing-studio-app,sas-reference-data-deploy-utilities,sas-data-quality-services,sas-model-publish)
+
+configMapGenerator:
+  - name: input 
+    behavior: merge
+    literals:
+    - IMAGE_REGISTRY=depotviya.azurecr.io
+    
+  - name: ingress-input
+    behavior: merge
+    literals:
+      - INGRESS_HOST=franceavv.eastus2.cloudapp.azure.com
+
+  - name: sas-shared-config
+    behavior: merge
+    literals:
+      - CASCFG_SERVICESBASEURL=http://franceavv.eastus2.cloudapp.azure.com
+      - SERVICES_BASE_URL=http://franceavv.eastus2.cloudapp.azure.com
+      - SAS_SERVICES_URL=http://franceavv.eastus2.cloudapp.azure.com
+
+  - name: sas-consul-config            ## This injects content into consul. You can add, but not replace
+    behavior: merge
+    files:
+      - SITEDEFAULT_CONF=site-config/gelldap-sitedefault.yaml
+
+  # # This is to fix an issue with services startup https://rndjira.sas.com/browse/NGCONFIG-587.
+  # # Do not do this at a customer site
+  - name: sas-go-config
+    behavior: merge
+    literals:
+      - SAS_BOOTSTRAP_HTTP_CLIENT_TIMEOUT_REQUEST='5m'
+
+  - name: sas-postgres-config
+    behavior: merge
+    literals:
+      - DATABASE_HOST=pgviyadb-fr.postgres.database.azure.com
+      - DATABASE_PORT=5432
+      - DATABASE_SSL_ENABLED="true"
+      - DATABASE_NAME=SharedServices
+      - EXTERNAL_DATABASE="true"
+      - SAS_DATABASE_DATABASESERVERNAME="postgres"
+
+secretGenerator:
+  - name: sas-image-pull-secrets
+    behavior: replace
+    type: kubernetes.io/dockerconfigjson
+    files:
+      - .dockerconfigjson=site-config/resources/cr_sas_com_access.json
+
+  - name: postgres-sas-user
+    literals:
+      - username=pgadmin@pgviyadb-fr
+      - password=LNX_sas_123
+        

@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gelldap-service
+  labels:
+    app: gelldap-service
+    app.kubernetes.io/part-of: gelldap
+spec:
+  ports:
+    - name: openldap-insecure-port
+      port: 389
+      targetPort: 389
+      protocol: TCP
+  selector:
+    app: gelldap-server

@@ -1,0 +1,22 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 2048m
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-event-stream-processing-metering-app
+  name: sas-event-stream-processing-metering-app
+spec:
+  rules:
+  - host: $(INGRESS_HOST)
+    http:
+      paths:
+      - backend:
+          serviceName: sas-event-stream-processing-metering-app
+          servicePort: 80
+        path: /SASEventStreamProcessingMetering(/|$)(.*)
+

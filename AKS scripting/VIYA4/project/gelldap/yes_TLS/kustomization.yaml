@@ -1,0 +1,6 @@
+---
+resources:
+  - ../bases/
+  - deployment.yaml
+  - service.yaml
+  - certificate.yaml
