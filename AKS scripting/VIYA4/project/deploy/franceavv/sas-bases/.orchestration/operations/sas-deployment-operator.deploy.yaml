@@ -1,0 +1,34 @@
+apiVersion: orchestration.sas.com/v1
+kind: LifecycleOperation
+metadata:
+  name: sas-deployment-operator.deploy
+spec:
+  args:
+  - name: namespace
+  - name: manifest
+  - name: permissionsManifest
+  steps:
+  - args:
+    - apply
+    - --namespace
+    - $namespace
+    - -f
+    - $permissionsManifest
+    cmd: kubectl
+    when: $permissionsManifest
+  - args:
+    - deploy
+    - --namespace
+    - $namespace
+    - --manifest
+    - $manifest
+    cmd: run
+  - always: true
+    args:
+    - delete
+    - --namespace
+    - $namespace
+    - -f
+    - $permissionsManifest
+    cmd: kubectl
+    when: $permissionsManifest

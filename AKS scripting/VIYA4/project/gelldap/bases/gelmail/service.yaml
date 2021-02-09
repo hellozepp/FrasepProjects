@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gelmail-service
+  labels:
+    app: gelmail-service
+    app.kubernetes.io/part-of: gelldap
+spec:
+  ports:
+    - name: gelmail-smtp
+      port: 1025
+      targetPort: 1025
+      protocol: TCP
+    - name: gelmail-http
+      port: 8025
+      targetPort: 8025
+      protocol: TCP
+  selector:
+    app: gelmail-server

@@ -1,0 +1,840 @@
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sas-esp-operator
+  annotations:
+    sas.com/certificate-file-format: pem
+    sas.com/component-name: sas-esp-operator
+  labels:
+    workload.sas.com/class: stateless
+    app.kubernetes.io/name: sas-esp-operator
+    sas.com/zero-scale-phase: "1"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: sas-esp-operator
+  template:
+    metadata:
+      annotations:
+        sas.com/certificate-file-format: pem
+        sas.com/component-name: sas-esp-operator
+        prometheus.io/port: "8383"
+        prometheus.io/scrape: "true"
+        prometheus.io/scheme: "http"
+      labels:
+        workload.sas.com/class: stateless
+        app.kubernetes.io/name: sas-esp-operator
+        name: sas-esp-operator
+    spec:
+      tolerations:
+        - key: "workload.sas.com/class"
+          operator: "Equal"
+          value: "stateful"
+          effect: "NoSchedule"
+        - key: "workload.sas.com/class"
+          operator: "Equal"
+          value: "stateless"
+          effect: "NoSchedule"
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: workload.sas.com/class
+                operator: In
+                values:
+                - stateless
+              matchFields: []
+            weight: 100
+          - preference:
+              matchExpressions:
+              - key: workload.sas.com/class
+                operator: NotIn
+                values:
+                - compute
+                - cas
+                - stateful
+              matchFields: []
+            weight: 50
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.azure.com/mode
+                operator: NotIn
+                values:
+                - system
+      serviceAccountName: sas-esp-operator
+      containers:
+        - name: sas-esp-operator
+          image: sas-esp-operator
+          command:
+          #- esp-operator
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: SAS_LICENSE
+              valueFrom:
+                secretKeyRef:
+                  key: SAS_LICENSE
+                  name: sas-license
+            - name: OPERATOR_NAME
+              value: "sas-esp-operator"
+            - name: CONSUL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: CONSUL_TOKEN
+                  name: sas-consul-client
+            - name: ESPOP_ESPCONFIG # ESPConfig used to configure operator
+              value: "sas-esp-operator"
+            - name: ESPOP_PUBLICHOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: INGRESS_HOST
+                  name: ingress-input
+            - name: ESPOP_SERVER__HTTP_PORT
+              value: "31415"
+            - name: ESPOP_SERVER__PUBSUB_PORT
+              value: "31416"
+          envFrom:
+          - configMapRef:
+              name: sas-shared-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/port: "80"
+    prometheus.io/scrape: "true"
+    prometheus.io/scheme: "http"
+  labels:
+    app.kubernetes.io/name: sas-esp-operator
+  name: sas-esp-operator
+spec:
+  ports:
+  - name: http-metrics
+    port: 80
+    protocol: TCP
+    targetPort: 8383
+  selector:
+    name: sas-esp-operator
+  type: ClusterIP
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: espconfigs.iot.sas.com
+spec:
+  group: iot.sas.com
+  names:
+    kind: ESPConfig
+    listKind: ESPConfigList
+    plural: espconfigs
+    singular: espconfig
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          type: object
+        status:
+          type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+
+---
+apiVersion: iot.sas.com/v1alpha1
+kind: ESPConfig
+metadata: 
+  annotations:
+    sas.com/certificate-file-format: pem
+  name: sas-esp-operator
+spec:
+  espProperties:
+    "env.server.license": "ESP_LICENSE"
+    "security.server.internal_paths": "metrics"
+    "meta.meteringport": "80"
+    "meta.meteringhost": "http://sas-event-stream-processing-metering-app"
+  operatorProperties: # the properties ESP operator use to configure projects
+    server.enableViyaOauth2: "true"
+  limits: # this set the limits that applies to all ESP project pod and HPA
+    maxReplicas: "5"
+    maxMemory: "4Gi"
+    maxCpu: "2"
+  projectTemplate: # deployment template for the project, overridden by ESPServer; ((...)) means a placeholder for the operator to fill in, ports 31415 and 31416 will be replaced if the project is configured to use different ports.
+    autoscale:
+      minReplicas: 1
+      maxReplicas: 10 
+      metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 50 
+    ingress:
+      metadata:
+        annotations:
+          #certmanager.k8s.io/issuer:
+          kubernetes.io/ingress.class: nginx
+          nginx.ingress.kubernetes.io/rewrite-target: /$2
+          nginx.ingress.kubernetes.io/use-regex: "true"
+        labels:
+          app: ((PROJECT_SERVICE_NAME))
+          type: esp
+        name: ((PROJECT_SERVICE_NAME))
+        namespace: ((PROJECT_NAMESPACE))
+      spec:
+        rules:
+        - host: ((PUBLIC_HOST_NAME))
+          http:
+            paths:
+            - backend:
+                serviceName: ((PROJECT_SERVICE_NAME))
+                servicePort: 80
+              path: /SASEventStreamProcessingServer/((PROJECT_SERVICE_NAME))(/|$)(.*)
+    httpService:
+      metadata:
+        annotations:
+          "prometheus.io/scrape": "true"
+          "prometheus.io/port": "80" # service http port 
+          "prometheus.io/scheme": "http"
+          "prometheus.io/path": "/SASESP/metrics"
+          sas.com/readiness-check: disabled
+        labels:
+          app: ((PROJECT_SERVICE_NAME))
+          project: ((PROJECT_HASHED_NAME))
+          app.kubernetes.io/name: ((PROJECT_SERVICE_NAME))
+          esp-component: project
+          type: http
+        name: ((PROJECT_SERVICE_NAME))
+        namespace: ((PROJECT_NAMESPACE))
+      spec:
+        ports:
+        - name: http
+          port: 80 # 443 if https enabled
+          protocol: TCP
+          targetPort: http
+        selector:
+          app: ((PROJECT_SERVICE_NAME))
+    pubsubService:
+      metadata:
+        annotations:
+        labels:
+          app: ((PROJECT_SERVICE_NAME))
+          project: ((PROJECT_HASHED_NAME))
+          type: pubsub
+          sas.com/readiness-check: disabled
+        name: ((PROJECT_PUBSUB_SERVICE_NAME))
+        namespace: ((PROJECT_NAMESPACE))
+      spec:
+        clusterIP: None
+        ports:
+        - name: pubsub
+          port: 31416
+          protocol: TCP
+          targetPort: pubsub
+        selector:
+          app: ((PROJECT_SERVICE_NAME))
+    deployment:
+      metadata:
+        name: ((PROJECT_SERVICE_NAME))
+        namespace: ((PROJECT_NAMESPACE))
+        annotations:
+          sas.com/component-name: ((PROJECT_SERVICE_NAME))
+          sas.com/certificate-file-format: pem
+        labels:
+          workload.sas.com/class: compute
+          app.kubernetes.io/name: ((PROJECT_SERVICE_NAME))
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: ((PROJECT_SERVICE_NAME))
+            type: esp
+        template: 
+          metadata:
+            annotations:
+              sas.com/component-name: ((PROJECT_SERVICE_NAME))
+              sas.com/certificate-file-format: pem
+              "prometheus.io/scrape": "true"
+              "prometheus.io/port": "31415"
+              "prometheus.io/scheme": "http"
+              "prometheus.io/path": "/SASESP/metrics"
+            labels:
+              app: ((PROJECT_SERVICE_NAME))
+              app.kubernetes.io/name: ((PROJECT_SERVICE_NAME))
+              workload.sas.com/class: compute
+              type: esp
+          spec: 
+            tolerations:
+            - effect: NoSchedule
+              key: workload.sas.com/class
+              operator: Equal
+              value: compute
+            affinity:
+              nodeAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                - preference:
+                    matchExpressions:
+                    - key: workload.sas.com/class
+                      operator: In
+                      values:
+                      - compute
+                    matchFields: []
+                  weight: 100
+                - preference:
+                    matchExpressions:
+                    - key: workload.sas.com/class
+                      operator: NotIn
+                      values:
+                      - cas
+                      - stateful
+                      - stateless
+                    matchFields: []
+                  weight: 50
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                  - matchExpressions:
+                    - key: kubernetes.azure.com/mode
+                      operator: NotIn
+                      values:
+                      - system
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                      - sas-event-stream-processing-server-app
+                  topologyKey: kubernetes.io/hostname
+            serviceAccountName: sas-esp-project
+            containers:
+            - name: ((PROJECT_SERVICE_NAME)) 
+              image: sas-event-stream-processing-server-app
+              imagePullPolicy: IfNotPresent
+              env:
+              - name: ESPENV_security_oauth2_client_id
+                valueFrom:
+                  secretKeyRef:
+                    key: ESPENV_security_oauth2_client_id
+                    name: esp-saslogon
+              - name: ESPENV_security_oauth2_client_secret
+                valueFrom:
+                  secretKeyRef:
+                    key: ESPENV_security_oauth2_client_secret
+                    name: esp-saslogon
+              - name: ESP_LICENSE
+                valueFrom:
+                  secretKeyRef:
+                    key: SAS_LICENSE
+                    name: sas-license
+              - name: MAS_M2PATH
+                value: /opt/sas/viya/home/SASFoundation/misc/embscoreeng/mas2py.py
+              - name: TKTXTANIO_BINDAT_DIR
+                value: /opt/sas/viya/home/SASFoundation/misc/tktg
+              envFrom: []
+              resources:
+                requests:
+                  memory: "1Gi"
+                  cpu: "1"
+                limits:
+                  memory: "2Gi"
+                  cpu: "2"
+              ports:
+              - name: http
+                containerPort:  31415
+              - name: pubsub
+                containerPort:  31416
+              readinessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /internal/ready
+                  port: 31415
+                  scheme: HTTP
+              volumeMounts: []
+            imagePullSecrets:
+            - name: sas-image-pull-secrets
+            volumes: []
+  loadBalancerTemplate: # deployment template for the project, overridden by ESPServer; ((...)) means a placeholder for the operator to fill in, ports 31415 and 31416 will be replaced if the project is configured to use different ports.
+    deployment:
+      metadata:
+        annotations:
+          sas.com/certificate-file-format: pem
+          sas.com/component-name: ((PROJECT_LB_SERVICE_NAME))
+        name: ((PROJECT_LB_SERVICE_NAME))
+        labels:
+          workload.sas.com/class: stateless
+          app.kubernetes.io/name: ((PROJECT_LB_SERVICE_NAME)) 
+      spec:  # required for deployment spec
+        tolerations:
+          - key: "workload.sas.com/class"
+            operator: "Equal"
+            value: "stateful"
+            effect: "NoSchedule"
+          - key: "workload.sas.com/class"
+            operator: "Equal"
+            value: "stateless"
+            effect: "NoSchedule"
+        affinity:
+          nodeAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                - key: workload.sas.com/class
+                  operator: In
+                  values:
+                  - stateless
+                matchFields: []
+              weight: 100
+            - preference:
+                matchExpressions:
+                - key: workload.sas.com/class
+                  operator: NotIn
+                  values:
+                  - compute
+                  - cas
+                  - stateful
+                matchFields: []
+              weight: 50
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.azure.com/mode
+                  operator: NotIn
+                  values:
+                  - system
+        replicas: 1
+        selector:
+          matchLabels:
+            app: ((PROJECT_LB_SERVICE_NAME))
+        template: # required
+          metadata:
+            annotations:
+              sas.com/component-name: ((PROJECT_LB_SERVICE_NAME))
+              sas.com/certificate-file-format: pem
+              "prometheus.io/scrape": "true"
+              "prometheus.io/port": "31415"
+              "prometheus.io/scheme": "http"
+              "prometheus.io/path": "/SASESP/metrics"
+            labels:
+              app: ((PROJECT_LB_SERVICE_NAME))
+              app.kubernetes.io/name: ((PROJECT_LB_SERVICE_NAME))
+          spec: # required
+            serviceAccountName: "sas-esp-operator"
+            containers:
+            - name: ((PROJECT_SERVICE_NAME)) 
+              image: sas-event-stream-processing-server-app
+              imagePullPolicy: IfNotPresent
+              imagePullSecrets:
+              - name: sas-image-pull-secrets
+              env:
+              - name: ESPENV_security_oauth2_client_id
+                valueFrom:
+                  secretKeyRef:
+                    key: ESPENV_security_oauth2_client_id
+                    name: esp-saslogon
+              - name: ESPENV_security_oauth2_client_secret
+                valueFrom:
+                  secretKeyRef:
+                    key: ESPENV_security_oauth2_client_secret
+                    name: esp-saslogon
+              - name: ESP_LICENSE
+                valueFrom:
+                  secretKeyRef:
+                    key: SAS_LICENSE
+                    name: sas-license
+              #- name: SAS_CERTIFICATE
+                #value: {{cert}} ## To kustomize; this is the content of the cert (not the file name)
+              #- name: SAS_CERTIFICATE_PRIVATE_KEY
+                #value: {{key}} ## To kustomize; this is the content of the key (not the file name)
+              #- name: CONSUL_TOKEN
+                #value: {{token}} ## To kustomize; this is required by SASLogon 
+              resources:
+                requests:
+                  memory: "1Gi"
+                  cpu: "1"
+                limits:
+                  memory: "2Gi"
+                  cpu: "2"
+              readinessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /internal/ready
+                  port: 31415
+                  scheme: HTTP
+            - name: ((PROJECT_LB_SERVICE_NAME)) 
+              image: sas-esp-load-balancer
+              imagePullPolicy: IfNotPresent              
+              imagePullSecrets:
+              - name: sas-image-pull-secrets
+              env:
+              - name: ESPLB_HTTP
+                value: "31415"
+              - name: ESPLB_PUBSUB
+                value: "31416"
+              - name: WATCH_NAMESPACE
+                value: "((PROJECT_NAMESPACE))"
+              - name: ESPLB_PROJECT
+                value: "((PROJECT_SERVICE_NAME))"
+              - name: POD_NAME
+                valueFrom: 
+                  fieldRef:
+                    fieldPath: "metadata.name"
+              resources:
+                requests:
+                  memory: "1Gi"
+                  cpu: "1"
+                limits:
+                  memory: "2Gi"
+                  cpu: "2"
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sas-esp-operator
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sas-esp-operator
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/log
+  - services
+  - endpoints
+  - configmaps
+  - persistentvolumeclaims
+  - events
+  - secrets
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - list
+- apiGroups:
+  - autoscaling
+  resources:
+  - horizontalpodautoscalers
+  verbs: ["get", "watch", "list", "create", "update", "delete"]
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - replicasets
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - servicemonitors
+  verbs:
+  - get
+  - create
+- apiGroups:
+  - apps
+  resourceNames:
+  - sas-esp-operator
+  resources:
+  - deployments/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - iot.sas.com
+  resources:
+  - "*"
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+- apiGroups:
+  - cert-manager.io
+  resources:
+  - certificates
+  verbs: ["get", "list", "watch", "create", "update"]
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: sas-esp-operator
+subjects:
+- kind: ServiceAccount
+  name: sas-esp-operator
+roleRef:
+  kind: Role
+  name: sas-esp-operator
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sas-esp-project
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sas-esp-project
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: sas-esp-project
+subjects:
+- kind: ServiceAccount
+  name: sas-esp-project
+roleRef:
+  kind: Role
+  name: sas-esp-project
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: esprouters.iot.sas.com
+spec:
+  group: iot.sas.com
+  names:
+    kind: ESPRouter
+    listKind: ESPRouterList
+    plural: esprouters
+    singular: esprouter
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          type: object
+        status:
+          type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: espservers.iot.sas.com
+spec:
+  group: iot.sas.com
+  names:
+    kind: ESPServer
+    listKind: ESPServerList
+    plural: espservers
+    singular: espserver
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      properties:
+        access:
+          properties:
+            externalURL:
+              type: string
+            internalHostName:
+              type: string
+            internalHttpPort:
+              format: int64
+              type: integer
+            state:
+              description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                of cluster Important: Run "operator-sdk generate k8s" to regenerate
+                code after modifying this file Add custom validation using kubebuilder
+                tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html'
+              type: string
+          type: object
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          properties:
+            espProperties:
+              nullable: true
+              additionalProperties:
+                type: string
+              type: object
+            failover:
+              type: boolean
+            loadBalancePolicy:
+              type: string
+            projectTemplate:
+              nullable: true
+              type: object
+              properties:
+                autoscale:
+                  properties:
+                    maxReplicas:
+                      format: int32
+                      type: integer
+                    metrics:
+                      items:
+                        type: object
+                      type: array
+                    minReplicas:
+                      format: int32
+                      type: integer
+                  required:
+                  - minReplicas
+                  - maxReplicas
+                  - metrics
+                  type: object
+                spec:
+                  nullable: true
+                  type: object
+                  properties:
+                    replicas:
+                      description: number of replicas
+                      format: int64
+                      type: integer
+            loadBalancerTemplate:
+              nullable: true
+              type: object
+              properties:
+                spec:
+                  nullable: true
+                  type: object
+                  properties:
+                    replicas:
+                      description: number of replicas
+                      format: int64
+                      type: integer
+          required:
+          - espProperties
+          - loadBalancePolicy
+          type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: espupdates.iot.sas.com
+spec:
+  group: iot.sas.com
+  names:
+    kind: ESPUpdate
+    listKind: ESPUpdateList
+    plural: espupdates
+    singular: espupdate
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ESPUpdate is the Schema for the espupdates API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ESPUpdateSpec defines the desired state of ESPUpdate
+            type: object
+            properties:
+              policy:
+                type: string
+              gracePeriod:
+                type: string
+                nullable: true
+              selector:
+                type: string
+                nullable: true
+          status:
+            description: ESPUpdateStatus defines the observed state of ESPUpdate
+            type: object
+          response:
+            description: ESPUpdateResponse defines the response of ESPUpdate
+            nullable: true
+            type: object
+            properties:
+              succeeded:
+                type: boolean
+                nullable: true
+              reason:
+                type: string
+                nullable: true
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

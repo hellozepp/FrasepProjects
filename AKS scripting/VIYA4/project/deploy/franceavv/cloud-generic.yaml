@@ -1,0 +1,35 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ingress-nginx
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+spec:
+# BEGIN ANSIBLE MANAGED BLOCK : source ranges
+  loadBalancerSourceRanges:
+    - 10.244.0.0/16 #Pod CIDR
+    - 109.232.56.224/27 #Marlow
+    - 149.173.0.0/16 #Cary
+    - 104.41.138.194/32 #CloudShell
+    - 92.169.223.17/32 
+    - 92.184.106.26/32 
+  # END ANSIBLE MANAGED BLOCK : source ranges
+  externalTrafficPolicy: Local
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: https
+
+---
+

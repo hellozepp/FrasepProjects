@@ -1,0 +1,34 @@
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: gelldap-com
+spec:
+  # Secret names are always required.
+  secretName: gelldap-tls
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  organization:
+  - GEL
+  # The use of the common name field has been deprecated since 2000 and is
+  # discouraged from being used.
+  commonName: gelldap.com
+  isCA: false
+  keySize: 2048
+  keyAlgorithm: rsa
+  keyEncoding: pkcs1
+  usages:
+    - server auth
+  # At least one of a DNS Name, URI, or IP address is required.
+  dnsNames:
+  - gelldap.com
+  - gelldap-service
+  - "*.race.sas.com"
+  # Issuer references are always required.
+  issuerRef:
+    name: sas-viya-issuer
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: Issuer
+
+

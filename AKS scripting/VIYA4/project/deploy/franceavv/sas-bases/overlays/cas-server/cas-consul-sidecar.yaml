@@ -1,0 +1,98 @@
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: cas-consul-sidecar
+patch: |-
+  - op: add
+    path: /spec/controllerTemplate/spec/containers/-
+    value:
+      env:
+      - name: CONSUL_SERVER_LIST
+        value: sas-consul-server
+      - name: CONSUL_SERVER_FLAG
+        value: "false"
+      - name: CONSUL_CLIENT_ADDRESS
+        value: 127.0.0.1
+      - name: CONSUL_DATACENTER_NAME
+        value: viya
+      - name: CONSUL_TOKENS_ENCRYPTION
+        valueFrom:
+          secretKeyRef:
+            name: sas-consul-management
+            key: CONSUL_TOKENS_ENCRYPTION
+      envFrom:
+      - configMapRef:
+          name: sas-shared-config
+      - configMapRef:
+          name: sas-go-config
+      - secretRef:
+          name: sas-consul-client
+      image: sas-consul-server
+      imagePullPolicy: IfNotPresent
+      lifecycle:
+        preStop:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - PROTO="http";
+              [[ ! -z ${SAS_CERTIFICATE_FILE+x} ]] && export PROTO="https";
+              CONSUL_HTTP_ADDR=$PROTO://localhost:8500;
+              /opt/sas/viya/home/bin/consul leave && sleep 5;
+      name: sas-consul-agent
+      ports:
+      - containerPort: 8300
+        name: server
+        protocol: TCP
+      - containerPort: 8301
+        name: serflan-tcp
+        protocol: TCP
+      - containerPort: 8301
+        name: serflan-udp
+        protocol: UDP
+      - containerPort: 8500
+        name: http
+        protocol: TCP
+      readinessProbe:
+        exec:
+          command:
+          - sh
+          - -c
+          - if [ -z ${SAS_CERTIFICATE_FILE} ]; then reply=$(curl -s -L -o /dev/null
+            -w %{http_code} http://localhost:${SAS_CONSUL_SERVER_SERVICE_PORT_HTTP}/);
+            else reply=$(curl -s -L -o /dev/null -w %{http_code} --cacert ${SAS_TRUSTED_CA_CERTIFICATES_PEM_FILE}
+            https://localhost:${SAS_CONSUL_SERVER_SERVICE_PORT_HTTP}/); fi; if [
+            $reply -ne 200 ]; then exit 1; fi; test -f /tmp/healthy;
+      volumeMounts:
+      - mountPath: /opt/sas/viya/config/etc/consul.d
+        name: consul-tmp-volume
+        subPath: consul.d
+      - mountPath: /opt/sas/viya/config/etc/SASSecurityCertificateFramework/tokens/consul/default
+        name: consul-tmp-volume
+        subPath: consul-tokens
+      - mountPath: /opt/sas/viya/config/tmp/sas-consul
+        name: consul-tmp-volume
+        subPath: sas-consul
+      - mountPath: /tmp
+        name: consul-tmp-volume
+        subPath: tmp
+      - mountPath: /consul/data/
+        name: consul-tmp-volume
+        subPath: data
+      resources:
+        requests:
+          memory: 2Gi
+          cpu: 100m
+        limits:
+          memory: 2Gi
+          cpu: 100m
+  - op: add
+    path: /spec/controllerTemplate/spec/volumes/-
+    value:
+      name: consul-tmp-volume
+      emptyDir: {}
+target:
+  group: viya.sas.com
+  kind: CASDeployment
+  name: .*
+  version: v1alpha1

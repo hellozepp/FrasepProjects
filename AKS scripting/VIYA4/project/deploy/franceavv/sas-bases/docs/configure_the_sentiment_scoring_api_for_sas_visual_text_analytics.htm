@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="sas.css"/>
+        <title>Configure the Sentiment Scoring API for SAS Visual Text Analytics</title>
+    </head>
+    <body>
+        <h1 id="configure-the-sentiment-scoring-api-for-sas-visual-text-analytics">Configure the Sentiment Scoring API for SAS Visual Text Analytics</h1>
+<h2 id="overview">Overview</h2>
+<p>This directory contains files to customize your SAS Viya deployment to enable the sentiment scoring service API. You should include this service if you previously used the public sentiment scoring API for any custom sentiment modeling. This service is no longer used by SAS Visual Text Analytics and is completely optional.</p>
+<h2 id="installation">Installation</h2>
+<h3 id="edit-the-kustomizationyaml-file">Edit the kustomization.yaml File</h3>
+<p>In order to add this service to your deployment, add a reference to the <code>sas-text-sentiment</code> overlay
+to the resources block of the base kustomization.yaml file (<code>$deploy/kustomization.yaml</code>).</p>
+<pre class="highlight"><code class="language-yaml">resources:
+...
+- sas-bases/overlays/sas-text-sentiment</code></pre>
+
+<h3 id="build">Build</h3>
+<p>After you configure Kustomize, continue your SAS Viya deployment as documented in the <a href="http://documentation.sas.com/?cdcId=itopscdc&amp;cdcVersion=default&amp;docsetId=dplyml0phy0dkr&amp;docsetTarget=titlepage.htm">SAS Viya Deployment Guide</a>.</p>
+    </body>
+</html>

@@ -1,0 +1,19 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-ingress-login-hint-transformer
+patch: |-
+  kind: Ingress
+  metadata:
+    name: sas-logon-app
+    annotations:
+      nginx.ingress.kubernetes.io/server-snippet: |
+          large_client_header_buffers 4 32k;
+          if ( $args !~ "login_hint" ) { set $test A; }
+          if ( $uri = "/SASLogon/oauth/authorize" ) { set $test "${test}B"; }
+          if ( $request_method = "GET" ) { set $test "${test}C"; }
+          if ($test = ABC ) { set $args $args&login_hint=example.com; return 302 $scheme://$server_name$uri?$args; }
+target:
+  kind: Ingress
+  name: sas-logon-app

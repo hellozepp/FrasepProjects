@@ -1,0 +1,56 @@
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-podtemplate-full-tls-certframe-transformer-connect-certificate
+patch: |-
+  - op: add
+    path: /template/spec/initContainers/0/env/-
+    value:
+      name: SAS_CERTIFICATE_GENERATOR
+      value: ""
+  - op: add
+    path: /template/spec/initContainers/0/env/-
+    value:
+      name: SAS_CERTIFICATE_SECRET_NAME
+      value:  "sas-connect-certificate"
+target:
+  kind: PodTemplate
+  name: sas-connect-pod-template
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-deployment-full-tls-certframe-transformer-connect-certificate
+patch: |-
+  - op: add
+    path: /spec/template/spec/initContainers/0/env/-
+    value:
+      name: SAS_CERTIFICATE_GENERATOR
+      value:  ""
+  - op: add
+    path: /spec/template/spec/initContainers/0/env/-
+    value:
+      name: SAS_CERTIFICATE_SECRET_NAME
+      value:  "sas-connect-certificate"
+target:
+  kind: Deployment
+  name: sas-connect-spawner
+---
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-casdeployment-full-tls-transformer-certificate
+patch: |-
+  - op: add
+    path: /spec/controllerTemplate/spec/initContainers/0/env/-
+    value:
+      name: SAS_CERTIFICATE_GENERATOR
+      value: ""
+  - op: add
+    path: /spec/controllerTemplate/spec/initContainers/0/env/-
+    value:
+      name: SAS_CERTIFICATE_SECRET_NAME
+      value: "sas-cas-certificate"
+target:
+  kind: CASDeployment

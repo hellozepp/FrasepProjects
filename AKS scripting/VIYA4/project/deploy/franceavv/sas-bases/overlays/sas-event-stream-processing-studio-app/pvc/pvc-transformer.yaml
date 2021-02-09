@@ -1,0 +1,17 @@
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-event-stream-processing-studio-app-pvc-transformer
+patch: |-
+  # Add env var for the PVC
+  - op: add
+    path: /spec/template/spec/containers/0/env/-
+    value:
+      name: SAS_ESP_COMMON_KUBERNETES_DEFAULTS_PERSISTENTVOLUMECLAIM
+      value: sas-event-stream-processing-studio-app
+
+target:
+  group: apps
+  kind: Deployment
+  name: sas-event-stream-processing-studio-app
+  version: v1

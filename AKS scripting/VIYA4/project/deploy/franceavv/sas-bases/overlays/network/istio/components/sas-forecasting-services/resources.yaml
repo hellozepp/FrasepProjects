@@ -1,0 +1,164 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: sas-forecasting-data-definition
+spec:
+  host: sas-forecasting-data-definition
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        httpCookie:
+          name: sas-ingress-istio
+          path: /forecastingDataDefinition/
+          ttl: 0s
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: sas-forecasting-gateway
+spec:
+  host: sas-forecasting-gateway
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        httpCookie:
+          name: sas-ingress-istio
+          path: /forecastingGateway/
+          ttl: 0s
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: sas-forecasting-overrides
+spec:
+  host: sas-forecasting-overrides
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        httpCookie:
+          name: sas-ingress-istio
+          path: /forecastingOverrides/
+          ttl: 0s
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: sas-forecasting-strategies
+spec:
+  host: sas-forecasting-strategies
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        httpCookie:
+          name: sas-ingress-istio
+          path: /forecastingStrategies/
+          ttl: 0s
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-services
+    sas.com/admin: namespace
+  name: sas-forecasting-data-definition
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /forecastingDataDefinition
+    - uri:
+        prefix: /forecastingDataDefinition/
+    route:
+    - destination:
+        host: sas-forecasting-data-definition
+    timeout: 300s
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-services
+    sas.com/admin: namespace
+  name: sas-forecasting-gateway
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /forecastingGateway
+    - uri:
+        prefix: /forecastingGateway/
+    route:
+    - destination:
+        host: sas-forecasting-gateway
+    timeout: 300s
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-services
+    sas.com/admin: namespace
+  name: sas-forecasting-overrides
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /forecastingOverrides
+    - uri:
+        prefix: /forecastingOverrides/
+    route:
+    - destination:
+        host: sas-forecasting-overrides
+    timeout: 300s
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  annotations:
+    sas.com/kustomize-base: base
+  labels:
+    app.kubernetes.io/name: sas-forecasting-services
+    sas.com/admin: namespace
+  name: sas-forecasting-strategies
+spec:
+  gateways:
+  - public-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        exact: /forecastingStrategies
+    - uri:
+        prefix: /forecastingStrategies/
+    route:
+    - destination:
+        host: sas-forecasting-strategies
+    timeout: 300s
+

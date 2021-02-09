@@ -1,0 +1,15 @@
+## Reference: https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode
+    kind: StorageClass
+    apiVersion: storage.k8s.io/v1
+    allowVolumeExpansion: true
+    metadata:
+      annotations:
+        storageclass.beta.kubernetes.io/is-default-class: "true"
+      labels:
+        kubernetes.io/cluster-service: "true"
+      name: default
+    provisioner: kubernetes.io/azure-disk
+    parameters:
+      storageaccounttype: Standard_LRS
+      kind: managed
+    volumeBindingMode: WaitForFirstConsumer

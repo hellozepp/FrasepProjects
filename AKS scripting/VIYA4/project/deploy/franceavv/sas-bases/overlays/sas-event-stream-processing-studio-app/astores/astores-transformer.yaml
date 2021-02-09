@@ -1,0 +1,25 @@
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: sas-event-stream-processing-studio-app-astores-transformer
+patch: |-
+  # AStore volume
+  - op: add
+    path: /spec/template/spec/volumes/-
+    value:
+      name: astores-volume
+      persistentVolumeClaim:
+        claimName: sas-microanalytic-score-astores
+  # Add mount path for AStore ( /models/astores/viya/ )
+  - op: add
+    path: /spec/template/spec/containers/0/volumeMounts/-
+    value:
+      name: astores-volume
+      mountPath: /models/astores/viya
+      subPath: models
+
+target:
+  group: apps
+  kind: Deployment
+  name: sas-event-stream-processing-studio-app
+  version: v1

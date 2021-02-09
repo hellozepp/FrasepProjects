@@ -1,0 +1,81 @@
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gelldap-server
+  labels:
+    app: gelldap-server
+    app.kubernetes.io/part-of: gelldap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gelldap-server
+  template:
+    metadata:
+      labels:
+        app: gelldap-server
+        app.kubernetes.io/part-of: gelldap
+    spec:
+      containers:
+        - name: gelldap-server
+          image: osixia/openldap:1.4.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - --copy-service
+          volumeMounts:
+            - name: gelldap-volume-users
+              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/bootstrap.ldif
+              subPath: bootstrap.ldif
+            - name: gelldap-volume-overlay
+              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/03-memberOf.ldif
+              subPath: 03-memberOf.ldif
+            - name: ldap-data
+              mountPath: /var/lib/ldap
+            - name: ldap-config
+              mountPath: /etc/ldap/slapd.d
+            - name: ldap-certs
+              mountPath: /container/service/slapd/assets/certs
+          ports:
+            - containerPort: 389
+              name: openldap
+            - containerPort: 636
+              name: openldaps
+          env:
+            - name: LDAP_TLS
+              value: "false"
+            - name: LDAP_ORGANISATION
+              value: "GELLDAP"
+            - name: LDAP_DOMAIN
+              value: "gelldap.com"
+            - name: LDAP_ADMIN_PASSWORD
+              value: "lnxsas"
+            - name: LDAP_CONFIG_PASSWORD
+              value: "lnxsas"
+            - name: LDAP_READONLY_USER
+              value: "false"
+            - name: LDAP_REMOVE_CONFIG_AFTER_SETUP
+              value: "false"
+            - name: LDAP_RFC2307BIS_SCHEMA
+              value: "true"
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
+      volumes:
+        - name: gelldap-volume-users
+          configMap:
+            name: gelldap-bootstrap-users
+        - name: gelldap-volume-overlay
+          configMap:
+            name: gelldap-memberof-overlay
+        - name: ldap-data
+          emptyDir: {}
+        - name: ldap-config
+          emptyDir: {}
+        - name: ldap-certs
+          emptyDir: {}

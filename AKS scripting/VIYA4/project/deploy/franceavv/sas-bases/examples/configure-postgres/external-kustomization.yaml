@@ -1,0 +1,22 @@
+# To specify an external PostgreSQL instance for your SAS deployment, add the
+# following into your kustomization.yaml file. Ensure you adjust the values here
+# as described in $deploy/sas-bases/overlays/external-postgres/README.md.
+
+transformers:
+- sas-bases/overlays/external-postgres/external-postgres-transformer.yaml
+
+secretGenerator:
+- name: postgres-sas-user  # DEFAULT 'postgres' DATABASE USER CREDENTIALS
+  literals:
+  - username={{ EXTERNAL-ADMIN-USERNAME }}
+  - password={{ EXTERNAL-ADMIN-PASSWORD }}
+
+configMapGenerator:
+- name: sas-postgres-config  # DEFAULT 'postgres' DATABASE CONFIG AND 'sas-data-server-utility' CONFIG
+  behavior: merge
+  literals:
+  - DATABASE_HOST={{ EXTERNAL-HOST }}
+  - DATABASE_PORT={{ EXTERNAL-PORT }}
+  - DATABASE_SSL_ENABLED="true"  # 'true' INDICATES SSL-ENABLED SERVER
+  - DATABASE_NAME=SharedServices
+  - EXTERNAL_DATABASE="true"  # 'true' INDICATES AN EXTERNALLY MANAGED POSTGRES
