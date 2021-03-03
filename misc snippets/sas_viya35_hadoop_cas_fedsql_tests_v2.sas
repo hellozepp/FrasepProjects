@@ -25,7 +25,7 @@ proc cas;
 			username="hive",
 			dbmaxText=255,
 			password="admin",
-			uri="jdbc:hive2://master.hadoop.com:2181/default;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2",
+			uri="jdbc:hive2://frasephdp.cloud.com:2181/default;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2",
 			hadoopjarpath="/opt/sas/hadoop/jars",
 			hadoopconfigdir="/opt/sas/hadoop/sitexmls",
 			schema="default"};
