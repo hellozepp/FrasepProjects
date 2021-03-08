@@ -19,8 +19,7 @@ run;
 
 proc svdd data=casuser.new_train;
 	input totalCost / level=interval;
-	input name / level=nominal;
-	kernel rbf / bw=2;
+	kernel rbf / bw=mean2;
 	savestate rstore=casuser.trade_outliers_svdd;
 	id _all_;
 run;
