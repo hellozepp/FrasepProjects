@@ -1,0 +1,70 @@
+<engine>
+  <projects>
+    <project threads="1" pubsub="auto" name="AHU_AnomalyDetection">
+      <contqueries>
+        <contquery name="Query_1">
+          <windows>
+            <window-model-reader name="Model_Reader" model-type="astore" />
+            <window-score name="Score_SVDD">
+              <schema>
+                <fields>
+                  <field type="int64" key="true" name="Key_ID" />
+                  <field type="string" key="false" name="seq_id" />
+                  <field type="string" key="false" name="datetime" />
+                  <field type="string" key="false" name="AHU" />
+                  <field type="double" key="false" name="_SVDDDISTANCE_" />
+                  <field type="double" key="false" name="_SVDDSCORE_" />
+                </fields>
+              </schema>
+              <models>
+                <offline model-type="astore" />
+              </models>
+              <connectors>
+                <connector class="fs" name="sub" type="subscribe">
+                  <properties>
+                    <property name="fsname">/home/viyademo01/FrasepProjects/My_ESP_Demo_IOT/data/svdd_out.csv</property>
+                    <property name="fstype">csv</property>
+                    <property name="header">full</property>
+                    <property name="snapshot">true</property>
+                  </properties>
+                </connector>
+              </connectors>
+            </window-score>
+            <window-source name="model_request" index="pi_EMPTY" insert-only="true">
+              <schema>
+                <fields>
+                  <field type="int64" key="true" name="req_id" />
+                  <field type="string" key="false" name="req_key" />
+                  <field type="string" key="false" name="req_val" />
+                </fields>
+              </schema>
+            </window-source>
+            <window-source name="src_data" index="pi_EMPTY" insert-only="true">
+              <schema>
+                <fields>
+                  <field type="int64" key="true" name="Key_ID" />
+                  <field type="string" key="false" name="seq_id" />
+                  <field type="string" key="false" name="datetime" />
+                  <field type="string" key="false" name="AHU" />
+                  <field type="double" key="false" name="CHW_VALVE" />
+                  <field type="double" key="false" name="CHW_VALVE_POSIT" />
+                  <field type="double" key="false" name="DIS_AIR_TEMP" />
+                  <field type="double" key="false" name="DUCT_PRESS_ACTV" />
+                  <field type="double" key="false" name="MAX_CO2_VAL" />
+                  <field type="double" key="false" name="MIXED_AIR_TEMP" />
+                  <field type="double" key="false" name="RTRN_AIR_TEMP" />
+                  <field type="double" key="false" name="SUPPL_FAN_SP" />
+                </fields>
+              </schema>
+            </window-source>
+          </windows>
+          <edges>
+            <edge source="src_data" target="Score_SVDD" role="data" />
+            <edge source="model_request" target="Model_Reader" role="request" />
+            <edge source="Model_Reader" target="Score_SVDD" role="model" />
+          </edges>
+        </contquery>
+      </contqueries>
+    </project>
+  </projects>
+</engine>
