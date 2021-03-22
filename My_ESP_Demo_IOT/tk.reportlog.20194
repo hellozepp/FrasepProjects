@@ -1,0 +1,11 @@
+
+
+ERROR: The system has encountered an unhandled Exception.
+     : Please contact technical support and provide them
+     : with the following traceback and system dump information:
+
+ABORT:   SAS/TK is aborting
+     :  Abort Log file [tk.reportlog.20194]
+     :  ---------------------------------------
+     :  Time [3/08/2021  9:50:05 PM]
+     :  ---------------------------------------
