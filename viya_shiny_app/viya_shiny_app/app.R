@@ -15,7 +15,12 @@ options(cas.print.messages = TRUE)
 options(shiny.maxRequestSize=30*1024^2)
 
 
-Sys.setenv(CAS_CLIENT_SSL_CA_LIST = "C://Users/frasep/OneDrive - SAS/Mes Documents/Dossiers/Demoing/My_Local_Environments/frasepviya35smp/frasepviya35smp.cloud.com/cacerts/trustedcerts.pem")
+#Sys.setenv(CAS_CLIENT_SSL_CA_LIST = "C://Users/frasep/OneDrive - SAS/Mes Documents/Dossiers/Demoing/My_Local_Environments/frasepviya35smp/frasepviya35smp.cloud.com/cacerts/trustedcerts.pem")
+
+Sys.setenv(CAS_CLIENT_SSL_CA_LIST = "C://Users/frasep/OneDrive - SAS/Mes Documents/Dossiers/Demoing/My_Azure_Environments/frasepviya35smp/azure_viya35smp_cacerts/cacerts/trustedcerts.pem")
+
+
+
 globalhostname <- "frasepviya35smp.cloud.com"
 
 
