@@ -27,26 +27,38 @@ proc cas;
 
 quit;
 
-/* Add row level security */
+/* List table effective access controls */
+/* https://go.documentation.sas.com/doc/en/pgmsascdc/9.4_3.5/caspg/p1v6omrbqeadyyn1otd0ibug53u9.htm */
+
+/* Clean and add row level security rule */
 
 proc cas;
-accessControl.updSomeAcsTable /
-   acs={
-      {caslib="mydata",
-       table="churn_fr_star",
-       identity="viyademo02",
-       identityType="User",
-       permType="Grant",
-       permission="Select",
-       filter="client_ville='CHAMPAGNOLE'"},
-      {caslib="mydata",
-       table="churn_fr_star",
-       identity="viyademo02",
-       identityType="User",
-       permType="Grant",
-       permission="ReadInfo"}};
+	accessControl.assumeRole / adminRole="superuser";
+	accessControl.remAllAcsData /  caslib="mydata"  table="churn_fr_star";
+
+	accessControl.updSomeAcsTable /
+	   acs={
+	      {
+			caslib="mydata",
+	        table="churn_fr_star",
+	        identity="viyademo02",
+	        identityType="User",
+	        permType="Grant",
+	        permission="Select",
+	        filter="client_ville='CHAMPAGNOLE'"},
+	      {
+			caslib="mydata",
+	        table="churn_fr_star",
+	        identity="viyademo02",
+	        identityType="User",
+	        permType="Grant",
+	        permission="ReadInfo"}
+	};
+quit;
+
+/* Display effective rules */
+proc cas;
+	accessControl.whatIsEffective /  objectSelector={objType="table",caslib="mydata",table="churn_fr_star"};
 quit;
 
 cas mysess001 terminate;
-
-
