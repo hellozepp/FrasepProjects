@@ -167,6 +167,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.vm1nic.id]
   size               = var.vm1vmtype
+  depends_on          = [azurerm_linux_virtual_machine.vm2]
 
   disable_password_authentication = false
   computer_name  = "frasepViya35vm1"
@@ -189,7 +190,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo yum install cloud-utils-growpart gdisk",
+      "sudo yum install -y cloud-utils-growpart gdisk git",
       "sudo growpart /dev/sda 4",
       "sudo pvresize /dev/sda4",
       "sudo lvresize -r -L +100G /dev/rootvg/tmplv",
@@ -198,6 +199,15 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "sudo lvresize -r -L +10G /dev/rootvg/homelv",
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
+      "ssh-keygen -t dsa -N \"My viya 35 env\" -C \"secured\" -f ~/.ssh/id_viya",
+      "ssh-copy-id -i ~/.ssh/id_viya.pub ${var.admin_username}@${azurerm_linux_virtual_machine.vm2.public_ip_address}",
+      "sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-$majversion.noarch.rpm",
+      "sudo yum install -y python python-setuptools python-devel openssl-devel",
+      "sudo yum install -y python-pip gcc wget automake libffi-devel python-six",
+      "sudo pip install -y pip==19.3.1",
+      "sudo pip install -y setuptools==42.0.2",
+      "sudo pip install -y ansible==2.7.2",
+      "git clone https://github.com/sassoftware/viya-ark.git",
     ]
 
     connection {
@@ -207,8 +217,6 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       host     = "${self.public_ip_address}"
     }
   }
-
-
 }
 
 ###########################################################
