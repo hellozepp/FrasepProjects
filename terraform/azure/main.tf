@@ -162,7 +162,7 @@ resource "azurerm_network_interface" "vm2nic" {
 # compute engine)
 
 resource "azurerm_linux_virtual_machine" "vm1" {
-  name                  = "frasepViya35vm1"
+  name                  = "frasepViya35vm1.cloud.com"
   location              = var.location
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.vm1nic.id]
@@ -170,7 +170,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
   depends_on          = [azurerm_linux_virtual_machine.vm2]
 
   disable_password_authentication = false
-  computer_name  = "frasepViya35vm1"
+  computer_name  = "frasepViya35vm1.cloud.com"
   admin_username = var.admin_username
   admin_password = var.admin_password
   
@@ -188,6 +188,30 @@ resource "azurerm_linux_virtual_machine" "vm1" {
     version   = "latest"
   }
 
+  # Copies the ssh key files
+  provisioner "file" {
+    source      = "./key_viya.pub"
+    destination = "/tmp/key_viya.pub"
+    
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
+  provisioner "file" {
+    source      = "./key_viya"
+    destination = "/tmp/key_viya"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo yum install -y cloud-utils-growpart gdisk git",
@@ -199,8 +223,12 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "sudo lvresize -r -L +10G /dev/rootvg/homelv",
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
-      "ssh-keygen -t dsa -N \"My viya 35 env\" -C \"secured\" -f ~/.ssh/id_viya",
-      "ssh-copy-id -i ~/.ssh/id_viya.pub ${var.admin_username}@${azurerm_linux_virtual_machine.vm2.public_ip_address}",
+      "echo \"${azurerm_linux_virtual_machine.vm1.private_ip_address} ${azurerm_linux_virtual_machine.vm1.computer_name}\" | sudo tee -a /etc/hosts",
+      "echo \"${azurerm_linux_virtual_machine.vm2.private_ip_address} ${azurerm_linux_virtual_machine.vm2.computer_name}\" | sudo tee -a /etc/hosts",
+      "mkdir ~/.ssh",
+      "mv /tmp/key_viya.pub ~/.ssh",
+      "mv /tmp/key_viya ~/.ssh",
+      "chmod -R 700 ~/.ssh",
       "sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-$majversion.noarch.rpm",
       "sudo yum install -y python python-setuptools python-devel openssl-devel",
       "sudo yum install -y python-pip gcc wget automake libffi-devel python-six",
@@ -223,14 +251,14 @@ resource "azurerm_linux_virtual_machine" "vm1" {
 # Create a Linux virtual machine (controller)
 
 resource "azurerm_linux_virtual_machine" "vm2" {
-  name                  = "frasepViya35vm2"
+  name                  = "frasepViya35vm2.cloud.com"
   location              = var.location
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.vm2nic.id]
   size                  = var.vm2vmtype
 
   disable_password_authentication = false
-  computer_name  = "frasepViya35vm2"
+  computer_name  = "frasepViya35vm2.cloud.com"
   admin_username = var.admin_username
   admin_password = var.admin_password
 
@@ -248,6 +276,18 @@ resource "azurerm_linux_virtual_machine" "vm2" {
     version   = "latest"
   }
 
+  # Copies the ssh key file
+  provisioner "file" {
+    source      = "./key_viya.pub"
+    destination = "/tmp/key_viya.pub"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo yum install cloud-utils-growpart gdisk",
@@ -259,6 +299,10 @@ resource "azurerm_linux_virtual_machine" "vm2" {
       "sudo lvresize -r -L +10G /dev/rootvg/homelv",
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
+      "echo \"${azurerm_linux_virtual_machine.vm2.private_ip_address} ${azurerm_linux_virtual_machine.vm2.computer_name}\" | sudo tee -a /etc/hosts",
+      "mkdir ~/.ssh",
+      "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
+      "chmod -R 700 ~/.ssh"
     ]
 
       connection {
