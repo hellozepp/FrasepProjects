@@ -226,9 +226,10 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "echo \"${azurerm_linux_virtual_machine.vm1.private_ip_address} ${azurerm_linux_virtual_machine.vm1.computer_name}\" | sudo tee -a /etc/hosts",
       "echo \"${azurerm_linux_virtual_machine.vm2.private_ip_address} ${azurerm_linux_virtual_machine.vm2.computer_name}\" | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
+      "chmod 700 ~/.ssh",
       "mv /tmp/key_viya.pub ~/.ssh",
       "mv /tmp/key_viya ~/.ssh",
-      "chmod -R 700 ~/.ssh",
+      "chmod 600 ~/.ssh/*",
       "sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-$majversion.noarch.rpm",
       "sudo yum install -y python python-setuptools python-devel openssl-devel",
       "sudo yum install -y python-pip gcc wget automake libffi-devel python-six",
@@ -301,8 +302,9 @@ resource "azurerm_linux_virtual_machine" "vm2" {
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
       "echo \"${azurerm_linux_virtual_machine.vm2.private_ip_address} ${azurerm_linux_virtual_machine.vm2.computer_name}\" | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
+      "chmod 700 ~/.ssh",
       "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
-      "chmod -R 700 ~/.ssh"
+      "chmod 600 ~/.ssh/authorized_keys"
     ]
 
       connection {
