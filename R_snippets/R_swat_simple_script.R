@@ -35,3 +35,5 @@ cas.simple.correlation(conn,
     table = indata,
     inputs = c("LOAN","VALUE","MORTDUE")
 )
+
+cas.session.endSession(conn)
