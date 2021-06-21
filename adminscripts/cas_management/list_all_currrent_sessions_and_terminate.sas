@@ -1,51 +1,37 @@
+/************************************************************************************************/
+/* Snippet used to get all disconnected and idle for too long cas sessions and terminate them   */
+/************************************************************************************************/
+
 %let BASE_URI=%sysfunc(getoption(servicesbaseurl));
-%let idletime_threshold=300;
-%let location=/tmp;
+%let idletime_threshold=10; /* idle time threshold in seconds
 
 /* 	FILEREFs for the response and the response headers; */
-filename resp temp encoding='UTF-8';
-filename resp_hdr temp encoding='UTF-8';
+filename respb temp encoding='UTF-8';
+filename resphdrb temp encoding='UTF-8';
 
-%macro get_detailed_cas_session_list();
-	proc http url="&BASE_URI/cas-shared-default-http/cas/sessions" oauth_bearer=sas_services
-		method='get' out=respb headerout=resphdrb headerout_overwrite;
-		debug level=3;
-	run;
-%mend get_detailed_cas_session_list;
-
-%macro drop_session(session_uuid);
-	proc http url="&BASE_URI/cas-shared-default-http/cas/sessions/&session_uuid" oauth_bearer=sas_services
-		method='delete' out=respb headerout=resphdrb headerout_overwrite;
-		debug level=3;
-	run;
-%mend drop_session;
-
+/* Macro used to terminate a specific CAS session */
 %macro terminate_session(session_uuid);
 	proc http url="&BASE_URI/cas-shared-default-http/cas/sessions/&session_uuid/terminate" oauth_bearer=sas_services
 		method='post' out=respb headerout=resphdrb headerout_overwrite;
-		debug level=3;
 	run;
 %mend terminate_session;
 
-%macro get_session_information(session_uuid);
-	proc http url="&BASE_URI/cas-shared-default-http/cas/sessions/&session_uuid" oauth_bearer=sas_services
+/* Macro used to get the list of of all current cas sessions */
+%macro get_detailed_cas_session_list();
+	proc http url="&BASE_URI/cas-shared-default-http/cas/sessions" oauth_bearer=sas_services
 		method='get' out=respb headerout=resphdrb headerout_overwrite;
-		debug level=3;
 	run;
-%mend get_session_information;
+%mend get_detailed_cas_session_list;
 
-
-filename respb "&location/get_ref_b.json";
-filename resphdrb "&location/get_ref_b.txt";
-
+/* Get all current CAS Sessions */
 %get_detailed_cas_session_list();
 
+libname obj2 json "%sysfunc(pathname(respb))";
 
 /************************************************************************************************/
 /* Get all sessions with idle time greater than the theshold defined in idletime_threshod macro */
 /* variable or disconnected */
 /************************************************************************************************/
-libname obj2 json "%sysfunc(pathname(respb))";
 
 proc sql;
 	create table detailed_session_list
@@ -56,10 +42,13 @@ proc sql;
 	((B.seconds+B.minutes*60+B.hours*3600)>&idletime_threshold or A.clientcount=0);
 quit;
 
-proc print data=work.detailed_session_list;
+/************************************************************************************************/
+/* Main loop to terminate the selected sessions                                                 */
+
+data _null_;
+	set detailed_session_list;
+	put "Terminating cas session with uuid : " uuid;
+	*%terminate_session(uuid);
 run;
 
-filename respb "&location/get_ref_b.json";
-filename resphdrb "&location/get_ref_b.txt";
-
-%get_session_information(4466974c-2746-d44d-8ee3-6b3131f594a3);
+/************************************************************************************************/
