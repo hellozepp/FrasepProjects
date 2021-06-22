@@ -1,7 +1,7 @@
 * Base URI for the service call;
 %let BASE_URI=%sysfunc(getoption(servicesbaseurl));
 
-%macro report_generation_duration(caslib,sourcedata,srcextension,report_name,report_uri);
+%macro report_generation_duration(caslib, sourcedata, srcextension, report_name, report_uri);
 	/* Refresh Data in CAS */
 	cas myses;
 	proc casutil;
