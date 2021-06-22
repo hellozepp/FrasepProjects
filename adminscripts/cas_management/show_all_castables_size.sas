@@ -6,12 +6,11 @@ proc cas;
                 accessControl.assumeRole / adminRole="superuser";
                 accessControl.accessPersonalCaslibs;
 
-                out_table = newtable("CAS Table size", {"CAS Library","CAS Table","Size in MB", "Number of rows"}, {"varchar","varchar","integer", "integer"});
+                out_table = newtable("CAS Table size", {"CAS Library","CAS Table","Size in MB", "Number of rows"}, {"varchar","varchar","int64", "int64"});
 
                 /**************** function to get a simple table with the cas table actual size in MB and the number of rows ****************/
                 function get_table_size(caslib,castab_name);
                                                table.tabledetails result=r/ caslib=caslib name=castab_name;
-                                               *out_table = newtable("caslib","castable","CAS Table size", {"Size in MB", "Number of rows"}, {"varchar","varchar","int64", "int64"});
                                                addrow(out_table, {caslib, castab_name,r.TableDetails[1].Datasize/1024/1024, r.TableDetails[1].Rows});
                 end;
 
@@ -26,7 +25,6 @@ proc cas;
                                                print "CASLIB : " || current_caslib.name;
                                                do row over listtab.tableinfo[1:listtab.tableinfo.nrows];
                                                                print "Castable : " || row.name;
-                                                               *table.tabledetails / caslib=current_caslib.name name=row.name ;
                                                                get_table_size(current_caslib.name,row.name);
                                                end;
                                end;
