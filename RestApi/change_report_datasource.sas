@@ -38,67 +38,44 @@ quit;
 * *change report data source *********************************************************;
 
 * * Prepare json for body REST API call **********************************************;
-* * to change samples.retail_demo to public.retail_demo_new;
+* * to change samples.rand_retaildemo to public.rand_retail_demo_new;
 
 filename json_in filesrvc folderpath="/Public" filename="json_in.json";
 
-/* Parameter to get all sections, one image for each with maximum of 20 sections */
-/*
-data _null_;
-	file json_in;
-	put '{'/
-	  '"inputReportUri" : "/reports/reports/' "&report_id" '",'/
-	  '"resultReportName" : "Retail Insight New",'/
-	  '"resultParentFolderUri" : "/folders/folders/f70b054e-ba40-4b5f-9038-cc0e2824af01",'/
-	  '"dataSources": ['/
-	  '  {'/
-	  '   "namePattern": "serverLibraryTable",'/
-	  '   "purpose": "replacement",'/
-	  '   "server": "cas-shared-default",'/
-	  '   "library": "public",'/
-	  '   "table": "rand_retaildemo_new",'/
-	  '   "replacementLabel": "New source"'/
-	  '  },'/
-	  '  {'/
-	  '   "namePattern": "uniqueName",'/
-	  '   "purpose": "original",'/
-	  '   "uniqueName": "rand_retaildemo"'/
-	  '  }'/
-	  '],'/
-	  '"xmlReport": null,'/
-	  '"jsonReport": null '/
-	  '}';
-run;
-*/
+/* JSON body for parameters to change data source of a specific report and saving it to specific folder */
+/* New report saved in /public as RetailInsightNew */
 
 data _null_;
 	file json_in;
 	put '{'/
 	  '"inputReportUri" : "/reports/reports/' "&report_id" '",'/
 	  '"resultReportName" : "RetailInsightNew",'/
-	  '"resultParentFolderUri" : "/folders/folders/f70b054e-ba40-4b5f-9038-cc0e2824af01",'/
+	  '"resultReport": {'/
+      '"name": "RetailInsightNew",'/
+      '"description": "TEST report transform"'/
+      '},'/
+	  '"resultParentFolderUri": "/folders/folders/f70b054e-ba40-4b5f-9038-cc0e2824af01",'/
 	  '"dataSources": ['/
-	  '  {'/
-	  '   "namePattern": "serverLibraryTable",'/
-	  '   "purpose": "replacement",'/
-	  '   "server": "cas-shared-default",'/
-	  '   "library": "public",'/
-	  '   "table": "rand_retail_demo_new",'/
-	  '   "replacementLabel": "New source"'/
-	  '  },'/
-	  '  {'/
-	  '   "namePattern": "uniqueName",'/
-	  '   "purpose": "original",'/
-	  '   "uniqueName": "rand_retaildemo"'/
-	  '  }'/
-	  '],'/
-	  '"xmlReport": null,'/
-	  '"jsonReport": null '/
+      '{'/
+      '     "namePattern": "serverLibraryTable",'/
+      '     "purpose": "original",'/
+      '     "server": "cas-shared-default",'/
+      '     "library": "samples",'/
+      '     "table": "RAND_RETAILDEMO"'/
+      ' },'/
+      ' {'/
+      '     "namePattern": "serverLibraryTable",'/
+      '     "purpose": "replacement",'/
+      '     "server": "cas-shared-default",'/
+      '     "library": "PUBLIC",'/
+      '     "table": "RAND_RETAIL_DEMO_NEW",'/
+      '     "replacementLabel": "NEW RETAIL DEMO"'/
+      ' }'/
+	  ']'/
 	  '}';
 run;
 
 %let REST_QUERY_URI=&BASE_URI/reportTransforms/dataMappedReports/?validate=true%str(&)useSavedReport=true%str(&)saveResult=true%str(&)failOnDataSourceError=true;
-%put &REST_QUERY_URI;
 
 PROC HTTP METHOD = "POST" oauth_bearer=sas_services OUT = rptFile IN = json_in
       URL = "&REST_QUERY_URI";
@@ -106,5 +83,4 @@ PROC HTTP METHOD = "POST" oauth_bearer=sas_services OUT = rptFile IN = json_in
                "Content-Type" = "application/vnd.sas.report.transform+json";
 RUN;
 
-LIBNAME rptFile json;
 
