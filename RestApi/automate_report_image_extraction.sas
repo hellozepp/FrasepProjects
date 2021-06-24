@@ -35,6 +35,7 @@ filename startjob temp;
 filename resp_hdr temp;
 filename json_in filesrvc folderpath="/Public" filename="json_in.json";
 
+/* Parameter to get all sections, one image for each with maximum of 20 sections */
 data _null_;
 	file json_in;
 	put '{'/
@@ -44,8 +45,7 @@ data _null_;
 	  '"selectionType" : "perSection",'/
 	  '"size" : "1280x720",'/
 	  '"refresh":true,'/
-	  '"renderLimit" : 1,'/
-	  '"sectionIndex" : 0,'/
+	  '"renderLimit" : 20,'/
 	  '"version" : 1'/
 	'}';
 run;
@@ -195,6 +195,8 @@ quit;
 
 /* build macro calls */
 
+%put "flag1";
+
 filename getimg temp;
 
 data _null_;
@@ -215,17 +217,24 @@ data _null_;
     , ")"
   );
   put line;
+  %put line;
   putlog line;
 run;
 
 %inc getimg / source2;
+
+
+/* PPT generation integrating the images */
+/* Warning : svg needs to be converted to png or jpeg through xcmd and command line tool or other means */
+
+/*
 
 %macro print_images(name, folder, titl);
 	title "Export for graph: &titl";
 
 	data _NULL_;
 	 	dcl odsout obj();
-	 	obj.image(file:"~/&job_id/&name..svg", height:"720", width:"1280");
+	 	obj.image(file:"~/&job_id/&name..png", height:"720", width:"1280");
 	run;
 %mend;
 
@@ -252,3 +261,5 @@ ods powerpoint file="~/&job_id/new_ppt.pptx";
 %inc ppt / source2;  
 
 ods powerpoint close;
+
+*/
