@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <script async src="../sdk-assets/va-report-components/dist/umd/va-report-components.js"></script>
+    <style>
+      html {
+        background-color: #f0f0f0;
+	background-image: url("./fond_BDF_test_sdk1.png");
+	background-size: cover;
+      }
+      sas-report-page {
+	position: absolute;
+	width: 90%;
+	height: 60%;
+	bottom: 10px;
+	margin-left: 5%;
+      }
+    </style>
+  </head>
+  <body>
+    <sas-report-page 
+	pageName="vi6"
+	authenticationType="guest"
+ 	url="https://10.237.105.84"
+ 	reportUri="/reports/reports/5b3fa45b-fcb3-4d82-a260-4612bd3722ce">
+    </sas-report-page>    
+  </body>
+</html>
+
