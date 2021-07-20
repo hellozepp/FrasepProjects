@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.2">
 	<Registration>
 	<Name>Open source code task</Name>
-	<Description></Description>
+	<Description>Custom task allowing to execute an external R or Python code and get the log info in the SAS Log</Description>
 	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
-	<Procedures>TBD</Procedures>
-	<Version>3.7</Version>
+	<Version>5.2/Version>
 	<Links>
 		<Link href="http://documentation.sas.com/?softwareId=STUDIOMID&amp;softwareVersion=3.7&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
 	</Links>
@@ -28,7 +27,11 @@
 			<OptionItem option="Python_exec"/>
 			<OptionItem option="srccodefile"/>
 		</Container>
+		
 	</UI>
+	
+
+	
 	
   	<CodeTemplate>
 		<![CDATA[
