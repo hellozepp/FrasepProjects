@@ -122,7 +122,7 @@ resource "azurerm_network_security_group" "nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefixes    = ["149.173.0.0/16","86.238.109.83/32"]
+    source_address_prefixes    = ["149.173.0.0/16","90.127.106.134/32"]
     destination_address_prefix = "*"
   }
 }
@@ -227,16 +227,17 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "echo \"${azurerm_linux_virtual_machine.vm2.private_ip_address} ${azurerm_linux_virtual_machine.vm2.computer_name}\" | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
-      "mv /tmp/key_viya.pub ~/.ssh",
-      "mv /tmp/key_viya ~/.ssh",
+      "mv /tmp/key_viya.pub ~/.ssh/id_rsa.pub",
+      "mv /tmp/key_viya ~/.ssh/id_rsa",
       "chmod 600 ~/.ssh/*",
-      "sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-$majversion.noarch.rpm",
+      "sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm",
       "sudo yum install -y python python-setuptools python-devel openssl-devel",
       "sudo yum install -y python-pip gcc wget automake libffi-devel python-six",
-      "sudo pip install -y pip==19.3.1",
-      "sudo pip install -y setuptools==42.0.2",
-      "sudo pip install -y ansible==2.7.2",
+      "sudo pip install pip==19.3.1",
+      "sudo pip install setuptools==42.0.2",
+      "sudo pip install ansible==2.7.2",
       "git clone https://github.com/sassoftware/viya-ark.git",
+      "git clone https://github.com/frasep/FrasepProjects.git",
     ]
 
     connection {
