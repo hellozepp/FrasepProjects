@@ -305,7 +305,7 @@ resource "azurerm_linux_virtual_machine" "vm2" {
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
       "echo \"${azurerm_linux_virtual_machine.vm2.private_ip_address} ${azurerm_linux_virtual_machine.vm2.computer_name}\" | sudo tee -a /etc/hosts",
-      "echo \"${azurerm_linux_virtual_machine.vm1.private_ip_address} ${azurerm_linux_virtual_machine.vm1.computer_name}\" | sudo tee -a /etc/hosts",
+      "echo \"10.0.1.5 frasepViya35vm1.cloud.com\" | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
       "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
