@@ -238,6 +238,9 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "sudo pip install ansible==2.7.2",
       "git clone https://github.com/sassoftware/viya-ark.git",
       "git clone https://github.com/frasep/FrasepProjects.git",
+      "sudo systemctl stop firewalld",
+      "sudo systemctl disable firewalld",
+      "sudo setenforce Permissive"
     ]
 
     connection {
@@ -305,7 +308,10 @@ resource "azurerm_linux_virtual_machine" "vm2" {
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
       "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
-      "chmod 600 ~/.ssh/authorized_keys"
+      "chmod 600 ~/.ssh/authorized_keys",
+      "sudo systemctl stop firewalld",
+      "sudo systemctl disable firewalld",
+      "sudo setenforce Permissive"
     ]
 
       connection {
