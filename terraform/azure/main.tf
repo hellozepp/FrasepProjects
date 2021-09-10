@@ -248,7 +248,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "sudo yum install -y python-pip gcc wget automake libffi-devel python-six",
       "sudo pip install pip==19.3.1",
       "sudo pip install setuptools==42.0.2",
-      "sudo pip install ansible==2.7.2",
+      "sudo pip install ansible==3.0.0",
       "git clone https://github.com/sassoftware/viya-ark.git",
       "git clone https://github.com/frasep/FrasepProjects.git",
       "sudo systemctl stop firewalld",
@@ -265,12 +265,21 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "EOF",
       "chmod 600 fuse_connection.cfg",
       "sudo blobfuse /mnt/viyarepo --tmp-path=/mnt/blobfusetmp --config-file=./fuse_connection.cfg -o attr_timeout=240 -o entry_timeout=240 -o negative_timeout=120 -o allow_other",
-      "sudo yum install java",
+      "sudo yum install -y java",
       "wget https://support.sas.com/installation/viya/35/sas-orchestration-cli/lax/sas-orchestration-linux.tgz",
       "tar xvf ./sas-orchestration-linux.tgz",
       "./sas-orchestration build --input ./SAS_Viya_deployment_data.zip --platform redhat --architecture x64 --repository-warehouse \"file:////mnt/viyarepo/Sept2021/viya_repo\"",
       "tar xvf SAS_Viya_playbook.tgz",
-      "mv viya-ark/ ./sas_viya_playbook/"
+      "mv viya-ark/ ./sas_viya_playbook/",
+      "sudo sed -i '/ClientAliveInterval/c\\ClientAliveInterval 3600' /etc/ssh/sshd_config",
+      "cd ./sas_viya_playbook/viya-ark/playbooks/pre-install-playbook",
+      "sed -i '/deployTarget ansible_connection/ a deployTarget02 ansible_host=frasepViya35vm2.cloud.com' pre-install.inventory.ini",
+      "sed -i '$ a deployTarget02' pre-install.inventory.ini",
+      "ansible-playbook viya_pre_install_playbook.yml -i pre-install.inventory.ini --skip-tags skipmemfail",
+      "cd ~/sas_viya_playbook",
+      "cp ./samples/inventory_local.ini inventory.ini",
+      "sed -i '/deployTarget ansible_connection/ a deployTarget02 ansible_host=frasepViya35vm2.cloud.com' inventory.ini",
+      "sed -i '/\\[sas_casserver_primary\\]/!b;n;cdeployTarget02' inventory.ini"
     ]
 
     connection {
