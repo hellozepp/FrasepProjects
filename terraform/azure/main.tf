@@ -275,6 +275,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "cd ./sas_viya_playbook/viya-ark/playbooks/pre-install-playbook",
       "sed -i '/deployTarget ansible_connection/ a deployTarget02 ansible_host=frasepViya35vm2.cloud.com' pre-install.inventory.ini",
       "sed -i '$ a deployTarget02' pre-install.inventory.ini",
+      "ssh-keyscan frasepViya35vm2.cloud.com >> ~/.ssh/known_hosts",
       "ansible-playbook viya_pre_install_playbook.yml -i pre-install.inventory.ini --skip-tags skipmemfail",
       "cd ~/sas_viya_playbook",
       "cp ./samples/inventory_local.ini inventory.ini",
