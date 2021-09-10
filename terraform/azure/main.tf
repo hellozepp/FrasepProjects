@@ -213,6 +213,17 @@ resource "azurerm_linux_virtual_machine" "vm1" {
     }
   }
 
+  provisioner "file" {
+    source      = "./SAS_Viya_deployment_data.zip"
+    destination = "/tmp/SAS_Viya_deployment_data.zip"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo yum install -y cloud-utils-growpart gdisk git",
@@ -230,6 +241,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "chmod 700 ~/.ssh",
       "mv /tmp/key_viya.pub ~/.ssh/id_rsa.pub",
       "mv /tmp/key_viya ~/.ssh/id_rsa",
+      "mv /tmp/SAS_Viya_deployment_data.zip ~/SAS_Viya_deployment_data.zip",
       "chmod 600 ~/.ssh/*",
       "sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm",
       "sudo yum install -y python python-setuptools python-devel openssl-devel",
@@ -241,7 +253,24 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "git clone https://github.com/frasep/FrasepProjects.git",
       "sudo systemctl stop firewalld",
       "sudo systemctl disable firewalld",
-      "sudo setenforce Permissive"
+      "sudo setenforce Permissive",
+      "sudo rpm -Uvh https://packages.microsoft.com/config/rhel/7/packages-microsoft-prod.rpm",
+      "sudo yum -y install blobfuse",
+      "sudo mkdir -p /mnt/viyarepo",
+      "sudo mkdir -p /mnt/blobfusetmp",
+      "tee  ~/fuse_connection.cfg /dev/null << \"EOF\"",
+      "accountName frasepstorage", 
+      "accountKey pHW64tt3HqQSvKgZS5ez6ZNKe4idzqYXnYRvXd5sMODrNgArDOBtO42omzcicw1LTat9BBpuBVz1WnKQxVrGEg==",
+      "containerName sasviya35mirror",
+      "EOF",
+      "chmod 600 fuse_connection.cfg",
+      "sudo blobfuse /mnt/viyarepo --tmp-path=/mnt/blobfusetmp --config-file=./fuse_connection.cfg -o attr_timeout=240 -o entry_timeout=240 -o negative_timeout=120 -o allow_other",
+      "sudo yum install java",
+      "wget https://support.sas.com/installation/viya/35/sas-orchestration-cli/lax/sas-orchestration-linux.tgz",
+      "tar xvf ./sas-orchestration-linux.tgz",
+      "./sas-orchestration build --input ./SAS_Viya_deployment_data.zip --platform redhat --architecture x64 --repository-warehouse \"file:////mnt/viyarepo/Sept2021/viya_repo\"",
+      "tar xvf SAS_Viya_playbook.tgz",
+      "mv viya-ark/ ./sas_viya_playbook/"
     ]
 
     connection {
@@ -313,7 +342,18 @@ resource "azurerm_linux_virtual_machine" "vm2" {
       "chmod 600 ~/.ssh/authorized_keys",
       "sudo systemctl stop firewalld",
       "sudo systemctl disable firewalld",
-      "sudo setenforce Permissive"
+      "sudo setenforce Permissive",
+      "sudo rpm -Uvh https://packages.microsoft.com/config/rhel/7/packages-microsoft-prod.rpm",
+      "sudo yum -y install blobfuse",
+      "sudo mkdir -p /mnt/viyarepo",
+      "sudo mkdir -p /mnt/blobfusetmp",
+      "tee  ~/fuse_connection.cfg /dev/null << \"EOF\"",
+      "accountName frasepstorage", 
+      "accountKey pHW64tt3HqQSvKgZS5ez6ZNKe4idzqYXnYRvXd5sMODrNgArDOBtO42omzcicw1LTat9BBpuBVz1WnKQxVrGEg==",
+      "containerName sasviya35mirror",
+      "EOF",
+      "chmod 600 fuse_connection.cfg",
+      "sudo blobfuse /mnt/viyarepo --tmp-path=/mnt/blobfusetmp --config-file=./fuse_connection.cfg -o attr_timeout=240 -o entry_timeout=240 -o negative_timeout=120 -o allow_other"
     ]
 
       connection {
