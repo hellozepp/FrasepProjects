@@ -1,6 +1,6 @@
 #!/bin/bash
 # gel.CASDiskCacheListUsers.sh
-
+#
 _CASCDCPAth=$1
 _hostname=$(hostname)
 if [ "${_CASCDCPAth}" == "" ];   then
@@ -9,6 +9,7 @@ if [ "${_CASCDCPAth}" == "" ];   then
       exit 1
 fi
 echo 
+
 echo "CAS Disk Cache path on ${_hostname}: ${_CASCDCPAth}"
 
 _CDCUsersList=$(lsof -a +L1 | grep "${_CASCDCPAth}" | awk '{print $3}' | sort | uniq)
