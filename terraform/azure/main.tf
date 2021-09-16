@@ -280,7 +280,10 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "cd ~/sas_viya_playbook",
       "cp ./samples/inventory_local.ini inventory.ini",
       "sed -i '/deployTarget ansible_connection/ a deployTarget02 ansible_host=frasepViya35vm2.cloud.com' inventory.ini",
-      "sed -i '/\\[sas_casserver_primary\\]/!b;n;cdeployTarget02' inventory.ini"
+      "sed -i '/\\[sas_casserver_primary\\]/!b;n;cdeployTarget02' inventory.ini",
+      "cd ~/FrasepProjects/OpenLDAP_forViya3",
+      "sed -i '/apple     ansible_connection=local/ a orange    ansible_host=frasepViya35vm2.cloud.com' inventory.ini",
+      "sed -i '/\\[openldapclients\\]/ a orange' inventory.ini"
     ]
 
     connection {
