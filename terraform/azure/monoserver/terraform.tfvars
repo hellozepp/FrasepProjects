@@ -1,0 +1,5 @@
+location       = "westeurope"
+admin_username = "azureuser"
+admin_password = "Orion123"
+vm1vmtype      = "Standard_E16d_v4"
+vm1disksizegb  = "300"
