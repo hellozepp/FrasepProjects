@@ -101,7 +101,7 @@ resource "azurerm_network_security_group" "nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_ranges     = ["22","636","80","443","5570"]
-    source_address_prefixes    = ["149.173.0.0/16","90.127.106.134/32","10.0.0.0/16"]
+    source_address_prefixes    = ["149.173.0.0/16","90.127.106.134/32","10.0.0.0/16","194.206.69.177/32"]
     destination_address_prefix = "*"
   }
 
@@ -133,7 +133,6 @@ resource "azurerm_linux_virtual_machine" "vm1" {
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.vm1nic.id]
   size               = var.vm1vmtype
-  depends_on          = [azurerm_linux_virtual_machine.vm2]
 
   disable_password_authentication = false
   computer_name  = "frasepviya35smp.cloud.com"
@@ -177,7 +176,6 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
       "echo \"${azurerm_linux_virtual_machine.vm1.private_ip_address} ${azurerm_linux_virtual_machine.vm1.computer_name}\" | sudo tee -a /etc/hosts",
-      "echo \"${azurerm_linux_virtual_machine.vm2.private_ip_address} ${azurerm_linux_virtual_machine.vm2.computer_name}\" | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
       "mv /tmp/key_viya.pub ~/.ssh/id_rsa.pub",
@@ -217,7 +215,11 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "ansible-playbook viya_pre_install_playbook.yml -i pre-install.inventory.ini --skip-tags skipmemfail",
       "cd ~/sas_viya_playbook",
       "cp ./samples/inventory_local.ini inventory.ini",
-      "cd ~/FrasepProjects/OpenLDAP_forViya3"
+      "cd ~/FrasepProjects/OpenLDAP_forViya3",
+      "ansible-playbook gel.openldapsetup.yml",
+      "cp ./sitedefault.yml  ~/sas_viya_playbook/roles/consul/files/sitedefault.yml",
+      "cd ~/sas_viya_playbook",
+      "ansible-playbook site.yml"
     ]
 
     connection {
