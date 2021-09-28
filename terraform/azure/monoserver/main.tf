@@ -219,6 +219,9 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "ansible-playbook gel.openldapsetup.yml",
       "cp ./sitedefault.yml  ~/sas_viya_playbook/roles/consul/files/sitedefault.yml",
       "cd ~/sas_viya_playbook",
+      "sudo mkdir -p /mnt/cascache",
+      "sudo chmod 777 /mnt/cascache",
+      "sudo sed -i '/CAS_DISK_CACHE:/c\\CAS_DISK_CACHE: /mnt/cascache' vars.yml",
       "ansible-playbook site.yml"
     ]
 
