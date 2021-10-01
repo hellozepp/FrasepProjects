@@ -1,4 +1,4 @@
-cas mysess;
+cas mysess sessopts=(metrics=true);
 
 proc cas;
 	table.dropcaslib / caslib="AzureDL" silent=true;
