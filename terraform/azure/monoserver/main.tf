@@ -100,7 +100,7 @@ resource "azurerm_network_security_group" "nsg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_ranges     = ["22","636","80","443","5570"]
+    destination_port_ranges     = ["22","636","80","443","5570","8000"]
     source_address_prefixes    = ["149.173.0.0/16","90.127.106.134/32","10.0.0.0/16","194.206.69.177/32"]
     destination_address_prefix = "*"
   }
@@ -258,7 +258,10 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "sudo systemctl enable setupSasWorkOnStartup",
       "sudo mkdir -p /mnt/cascache",
       "sudo chmod 777 /mnt/cascache",
-      "sudo sed -i '/CAS_DISK_CACHE:/c\\    CAS_DISK_CACHE: /mnt/cascache' vars.yml",
+      "mkdir -p /mnt/demo/sasdata",
+      "mkdir -p /mnt/demo/dnfs",
+      "sudo chmod -R 777 /mnt/demo",
+      "sudo sed -i '/CAS_DISK_CACHE:/c\\    CAS_DISK_CACHE: '/mnt/cascache'' vars.yml",
       "ansible-playbook site.yml"
     ]
 
