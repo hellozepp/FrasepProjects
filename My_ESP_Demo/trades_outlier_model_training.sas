@@ -11,6 +11,7 @@ quit;
 */
 
 /* get from data viz a usable filter to retrieve a normal activity period */
+/*
 data PUBLIC.STREAMTOTALCOST_TRAIN;
 	set PUBLIC.STREAMTOTALCOST_TRAIN(drop=_SVDDDISTANCE_ _SVDDSCORE_);
 run;
@@ -18,8 +19,9 @@ run;
 proc cas;
 	table.save / caslib='public' name='STREAMTOTALCOST_TRAIN.sashdat' table={caslib='public' name='STREAMTOTALCOST_TRAIN'} replace=true;
 quit;
+*/
 
-proc svdd data=casuser.new_train;
+proc svdd data=PUBLIC.STREAMTOTALCOST_TRAIN;
 	input totalCost / level=interval;
 	kernel rbf / bw=mean2;
 	savestate rstore=casuser.trade_outliers_svdd;

@@ -1,3 +1,3 @@
 . ./esp_env.sh
-dfesp_xml_client -url "https://frasepviya35smp:5556/SASESP/eventGenerators/tradesEG" -put "file://trades_generator.xml"
+dfesp_xml_client -url "https://frasepviya35smp.cloud.com:5556/SASESP/eventGenerators/tradesEG" -put "file://trades_generator.xml"
 
