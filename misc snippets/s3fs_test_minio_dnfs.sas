@@ -27,3 +27,21 @@ proc cas;
 quit;
 
 cas mysess terminate;
+
+/*
+
+options sastrace=',,,d' sastraceloc=saslog;
+
+proc s3 config="/home/viyademo01/.tks3.conf";
+	REGION ADD HOST="frasepviya35smp.cloud.com" NAME="fr-local-frasep" PORT=9000 REPLACE;
+	REGION LIST;
+run;
+quit;
+
+proc s3 region="fr-local-frasep";
+   list "/datalake";
+run;
+
+
+*/
+
