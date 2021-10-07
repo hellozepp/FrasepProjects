@@ -3,9 +3,14 @@ VA Realtime reporting with randomly generated trades events
 This simple project has been used to showcase ESP Studio, Model Manager integration and VA realtime dashboarding on SAS Viya 3.5.
 Warning : a SMP server with all VA/VS/VDMML/ESP has been installed, and ssl had to be activated to avoid problems with ESP Studio
 direct websocket connection to ESP Server for test interface.
-More over to integrate MM with ESP, the following symbolic link had to be created (with 775 rights for sas group - the demo user belonging to this group-) : 
+More over to integrate MM with ESP, the following symbolic link had to be created (with 775 rights for sas group - the demo user must belong to this group-) : 
 /models/astores/viya pointing on existing directory /opt/sas/viya/config/data/modelsvr/astore
 This is mandatory to let ESP Micro analytics services and MM see the astores produced by the model registering actions.
+For exemple these commands on linux :
+sudo mkdir -p /models/astores
+sudo ln -s /opt/sas/viya/config/data/modelsvr/astore /models/astores/viya
+sudo chmod -R 775 /models/astores
+sudo chown -R sas:sas /models
 
 
 Components :
