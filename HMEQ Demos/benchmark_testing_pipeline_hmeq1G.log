@@ -1,1 +1,1294 @@
-<!DOCTYPE HTML><html><head><meta charset="UTF-8"></meta><style rel="stylesheet">.sasError {color: #d80000;}.sasMessage{color:ssSourceColor;}.sasWarning{color:#1b7a1b;}.sasSource{color:ssSourceColor;}.sasNote {color:#0072b2;}</style><title>Log:benchmark_testing_pipeline_hmeq1G.sas</title></head><body class='sasLog'><pre class='sasLog' id='pre_sasLog_43' style='background-color:transparent; -webkit-user-select: text; -webkit-user-modify: read-only;-webkit-touch-callout: default;border-top-width: 0px;border-bottom-width: 0px'><div class="sasSource">528  OPTIONS NOSYNTAXCHECK;</div><div class="sasSource">529  TITLE;</div><div class="sasSource">530  FOOTNOTE;</div><div class="sasSource">531  DATA _NULL_;</div><div class="sasSource">532  RUN;</div><div class="sasNote" id="sasLogNote1_1580766237319">NOTE: DATA statement used (Total process time):</div><div class="sasNote">      real time           0.00 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div><div class="sasSource">533  OPTIONS VALIDVARNAME=ANY;</div><div class="sasSource">534  OPTIONS VALIDMEMNAME=EXTEND;</div><div class="sasSource">535  ODS _ALL_ CLOSE;</div><div class="sasSource">536  </div><div class="sasSource">537  OPTIONS NOSYNTAXCHECK;</div><div class="sasSource">538  DATA _NULL_;</div><div class="sasSource">539  LENGTH RC 4;</div><div class="sasSource">540  %let TWORKLOC="%sysfunc(getoption(work))";</div><div class="sasSource">541  RC=DLGCDIR(&amp;TWORKLOC);</div><div class="sasSource">542  RUN;</div><div class="sasNote" id="sasLogNote2_1580766237319">NOTE: The current working directory is now </div><div class="sasNote">      "/opt/sas/viya/config/var/tmp/compsrv/default/f0422bbc-a600-433b-81b8-6eceead3ee90/SAS_work415A00003E3E_sepviya35.aws.sas.com"</div><div class="sasNote">      .</div><div class="sasNote" id="sasLogNote3_1580766237319">NOTE: DATA statement used (Total process time):</div><div class="sasNote">      real time           0.00 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div><div class="sasSource">543  OPTIONS NOSYNTAXCHECK;</div><div class="sasSource">544  filename _HTMLOUT %nrstr("/home/viyademo01/frasepprojects/HMEQ Demos/benchmark_testing_pipeline_hmeq1G.html");</div><div class="sasSource">545  FILENAME _GSFNAME TEMP;</div><div class="sasSource">546  FILENAME _DATAOUT TEMP;</div><div class="sasSource">547  %LET SYSCC=0;</div><div class="sasSource">548  %LET _CLIENTAPP = %NRQUOTE(%NRSTR(SAS Studio));</div><div class="sasSource">549  %LET _CLIENTAPPABBREV = %NRQUOTE(%NRSTR(Studio));</div><div class="sasSource">550  %LET _CLIENTAPPVERSION=5.2;</div><div class="sasSource">551  %LET _CLIENTVERSION=5.2;</div><div class="sasSource">552  %LET _SASSERVERNAME = %NRQUOTE(%NRSTR(sepviya35));</div><div class="sasSource">553  %LET _SASHOSTNAME = %NRQUOTE(%NRSTR(sepviya35));</div><div class="sasSource">554  %LET _SASPROGRAMFILEHOST = %NRQUOTE(%NRSTR(sepviya35));</div><div class="sasSource">555  %LET _CLIENTUSERID = %NRQUOTE(%NRSTR(viyademo01));</div><div class="sasSource">556  %LET _CLIENTUSERNAME = %NRQUOTE(%NRSTR(Viya Demo User 01</div><div class="sasSource">556!                                                                                                                 ));</div><div class="sasSource">557  %LET CLIENTMACHINE = %NRQUOTE(%NRSTR(172.28.249.150));</div><div class="sasSource">558  %LET _CLIENTMACHINE = %NRQUOTE(%NRSTR(172.28.249.150));</div><div class="sasSource">559  %LET _CLIENTMODE = %NRQUOTE(%NRSTR(viya));</div><div class="sasSource">560  %let SASWORKLOCATION="%sysfunc(getoption(work))/";</div><div class="sasSource">561  FILENAME _CWD &amp;SASWORKLOCATION;</div><div class="sasSource">562  DATA _NULL_;</div><div class="sasSource">563  CALL SYMPUT('_SASWORKINGDIR',PATHNAME('_CWD'));</div><div class="sasSource">564  RUN;</div><div class="sasNote" id="sasLogNote4_1580766237319">NOTE: DATA statement used (Total process time):</div><div class="sasNote">      real time           0.00 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div><div class="sasSource">565  FILENAME _CWD;</div><div class="sasNote" id="sasLogNote5_1580766237319">NOTE: Fileref _CWD has been deassigned.</div><div class="sasSource">566  %LET _SASPROGRAMFILE = %NRQUOTE(%NRSTR(/home/viyademo01/frasepprojects/HMEQ Demos/benchmark_testing_pipeline_hmeq1G.sas));</div><div class="sasSource">567  %LET _BASEURL = %NRQUOTE(%NRSTR(https://sepviya35.aws.sas.com/SASStudioV/));</div><div class="sasSource">568  %LET _EXECENV = %NRQUOTE(%NRSTR(SASStudio;));</div><div class="sasSource">569  DATA _NULL_;</div><div class="sasSource">570  LENGTH RC $255;</div><div class="sasSource">571  CALL SYMPUT("GRAPHINIT","");</div><div class="sasSource">572  CALL SYMPUT("GRAPHTERM","");</div><div class="sasSource">573  RC=TSLVL('SASXGOPT','N');</div><div class="sasSource">574  _ERROR_=0;</div><div class="sasSource">575  IF (RC^=' ') THEN DO;</div><div class="sasSource">576  CALL SYMPUT("GRAPHINIT","GOPTIONS RESET=ALL GSFNAME=_GSFNAME;");</div><div class="sasSource">577  CALL SYMPUT("GRAPHTERM","GOPTIONS NOACCESSIBLE;");</div><div class="sasSource">578  END;</div><div class="sasSource">579  RUN;</div><div class="sasNote" id="sasLogNote6_1580766237319">NOTE: DATA statement used (Total process time):</div><div class="sasNote">      real time           0.00 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div><div class="sasSource">580  DATA _NULL_;</div><div class="sasSource">581  LENGTH RC 4;</div><div class="sasSource">582  RC=SYSPROD("PRODNUM002");</div><div class="sasSource">583  IF (RC^=1) THEN DO;</div><div class="sasSource">584  CALL SYMPUT("GRAPHINIT","");</div><div class="sasSource">585  CALL SYMPUT("GRAPHTERM","");</div><div class="sasSource">586  END;</div><div class="sasSource">587  RUN;</div><div class="sasNote" id="sasLogNote7_1580766237319">NOTE: DATA statement used (Total process time):</div><div class="sasNote">      real time           0.00 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div><div class="sasSource">588  %LET _DATAOUT_MIME_TYPE=;</div><div class="sasSource">589  %LET _DATAOUT_NAME=;</div><div class="sasSource">590  %LET _DATAOUT_TABLE=;</div><div class="sasSource">591  %LET _DATAOUT_URL=;</div><div class="sasSource">592  %SYMDEL _DATAOUT_MIME_TYPE _DATAOUT_NAME _DATAOUT_URL _DATAOUT_TABLE;</div><div class="sasSource">593  %LET _SASWS_ = %BQUOTE(%sysfunc(getoption(work)));</div><div class="sasSource">594  %LET _SASWSTEMP_ = %BQUOTE(%sysfunc(getoption(work)));</div><div class="sasSource">595  ODS LISTING CLOSE;</div><div class="sasSource">596  OPTIONS PRINTERPATH=PDF;</div><div class="sasSource">597  ODS AUTONAVIGATE OFF;</div><div class="sasSource">598  ODS GRAPHICS ON;</div><div class="sasSource">599  ODS HTML5 (ID=WEB) DEVICE=PNG GPATH="&amp;_SASWSTEMP_" PATH="&amp;_SASWSTEMP_" ENCODING=utf8 FILE=_HTMLOUT</div><div class="sasSource">599! (TITLE='Results:benchmark_testing_pipeline_hmeq1G.sas') STYLE=HtmlBlue OPTIONS(BITMAP_MODE='INLINE' OUTLINE='ON'</div><div class="sasSource">599! SVG_MODE='INLINE' CSS_PREFIX='.ods_90e705f8-cd30-4f0a-9081-c79290ffdc41' BODY_ID='div_90e705f8-cd30-4f0a-9081-c79290ffdc41' );</div><div class="sasNote" id="sasLogNote8_1580766237319">NOTE: Writing HTML5(WEB) Body file: _HTMLOUT</div><div class="sasSource">600  &amp;GRAPHINIT;</div><div class="sasSource">601  OPTIONS FIRSTOBS=1;</div><div class="sasSource">602  OPTIONS OBS=MAX;</div><div class="sasSource">603  OPTIONS DTRESET DATE NUMBER;</div><div class="sasSource">604  OPTIONS DEVICE=PNG;</div><div class="sasSource">605  filename _LOGOUT %nrstr("/home/viyademo01/frasepprojects/HMEQ Demos/benchmark_testing_pipeline_hmeq1G.log");</div><div class="sasSource">606  run;</div><div class="sasSource">607  %studio_show_only_notes_wrapper;</div><div class="sasNote" id="sasLogNote9_1580766237319">NOTE: ODS statements in the SAS Studio environment may disable some output features.</div><div class="sasSource">610  options cashost="sepviya35.aws.sas.com" casport=5570;</div><div class="sasSource">611  </div><div class="sasSource">612  /************************************************************************/</div><div class="sasSource">613  /* This example illustrates various tools for assaying, assessing,      */</div><div class="sasSource">614  /* modifying and preparing data prior to modeling. It uses HMEQ         */</div><div class="sasSource">615  /* dataset as input and produces HMEQ_PREPPED dataset. The HMEQ_PREPPED */</div><div class="sasSource">616  /* dataset is used in subsequent examples.                              */</div><div class="sasSource">617  /*                                                                      */</div><div class="sasSource">618  /* The steps include:                                                   */</div><div class="sasSource">619  /*                                                                      */</div><div class="sasSource">620  /* (1) PREPARE AND EXPLORE                                              */</div><div class="sasSource">621  /*     a) Load data set into CAS                                        */</div><div class="sasSource">622  /*     b) Explore                                                       */</div><div class="sasSource">623  /*     c) Impute                                                        */</div><div class="sasSource">624  /*     d) Identify variables that explain variance                      */</div><div class="sasSource">625  /*     e) Perform a cluster analysis to identify homogeneous            */</div><div class="sasSource">626  /*        groups in the data                                            */</div><div class="sasSource">627  /*     f) Perform principal components analysis to assess collineary    */</div><div class="sasSource">628  /*        among candidate, interval valued inputs                       */</div><div class="sasSource">629  /************************************************************************/</div><div class="sasSource">630  </div><div class="sasSource">631  /************************************************************************/</div><div class="sasSource">632  /* Setup and initialize for later use in the program                    */</div><div class="sasSource">633  /************************************************************************/</div><div class="sasSource">634  /* Define a CAS engine libref for CAS in-memory data tables */</div><div class="sasSource">635  libname mycaslib cas caslib=casuser;</div><div class="sasNote" id="sasLogNote10_1580766237319">NOTE: The session CASAUTO connected successfully to Cloud Analytic Services sepviya35.aws.sas.com using port 5570. The UUID is </div><div class="sasNote">      6a69ab86-8253-c04b-a025-51f630e6713d. The user is viyademo01 and the active caslib is CASUSER(viyademo01).</div><div class="sasNote" id="sasLogNote11_1580766237319">NOTE: The SAS option SESSREF was updated with the value CASAUTO.</div><div class="sasNote" id="sasLogNote12_1580766237319">NOTE: The SAS macro _SESSREF_ was updated with the value CASAUTO.</div><div class="sasNote" id="sasLogNote13_1580766237319">NOTE: The session is using 0 workers.</div><div class="sasNote" id="sasLogNote14_1580766237319">NOTE: Libref MYCASLIB was successfully assigned as follows: </div><div class="sasNote">      Engine:        CAS </div><div class="sasNote">      Physical Name: 6a69ab86-8253-c04b-a025-51f630e6713d</div><div class="sasSource">636  </div><div class="sasSource">637  /* Specify the data set names */</div><div class="sasSource">638  %let sasdata          = sampsio.hmeq;</div><div class="sasSource">639  %let casdata          = mycaslib.hmeq;</div><div class="sasSource">640  </div><div class="sasSource">641  /* Specify the data set inputs and target */</div><div class="sasSource">642  %let class_inputs    = reason job;</div><div class="sasSource">643  %let interval_inputs = clage clno debtinc loan mortdue value yoj derog delinq ninq;</div><div class="sasSource">644  %let target          = bad;</div><div class="sasSource">645  </div><div class="sasSource">646  %let im_class_inputs    = reason job;</div><div class="sasSource">647  %let im_interval_inputs = im_clage clno im_debtinc loan mortdue value im_yoj im_ninq derog im_delinq;</div><div class="sasSource">648  %let cluster_inputs     = im_clage im_debtinc value;</div><div class="sasSource">649  </div><div class="sasSource">650  /* Specify a folder path to write the temporary output files */</div><div class="sasSource">651  %let outdir = &amp;_SASWORKINGDIR;</div><div class="sasSource">652  </div><div class="sasSource">653  /************************************************************************/</div><div class="sasSource">654  /* Load data into CAS if needed. Data should have been loaded in        */</div><div class="sasSource">655  /* step 1, it will be loaded here after checking if it exists in CAS    */</div><div class="sasSource">656  /************************************************************************/</div><div class="sasSource">657  %if not %sysfunc(exist(&amp;casdata)) %then %do;</div><div class="sasSource">658    proc casutil;</div><div class="sasNote" id="sasLogNote15_1580766237319">NOTE: The UUID '6a69ab86-8253-c04b-a025-51f630e6713d' is connected using session CASAUTO.</div><div class="sasSource">659      load data=&amp;sasdata casout="hmeq" outcaslib=casuser;</div><div class="sasNote" id="sasLogNote16_1580766237319">NOTE: SAMPSIO.HMEQ was successfully added to the "CASUSER(viyademo01)" caslib as "HMEQ".</div><div class="sasSource">660    run;</div><div class="sasSource">661  %end;</div><div class="sasSource">662  </div><div class="sasSource">663  /* Grow volume of input training dataset to 5960000 records */</div><div class="sasSource">664  </div><div class="sasSource">665  data mycaslib.hmeq(drop=i) ;</div><div class="sasNote" id="sasLogNote17_1580766237319">NOTE: PROCEDURE CASUTIL used (Total process time):</div><div class="sasNote">      real time           0.03 seconds</div><div class="sasNote">      cpu time            0.01 seconds</div><div class="sasNote">      </div><div class="sasSource">666     set mycaslib.hmeq ;</div><div class="sasSource">667     do i=1 to 10 ;</div><div class="sasSource">668        output ;</div><div class="sasSource">669     end ;</div><div class="sasSource">670  run ;</div><div class="sasNote" id="sasLogNote18_1580766237319">NOTE: Running DATA step in Cloud Analytic Services.</div><div class="sasNote" id="sasLogNote19_1580766237319">NOTE: The DATA step will run in multiple threads.</div><div class="sasNote" id="sasLogNote20_1580766237319">NOTE: There were 5960 observations read from the table HMEQ in caslib CASUSER(viyademo01).</div><div class="sasNote" id="sasLogNote21_1580766237319">NOTE: The table hmeq in caslib CASUSER(viyademo01) has 59600 observations and 13 variables.</div><div class="sasNote" id="sasLogNote22_1580766237319">NOTE: DATA statement used (Total process time):</div><div class="sasNote">      real time           0.04 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div><div class="sasSource">671  </div><div class="sasSource">672  proc cas ;</div><div class="sasSource">673     tabledetails / table="hmeq" ;</div><div class="sasSource">674  quit ;</div><div class="sasNote" id="sasLogNote23_1580766237319">NOTE: Active Session now CASAUTO.</div><div class="sasNote" id="sasLogNote24_1580766237319">NOTE: PROCEDURE CAS used (Total process time):</div><div class="sasNote">      real time           0.03 seconds</div><div class="sasNote">      cpu time            0.04 seconds</div><div class="sasNote">      </div><div class="sasSource">675  </div><div class="sasSource">676  /************************************************************************/</div><div class="sasSource">677  /* Explore the data and plot missing values                             */</div><div class="sasSource">678  /************************************************************************/</div><div class="sasSource">679  proc cardinality data=&amp;casdata outcard=mycaslib.data_card;</div><div class="sasSource">680  run;</div><div class="sasNote" id="sasLogNote25_1580766237319">NOTE: Added action set 'cardinality'.</div><div class="sasNote" id="sasLogNote26_1580766237319">NOTE: Writing cardinality.</div><div class="sasNote" id="sasLogNote27_1580766237319">NOTE: status = 0.</div><div class="sasNote" id="sasLogNote28_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.050639 seconds.</div><div class="sasNote" id="sasLogNote29_1580766237319">NOTE: PROCEDURE CARDINALITY used (Total process time):</div><div class="sasNote">      real time           0.06 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div><div class="sasSource">681  </div><div class="sasSource">682  proc print data=mycaslib.data_card(where=(_nmiss_&gt;0));</div><div class="sasSource">683    title "Data Summary";</div><div class="sasSource">684  run;</div><div class="sasNote" id="sasLogNote30_1580766237319">NOTE: PROCEDURE PRINT used (Total process time):</div><div class="sasNote">      real time           0.06 seconds</div><div class="sasNote">      cpu time            0.06 seconds</div><div class="sasNote">      </div><div class="sasSource">685  </div><div class="sasSource">686  data data_missing;</div><div class="sasSource">687    set mycaslib.data_card (where=(_nmiss_&gt;0) keep=_varname_ _nmiss_ _nobs_);</div><div class="sasSource">688    _percentmiss_ = (_nmiss_/_nobs_)*100;</div><div class="sasSource">689    label _percentmiss_ = 'Percent Missing';</div><div class="sasSource">690  run;</div><div class="sasNote" id="sasLogNote31_1580766237319">NOTE: There were 11 observations read from the data set MYCASLIB.DATA_CARD.</div><div class="sasNote">      WHERE _nmiss_&gt;0;</div><div class="sasNote" id="sasLogNote32_1580766237319">NOTE: The data set WORK.DATA_MISSING has 11 observations and 4 variables.</div><div class="sasNote" id="sasLogNote33_1580766237319">NOTE: DATA statement used (Total process time):</div><div class="sasNote">      real time           0.01 seconds</div><div class="sasNote">      cpu time            0.01 seconds</div><div class="sasNote">      </div><div class="sasSource">691  </div><div class="sasSource">692  proc sgplot data=data_missing;</div><div class="sasSource">693    title "Percentage of Missing Values";</div><div class="sasSource">694    vbar _varname_ / response=_percentmiss_ datalabel categoryorder=respdesc;</div><div class="sasSource">695  run;</div><div class="sasNote" id="sasLogNote34_1580766237319">NOTE: PROCEDURE SGPLOT used (Total process time):</div><div class="sasNote">      real time           2.12 seconds</div><div class="sasNote">      cpu time            0.18 seconds</div><div class="sasNote">      </div><div class="sasNote" id="sasLogNote35_1580766237319">NOTE: There were 11 observations read from the data set WORK.DATA_MISSING.</div><div class="sasSource">696  title;</div><div class="sasSource">697  </div><div class="sasSource">698  /************************************************************************/</div><div class="sasSource">699  /* Impute missing values                                                */</div><div class="sasSource">700  /************************************************************************/</div><div class="sasSource">701  proc varimpute data=&amp;casdata;</div><div class="sasSource">702    input clage /ctech=mean;</div><div class="sasSource">703    input delinq /ctech=median;</div><div class="sasSource">704    input ninq /ctech=random;</div><div class="sasSource">705    input debtinc yoj /ctech=value cvalues=50,100;</div><div class="sasSource">706    output out=mycaslib.hmeq_prepped copyvars=(_ALL_);</div><div class="sasSource">707    code file="&amp;outdir./impute_score.sas";</div><div class="sasSource">708  run;</div><div class="sasNote" id="sasLogNote36_1580766237319">NOTE: Using SEED=1896367425 for random imputation.</div><div class="sasNote" id="sasLogNote37_1580766237319">NOTE: External file </div><div class="sasNote">      /opt/sas/viya/config/var/tmp/compsrv/default/f0422bbc-a600-433b-81b8-6eceead3ee90/SAS_work415A00003E3E_sepviya35.aws.sas.com/i</div><div class="sasNote">      mpute_score.sas opened.</div><div class="sasNote" id="sasLogNote38_1580766237319">NOTE: The procedure wrote the DATA step code to external file </div><div class="sasNote">      /opt/sas/viya/config/var/tmp/compsrv/default/f0422bbc-a600-433b-81b8-6eceead3ee90/SAS_work415A00003E3E_sepviya35.aws.sas.com/i</div><div class="sasNote">      mpute_score.sas.</div><div class="sasNote" id="sasLogNote39_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.043963 seconds.</div><div class="sasNote" id="sasLogNote40_1580766237319">NOTE: The data set MYCASLIB.HMEQ_PREPPED has 59600 observations and 18 variables.</div><div class="sasNote" id="sasLogNote41_1580766237319">NOTE: PROCEDURE VARIMPUTE used (Total process time):</div><div class="sasNote">      real time           0.06 seconds</div><div class="sasNote">      cpu time            0.03 seconds</div><div class="sasNote">      </div><div class="sasSource">709  </div><div class="sasSource">710  </div><div class="sasSource">711  /************************************************************************/</div><div class="sasSource">712  /* Identify variables that explain variance in the target               */</div><div class="sasSource">713  /************************************************************************/</div><div class="sasSource">714  /* Discriminant analysis for class target */</div><div class="sasSource">715  proc varreduce data=mycaslib.hmeq_prepped technique=discriminantanalysis;</div><div class="sasSource">716    class &amp;target &amp;im_class_inputs.;</div><div class="sasSource">717    reduce supervised &amp;target=&amp;im_class_inputs. &amp;im_interval_inputs. / maxeffects=8;</div><div class="sasSource">718    ods output selectionsummary=summary;</div><div class="sasSource">719  run;</div><div class="sasNote" id="sasLogNote42_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.054576 seconds.</div><div class="sasNote" id="sasLogNote43_1580766237319">NOTE: The data set WORK.SUMMARY has 8 observations and 9 variables.</div><div class="sasNote" id="sasLogNote44_1580766237319">NOTE: PROCEDURE VARREDUCE used (Total process time):</div><div class="sasNote">      real time           0.11 seconds</div><div class="sasNote">      cpu time            0.04 seconds</div><div class="sasNote">      </div><div class="sasSource">720  </div><div class="sasSource">721  data out_iter (keep=Iteration VarExp Base Increment Parameter);</div><div class="sasSource">722    set summary;</div><div class="sasSource">723    Increment=dif(VarExp);</div><div class="sasSource">724    if Increment=. then Increment=0;</div><div class="sasSource">725    Base=VarExp - Increment;</div><div class="sasSource">726  run;</div><div class="sasNote" id="sasLogNote45_1580766237319">NOTE: There were 8 observations read from the data set WORK.SUMMARY.</div><div class="sasNote" id="sasLogNote46_1580766237319">NOTE: The data set WORK.OUT_ITER has 8 observations and 5 variables.</div><div class="sasNote" id="sasLogNote47_1580766237319">NOTE: DATA statement used (Total process time):</div><div class="sasNote">      real time           0.00 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div><div class="sasSource">727  </div><div class="sasSource">728  proc transpose data=out_iter out=out_iter_trans;</div><div class="sasSource">729    by Iteration VarExp Parameter;</div><div class="sasSource">730  run;</div><div class="sasNote" id="sasLogNote48_1580766237319">NOTE: There were 8 observations read from the data set WORK.OUT_ITER.</div><div class="sasNote" id="sasLogNote49_1580766237319">NOTE: The data set WORK.OUT_ITER_TRANS has 16 observations and 5 variables.</div><div class="sasNote" id="sasLogNote50_1580766237319">NOTE: PROCEDURE TRANSPOSE used (Total process time):</div><div class="sasNote">      real time           0.00 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div><div class="sasSource">731  </div><div class="sasSource">732  proc sort data=out_iter_trans;</div><div class="sasSource">733    label _NAME_='Group';</div><div class="sasSource">734    by _NAME_;</div><div class="sasSource">735  run;</div><div class="sasNote" id="sasLogNote51_1580766237319">NOTE: There were 16 observations read from the data set WORK.OUT_ITER_TRANS.</div><div class="sasNote" id="sasLogNote52_1580766237319">NOTE: The data set WORK.OUT_ITER_TRANS has 16 observations and 5 variables.</div><div class="sasNote" id="sasLogNote53_1580766237319">NOTE: PROCEDURE SORT used (Total process time):</div><div class="sasNote">      real time           0.00 seconds</div><div class="sasNote">      cpu time            0.01 seconds</div><div class="sasNote">      </div><div class="sasSource">736  </div><div class="sasSource">737  /* Variance explained by Iteration plot */</div><div class="sasSource">738  proc sgplot data=out_iter_trans;</div><div class="sasSource">739    title "Variance Explained by Iteration";</div><div class="sasSource">740    yaxis label="Variance Explained";</div><div class="sasSource">741    vbar Iteration / response=COL1 group=_NAME_;</div><div class="sasSource">742  run;</div><div class="sasNote" id="sasLogNote54_1580766237319">NOTE: PROCEDURE SGPLOT used (Total process time):</div><div class="sasNote">      real time           0.18 seconds</div><div class="sasNote">      cpu time            0.04 seconds</div><div class="sasNote">      </div><div class="sasNote" id="sasLogNote55_1580766237319">NOTE: There were 16 observations read from the data set WORK.OUT_ITER_TRANS.</div><div class="sasSource">743  title;</div><div class="sasSource">744  </div><div class="sasSource">745  </div><div class="sasSource">746  /************************************************************************/</div><div class="sasSource">747  /* Perform a cluster analysis based on demographic inputs               */</div><div class="sasSource">748  /************************************************************************/</div><div class="sasSource">749  proc kclus data=mycaslib.hmeq_prepped standardize=std distance=euclidean maxclusters=6;</div><div class="sasSource">750    input &amp;cluster_inputs. / level=interval;</div><div class="sasSource">751  run;</div><div class="sasNote" id="sasLogNote56_1580766237319">NOTE: Using SEED=299020354.</div><div class="sasNote" id="sasLogNote57_1580766237319">NOTE: Running for input data for K 6.</div><div class="sasNote" id="sasLogNote58_1580766237319">NOTE: Clustering is finished. MAXITER is satisfied.</div><div class="sasNote" id="sasLogNote59_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.060726 seconds.</div><div class="sasNote" id="sasLogNote60_1580766237319">NOTE: PROCEDURE KCLUS used (Total process time):</div><div class="sasNote">      real time           0.14 seconds</div><div class="sasNote">      cpu time            0.08 seconds</div><div class="sasNote">      </div><div class="sasSource">752  </div><div class="sasSource">753  </div><div class="sasSource">754  /************************************************************************/</div><div class="sasSource">755  /* Perform a principal components analysis on the interval valued       */</div><div class="sasSource">756  /* input variables                                                      */</div><div class="sasSource">757  /************************************************************************/</div><div class="sasSource">758  proc pca data=mycaslib.hmeq_prepped plots=(scree);</div><div class="sasSource">759    var &amp;im_interval_inputs;</div><div class="sasSource">760  run;</div><div class="sasWarning" id="sasLogWarning1_1580766237319">WARNING: 11380 observations in table HMEQ_PREPPED omitted due to missing values.</div><div class="sasNote" id="sasLogNote61_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.01156 seconds.</div><div class="sasNote" id="sasLogNote62_1580766237319">NOTE: PROCEDURE PCA used (Total process time):</div><div class="sasNote">      real time           0.35 seconds</div><div class="sasNote">      cpu time            0.13 seconds</div><div class="sasNote">      </div><div class="sasSource">761  </div><div class="sasSource">762  </div><div class="sasSource">763  </div><div class="sasSource">764  /************************************************************************/</div><div class="sasSource">765  /* This example illustrates fitting and comparing several Machine       */</div><div class="sasSource">766  /* Learning algorithms for predicting the binary target in the          */</div><div class="sasSource">767  /* HMEQ data set. The steps include:                                    */</div><div class="sasSource">768  /*                                                                      */</div><div class="sasSource">769  /* (1) PREPARE AND EXPLORE                                              */</div><div class="sasSource">770  /*     a) Check data is loaded into CAS                                 */</div><div class="sasSource">771  /*                                                                      */</div><div class="sasSource">772  /* (2) PERFORM SUPERVISED LEARNING                                      */</div><div class="sasSource">773  /*     a) Fit a model using a Random Forest                             */</div><div class="sasSource">774  /*     b) Fit a model using Gradient Boosting                           */</div><div class="sasSource">775  /*     c) Fit a model using a Neural Network                            */</div><div class="sasSource">776  /*     d) Fit a model using a Support Vector Machine                    */</div><div class="sasSource">777  /*                                                                      */</div><div class="sasSource">778  /* (3) EVALUATE AND IMPLEMENT                                           */</div><div class="sasSource">779  /*     a) Score the data                                                */</div><div class="sasSource">780  /*     b) Assess model performance                                      */</div><div class="sasSource">781  /*     c) Generate ROC and Lift charts                                  */</div><div class="sasSource">782  /************************************************************************/</div><div class="sasSource">783  </div><div class="sasSource">784  /************************************************************************/</div><div class="sasSource">785  /* Setup and initialize for later use in the program                    */</div><div class="sasSource">786  /************************************************************************/</div><div class="sasSource">787  </div><div class="sasSource">788  /* Define a CAS engine libref for CAS in-memory data tables */</div><div class="sasSource">789  libname mycaslib cas caslib=casuser;</div><div class="sasNote" id="sasLogNote63_1580766237319">NOTE: Libref MYCASLIB was successfully assigned as follows: </div><div class="sasNote">      Engine:        CAS </div><div class="sasNote">      Physical Name: 6a69ab86-8253-c04b-a025-51f630e6713d</div><div class="sasSource">790  </div><div class="sasSource">791  /* Specify the data set names */</div><div class="sasSource">792  %let casdata          = mycaslib.hmeq_prepped;</div><div class="sasSource">793  %let partitioned_data = mycaslib.hmeq_part;</div><div class="sasSource">794  </div><div class="sasSource">795  /* Specify the data set inputs and target */</div><div class="sasSource">796  %let class_inputs    = reason job;</div><div class="sasSource">797  %let interval_inputs = im_clage clno im_debtinc loan mortdue value im_yoj im_ninq derog im_delinq;</div><div class="sasSource">798  %let target          = bad;</div><div class="sasSource">799  </div><div class="sasSource">800  </div><div class="sasSource">801  /************************************************************************/</div><div class="sasSource">802  /* Check if HMEQ_PREPPED data created in the Prepare and Explore Data   */</div><div class="sasSource">803  /* snippet exists.  If not, print error message to run the program.     */</div><div class="sasSource">804  /************************************************************************/</div><div class="sasSource">805  %if not %sysfunc(exist(&amp;casdata)) %then %do;</div><div class="sasSource">806    %put ERROR: The input dataset HMEQ_PREPPED is not loaded into CAS.;</div><div class="sasSource">807    %put ERROR: Remember to run the Prepare and Explore Data snippet to load necessary data before executing this example.;</div><div class="sasSource">808  %end;</div><div class="sasSource">809  </div><div class="sasSource">810  /************************************************************************/</div><div class="sasSource">811  /* Partition the data into training and validation                      */</div><div class="sasSource">812  /************************************************************************/</div><div class="sasSource">813  proc partition data=&amp;casdata partition samppct=70;</div><div class="sasSource">814    by &amp;target;</div><div class="sasSource">815    output out=&amp;partitioned_data copyvars=(_ALL_);</div><div class="sasSource">816  run;</div><div class="sasNote" id="sasLogNote64_1580766237319">NOTE: Stratified sampling is in effect.</div><div class="sasNote" id="sasLogNote65_1580766237319">NOTE: Using SEED=10674260 for sampling.</div><div class="sasNote" id="sasLogNote66_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.036867 seconds.</div><div class="sasNote" id="sasLogNote67_1580766237319">NOTE: The data set MYCASLIB.HMEQ_PART has 59600 observations and 19 variables.</div><div class="sasNote" id="sasLogNote68_1580766237319">NOTE: PROCEDURE PARTITION used (Total process time):</div><div class="sasNote">      real time           0.06 seconds</div><div class="sasNote">      cpu time            0.03 seconds</div><div class="sasNote">      </div><div class="sasSource">817  </div><div class="sasSource">818  </div><div class="sasSource">819  /************************************************************************/</div><div class="sasSource">820  /* RANDOM FOREST predictive model                                       */</div><div class="sasSource">821  /************************************************************************/</div><div class="sasSource">822  proc forest data=&amp;partitioned_data ntrees=50 intervalbins=20 minleafsize=5</div><div class="sasSource">823              outmodel=mycaslib.forest_model;</div><div class="sasSource">824    input &amp;interval_inputs. / level = interval;</div><div class="sasSource">825    input &amp;class_inputs. / level = nominal;</div><div class="sasSource">826    target &amp;target / level=nominal;</div><div class="sasSource">827    partition rolevar=_partind_(train='1' validate='0');</div><div class="sasSource">828  run;</div><div class="sasNote" id="sasLogNote69_1580766237319">NOTE: Using SEED=1077757021 for FOREST model building.</div><div class="sasNote" id="sasLogNote70_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 2.155357 seconds.</div><div class="sasNote" id="sasLogNote71_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.893362 seconds.</div><div class="sasNote" id="sasLogNote72_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 1.236964 seconds.</div><div class="sasNote" id="sasLogNote73_1580766237319">NOTE: The data set MYCASLIB.FOREST_MODEL has 44088 observations and 42 variables.</div><div class="sasNote" id="sasLogNote74_1580766237319">NOTE: PROCEDURE FOREST used (Total process time):</div><div class="sasNote">      real time           4.42 seconds</div><div class="sasNote">      cpu time            0.11 seconds</div><div class="sasNote">      </div><div class="sasSource">829  </div><div class="sasSource">830  </div><div class="sasSource">831  /************************************************************************/</div><div class="sasSource">832  /* Score the data using the generated RF model                          */</div><div class="sasSource">833  /************************************************************************/</div><div class="sasSource">834  proc forest data=&amp;partitioned_data inmodel=mycaslib.forest_model noprint;</div><div class="sasSource">835    output out=mycaslib._scored_RF copyvars=(_ALL_);</div><div class="sasSource">836  run;</div><div class="sasNote" id="sasLogNote75_1580766237319">NOTE: When the INMODEL option is specified, only the DATA option, the NOPRINT option, and the OUTPUT and CODE statements are </div><div class="sasNote">      supported.</div><div class="sasNote" id="sasLogNote76_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 1.141481 seconds.</div><div class="sasNote" id="sasLogNote77_1580766237319">NOTE: The data set MYCASLIB._SCORED_RF has 59600 observations and 24 variables.</div><div class="sasNote" id="sasLogNote78_1580766237319">NOTE: PROCEDURE FOREST used (Total process time):</div><div class="sasNote">      real time           1.15 seconds</div><div class="sasNote">      cpu time            0.01 seconds</div><div class="sasNote">      </div><div class="sasSource">837  </div><div class="sasSource">838  </div><div class="sasSource">839  /************************************************************************/</div><div class="sasSource">840  /* GRADIENT BOOSTING MACHINES predictive model                          */</div><div class="sasSource">841  /************************************************************************/</div><div class="sasSource">842  proc gradboost data=&amp;partitioned_data ntrees=10 intervalbins=20 maxdepth=5</div><div class="sasSource">843                 outmodel=mycaslib.gb_model;</div><div class="sasSource">844    input &amp;interval_inputs. / level = interval;</div><div class="sasSource">845    input &amp;class_inputs. / level = nominal;</div><div class="sasSource">846    target &amp;target / level=nominal;</div><div class="sasSource">847    partition rolevar=_partind_(train='1' validate='0');</div><div class="sasSource">848  run;</div><div class="sasNote" id="sasLogNote79_1580766237319">NOTE: Using SEED=1634740823 for GRADBOOST model building.</div><div class="sasNote" id="sasLogNote80_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.407108 seconds.</div><div class="sasNote" id="sasLogNote81_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.05656 seconds.</div><div class="sasNote" id="sasLogNote82_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.030534 seconds.</div><div class="sasNote" id="sasLogNote83_1580766237319">NOTE: The data set MYCASLIB.GB_MODEL has 546 observations and 32 variables.</div><div class="sasNote" id="sasLogNote84_1580766237319">NOTE: PROCEDURE GRADBOOST used (Total process time):</div><div class="sasNote">      real time           0.56 seconds</div><div class="sasNote">      cpu time            0.06 seconds</div><div class="sasNote">      </div><div class="sasSource">849  </div><div class="sasSource">850  </div><div class="sasSource">851  /************************************************************************/</div><div class="sasSource">852  /* Score the data using the generated GBM model                         */</div><div class="sasSource">853  /************************************************************************/</div><div class="sasSource">854  proc gradboost  data=&amp;partitioned_data inmodel=mycaslib.gb_model noprint;</div><div class="sasSource">855    output out=mycaslib._scored_GB copyvars=(_ALL_);</div><div class="sasSource">856  run;</div><div class="sasNote" id="sasLogNote85_1580766237319">NOTE: When the INMODEL option is specified without the ADDTREE option, only the DATA option, the NOPRINT option, and the OUTPUT </div><div class="sasNote">      statement are supported.</div><div class="sasNote" id="sasLogNote86_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.116377 seconds.</div><div class="sasNote" id="sasLogNote87_1580766237319">NOTE: The data set MYCASLIB._SCORED_GB has 59600 observations and 23 variables.</div><div class="sasNote" id="sasLogNote88_1580766237319">NOTE: PROCEDURE GRADBOOST used (Total process time):</div><div class="sasNote">      real time           0.13 seconds</div><div class="sasNote">      cpu time            0.02 seconds</div><div class="sasNote">      </div><div class="sasSource">857  </div><div class="sasSource">858  </div><div class="sasSource">859  /************************************************************************/</div><div class="sasSource">860  /* NEURAL NETWORK predictive model                                      */</div><div class="sasSource">861  /************************************************************************/</div><div class="sasSource">862  proc nnet data=&amp;partitioned_data;</div><div class="sasSource">863    target &amp;target / level=nom;</div><div class="sasSource">864    input &amp;interval_inputs. / level=int;</div><div class="sasSource">865    input &amp;class_inputs. / level=nom;</div><div class="sasSource">866    hidden 2;</div><div class="sasSource">867    train outmodel=mycaslib.nnet_model;</div><div class="sasSource">868    partition rolevar=_partind_(train='1' validate='0');</div><div class="sasSource">869    ods exclude OptIterHistory;</div><div class="sasSource">870  run;</div><div class="sasNote" id="sasLogNote89_1580766237319">NOTE: Using SEED=1270836874 for random weight generation.</div><div class="sasNote" id="sasLogNote90_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.123612 seconds.</div><div class="sasNote" id="sasLogNote91_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.011687 seconds.</div><div class="sasNote" id="sasLogNote92_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.007737 seconds.</div><div class="sasNote" id="sasLogNote93_1580766237319">NOTE: The data set MYCASLIB.NNET_MODEL has 40 observations and 15 variables.</div><div class="sasNote" id="sasLogNote94_1580766237319">NOTE: PROCEDURE NNET used (Total process time):</div><div class="sasNote">      real time           0.20 seconds</div><div class="sasNote">      cpu time            0.03 seconds</div><div class="sasNote">      </div><div class="sasSource">871  </div><div class="sasSource">872  </div><div class="sasSource">873  /************************************************************************/</div><div class="sasSource">874  /* Score the data using the generated NN model                          */</div><div class="sasSource">875  /************************************************************************/</div><div class="sasSource">876  proc nnet data=&amp;partitioned_data inmodel=mycaslib.nnet_model noprint;</div><div class="sasSource">877    output out=mycaslib._scored_NN copyvars=(_ALL_);</div><div class="sasSource">878  run;</div><div class="sasNote" id="sasLogNote95_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.001441 seconds.</div><div class="sasNote" id="sasLogNote96_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.056107 seconds.</div><div class="sasNote" id="sasLogNote97_1580766237319">NOTE: The data set MYCASLIB._SCORED_NN has 59600 observations and 22 variables.</div><div class="sasNote" id="sasLogNote98_1580766237319">NOTE: PROCEDURE NNET used (Total process time):</div><div class="sasNote">      real time           0.07 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div><div class="sasSource">879  </div><div class="sasSource">880  </div><div class="sasSource">881  /************************************************************************/</div><div class="sasSource">882  /* SUPPORT VECTOR MACHINE predictive model                              */</div><div class="sasSource">883  /************************************************************************/</div><div class="sasSource">884  proc svmachine data=&amp;partitioned_data(where=(_partind_=1));</div><div class="sasSource">885    kernel polynom / deg=2;</div><div class="sasSource">886    target &amp;target;</div><div class="sasSource">887    input &amp;interval_inputs. / level=interval;</div><div class="sasSource">888    input &amp;class_inputs. / level=nominal;</div><div class="sasSource">889    id bad _partind_;</div><div class="sasSource">890    savestate rstore=mycaslib.svm_astore_model;</div><div class="sasSource">891    ods exclude IterHistory;</div><div class="sasSource">892  run;</div><div class="sasNote" id="sasLogNote99_1580766237319">NOTE: SVM training is activated.</div><div class="sasNote" id="sasLogNote100_1580766237319">NOTE: 10261 bytes were written to the table "SVM_ASTORE_MODEL" in the caslib "CASUSER(viyademo01)".</div><div class="sasNote" id="sasLogNote101_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 1.049182 seconds.</div><div class="sasNote" id="sasLogNote102_1580766237319">NOTE: The data set MYCASLIB.SVM_ASTORE_MODEL has 1 observations and 2 variables.</div><div class="sasNote" id="sasLogNote103_1580766237319">NOTE: PROCEDURE SVMACHINE used (Total process time):</div><div class="sasNote">      real time           1.07 seconds</div><div class="sasNote">      cpu time            0.04 seconds</div><div class="sasNote">      </div><div class="sasSource">893  </div><div class="sasSource">894  </div><div class="sasSource">895  /************************************************************************/</div><div class="sasSource">896  /* Score data using ASTORE code generated for the SVM model             */</div><div class="sasSource">897  /************************************************************************/</div><div class="sasSource">898  proc astore;</div><div class="sasSource">899    score data=&amp;partitioned_data out=mycaslib._scored_SVM</div><div class="sasSource">900          rstore=mycaslib.svm_astore_model;</div><div class="sasSource">901  run;</div><div class="sasNote" id="sasLogNote104_1580766237319">NOTE: The data set MYCASLIB._SCORED_SVM has 59600 observations and 7 variables.</div><div class="sasNote" id="sasLogNote105_1580766237319">NOTE: PROCEDURE ASTORE used (Total process time):</div><div class="sasNote">      real time           0.08 seconds</div><div class="sasNote">      cpu time            0.03 seconds</div><div class="sasNote">      </div><div class="sasSource">902  </div><div class="sasSource">903  </div><div class="sasSource">904  /************************************************************************/</div><div class="sasSource">905  /* Assess                                                               */</div><div class="sasSource">906  /************************************************************************/</div><div class="sasSource">907  %macro assess_model(prefix=, var_evt=, var_nevt=);</div><div class="sasSource">908  proc assess data=mycaslib._scored_&amp;prefix.(where=(_partind_=0));</div><div class="sasSource">909      input &amp;var_evt.;</div><div class="sasSource">910      target &amp;target / level=nominal event='1';</div><div class="sasSource">911      fitstat pvar=&amp;var_nevt. / pevent='0';</div><div class="sasSource">912  </div><div class="sasSource">913      ods output</div><div class="sasSource">914        fitstat=&amp;prefix._fitstat</div><div class="sasSource">915        rocinfo=&amp;prefix._rocinfo</div><div class="sasSource">916        liftinfo=&amp;prefix._liftinfo;</div><div class="sasSource">917  run;</div><div class="sasSource">918  %mend assess_model;</div><div class="sasSource">919  </div><div class="sasSource">920  ods exclude all;</div><div class="sasSource">921  %assess_model(prefix=RF, var_evt=p_&amp;target.1, var_nevt=p_&amp;target.0);</div><div class="sasNote" id="sasLogNote106_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.018638 seconds.</div><div class="sasNote" id="sasLogNote107_1580766237319">NOTE: The data set WORK.RF_LIFTINFO has 21 observations and 21 variables.</div><div class="sasNote" id="sasLogNote108_1580766237319">NOTE: The data set WORK.RF_ROCINFO has 101 observations and 21 variables.</div><div class="sasNote" id="sasLogNote109_1580766237319">NOTE: The data set WORK.RF_FITSTAT has 1 observations and 6 variables.</div><div class="sasNote" id="sasLogNote110_1580766237319">NOTE: PROCEDURE ASSESS used (Total process time):</div><div class="sasNote">      real time           0.03 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div><div class="sasSource">922  %assess_model(prefix=SVM, var_evt=p_&amp;target.1, var_nevt=p_&amp;target.0);</div><div class="sasNote" id="sasLogNote111_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.016858 seconds.</div><div class="sasNote" id="sasLogNote112_1580766237319">NOTE: The data set WORK.SVM_LIFTINFO has 21 observations and 21 variables.</div><div class="sasNote" id="sasLogNote113_1580766237319">NOTE: The data set WORK.SVM_ROCINFO has 101 observations and 21 variables.</div><div class="sasNote" id="sasLogNote114_1580766237319">NOTE: The data set WORK.SVM_FITSTAT has 1 observations and 6 variables.</div><div class="sasNote" id="sasLogNote115_1580766237319">NOTE: PROCEDURE ASSESS used (Total process time):</div><div class="sasNote">      real time           0.02 seconds</div><div class="sasNote">      cpu time            0.01 seconds</div><div class="sasNote">      </div><div class="sasSource">923  %assess_model(prefix=GB, var_evt=p_&amp;target.1, var_nevt=p_&amp;target.0);</div><div class="sasNote" id="sasLogNote116_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.015132 seconds.</div><div class="sasNote" id="sasLogNote117_1580766237319">NOTE: The data set WORK.GB_LIFTINFO has 21 observations and 21 variables.</div><div class="sasNote" id="sasLogNote118_1580766237319">NOTE: The data set WORK.GB_ROCINFO has 101 observations and 21 variables.</div><div class="sasNote" id="sasLogNote119_1580766237319">NOTE: The data set WORK.GB_FITSTAT has 1 observations and 6 variables.</div><div class="sasNote" id="sasLogNote120_1580766237319">NOTE: PROCEDURE ASSESS used (Total process time):</div><div class="sasNote">      real time           0.02 seconds</div><div class="sasNote">      cpu time            0.01 seconds</div><div class="sasNote">      </div><div class="sasSource">924  %assess_model(prefix=NN, var_evt=p_&amp;target.1, var_nevt=p_&amp;target.0);</div><div class="sasNote" id="sasLogNote121_1580766237319">NOTE: The Cloud Analytic Services server processed the request in 0.013462 seconds.</div><div class="sasNote" id="sasLogNote122_1580766237319">NOTE: The data set WORK.NN_LIFTINFO has 21 observations and 21 variables.</div><div class="sasNote" id="sasLogNote123_1580766237319">NOTE: The data set WORK.NN_ROCINFO has 101 observations and 21 variables.</div><div class="sasNote" id="sasLogNote124_1580766237319">NOTE: The data set WORK.NN_FITSTAT has 1 observations and 6 variables.</div><div class="sasNote" id="sasLogNote125_1580766237319">NOTE: PROCEDURE ASSESS used (Total process time):</div><div class="sasNote">      real time           0.02 seconds</div><div class="sasNote">      cpu time            0.01 seconds</div><div class="sasNote">      </div><div class="sasSource">925  ods exclude none;</div><div class="sasSource">926  </div><div class="sasSource">927  </div><div class="sasSource">928  /************************************************************************/</div><div class="sasSource">929  /* ROC and Lift Charts using validation data                            */</div><div class="sasSource">930  /************************************************************************/</div><div class="sasSource">931  ods graphics on;</div><div class="sasSource">932  </div><div class="sasSource">933  data all_rocinfo;</div><div class="sasSource">934    set SVM_rocinfo(in=s)</div><div class="sasSource">935        GB_rocinfo(in=g)</div><div class="sasSource">936        NN_rocinfo(in=n)</div><div class="sasSource">937        RF_rocinfo(in=f);</div><div class="sasSource">938  </div><div class="sasSource">939    length model $ 16;</div><div class="sasSource">940    select;</div><div class="sasSource">941      when (s) model='SVM';</div><div class="sasSource">942      when (f) model='Forest';</div><div class="sasSource">943      when (g) model='GradientBoosting';</div><div class="sasSource">944      when (n) model='NeuralNetwork';</div><div class="sasSource">945    end;</div><div class="sasSource">946  run;</div><div class="sasNote" id="sasLogNote126_1580766237319">NOTE: There were 101 observations read from the data set WORK.SVM_ROCINFO.</div><div class="sasNote" id="sasLogNote127_1580766237319">NOTE: There were 101 observations read from the data set WORK.GB_ROCINFO.</div><div class="sasNote" id="sasLogNote128_1580766237319">NOTE: There were 101 observations read from the data set WORK.NN_ROCINFO.</div><div class="sasNote" id="sasLogNote129_1580766237319">NOTE: There were 101 observations read from the data set WORK.RF_ROCINFO.</div><div class="sasNote" id="sasLogNote130_1580766237319">NOTE: The data set WORK.ALL_ROCINFO has 404 observations and 22 variables.</div><div class="sasNote" id="sasLogNote131_1580766237319">NOTE: DATA statement used (Total process time):</div><div class="sasNote">      real time           0.00 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div><div class="sasSource">947  </div><div class="sasSource">948  data all_liftinfo;</div><div class="sasSource">949    set SVM_liftinfo(in=s)</div><div class="sasSource">950        GB_liftinfo(in=g)</div><div class="sasSource">951        NN_liftinfo(in=n)</div><div class="sasSource">952        RF_liftinfo(in=f);</div><div class="sasSource">953  </div><div class="sasSource">954    length model $ 16;</div><div class="sasSource">955    select;</div><div class="sasSource">956      when (s) model='SVM';</div><div class="sasSource">957      when (f) model='Forest';</div><div class="sasSource">958      when (g) model='GradientBoosting';</div><div class="sasSource">959      when (n) model='NeuralNetwork';</div><div class="sasSource">960    end;</div><div class="sasSource">961  run;</div><div class="sasNote" id="sasLogNote132_1580766237319">NOTE: There were 21 observations read from the data set WORK.SVM_LIFTINFO.</div><div class="sasNote" id="sasLogNote133_1580766237319">NOTE: There were 21 observations read from the data set WORK.GB_LIFTINFO.</div><div class="sasNote" id="sasLogNote134_1580766237319">NOTE: There were 21 observations read from the data set WORK.NN_LIFTINFO.</div><div class="sasNote" id="sasLogNote135_1580766237319">NOTE: There were 21 observations read from the data set WORK.RF_LIFTINFO.</div><div class="sasNote" id="sasLogNote136_1580766237319">NOTE: The data set WORK.ALL_LIFTINFO has 84 observations and 22 variables.</div><div class="sasNote" id="sasLogNote137_1580766237319">NOTE: DATA statement used (Total process time):</div><div class="sasNote">      real time           0.00 seconds</div><div class="sasNote">      cpu time            0.01 seconds</div><div class="sasNote">      </div><div class="sasSource">962  </div><div class="sasSource">963  /* Print AUC (Area Under the ROC Curve) */</div><div class="sasSource">964  title "AUC (using validation data) ";</div><div class="sasSource">965  proc sql;</div><div class="sasSource">966    select distinct model, c from all_rocinfo order by c desc;</div><div class="sasSource">967  quit;</div><div class="sasNote" id="sasLogNote138_1580766237319">NOTE: PROCEDURE SQL used (Total process time):</div><div class="sasNote">      real time           0.01 seconds</div><div class="sasNote">      cpu time            0.02 seconds</div><div class="sasNote">      </div><div class="sasSource">968  </div><div class="sasSource">969  /* Draw ROC charts */</div><div class="sasSource">970  proc sgplot data=all_rocinfo aspect=1;</div><div class="sasSource">971    title "ROC Curve (using validation data)";</div><div class="sasSource">972    xaxis values=(0 to 1 by 0.25) grid offsetmin=.05 offsetmax=.05;</div><div class="sasSource">973    yaxis values=(0 to 1 by 0.25) grid offsetmin=.05 offsetmax=.05;</div><div class="sasSource">974    lineparm x=0 y=0 slope=1 / transparency=.7;</div><div class="sasSource">975    series x=fpr y=sensitivity / group=model;</div><div class="sasSource">976  run;</div><div class="sasNote" id="sasLogNote139_1580766237319">NOTE: PROCEDURE SGPLOT used (Total process time):</div><div class="sasNote">      real time           0.20 seconds</div><div class="sasNote">      cpu time            0.06 seconds</div><div class="sasNote">      </div><div class="sasNote" id="sasLogNote140_1580766237319">NOTE: There were 404 observations read from the data set WORK.ALL_ROCINFO.</div><div class="sasSource">977  </div><div class="sasSource">978  /* Draw lift charts */</div><div class="sasSource">979  proc sgplot data=all_liftinfo;</div><div class="sasSource">980    title "Lift Chart (using validation data)";</div><div class="sasSource">981    yaxis label=' ' grid;</div><div class="sasSource">982    series x=depth y=lift / group=model markers markerattrs=(symbol=circlefilled);</div><div class="sasSource">983  run;</div><div class="sasNote" id="sasLogNote141_1580766237319">NOTE: PROCEDURE SGPLOT used (Total process time):</div><div class="sasNote">      real time           0.13 seconds</div><div class="sasNote">      cpu time            0.04 seconds</div><div class="sasNote">      </div><div class="sasNote" id="sasLogNote142_1580766237319">NOTE: There were 84 observations read from the data set WORK.ALL_LIFTINFO.</div><div class="sasSource">984  </div><div class="sasSource">985  title;</div><div class="sasSource">986  ods graphics off;</div><div class="sasSource">987  </div><div class="sasSource">988  cas _all_ terminate;</div><div class="sasNote" id="sasLogNote143_1580766237319">NOTE: Libref MYCASLIB has been deassigned.</div><div class="sasNote" id="sasLogNote144_1580766237319">NOTE: Deletion of the session CASAUTO was successful.</div><div class="sasNote" id="sasLogNote145_1580766237319">NOTE: Request to TERMINATE completed for session CASAUTO.</div><div class="sasSource">989  </div><div class="sasSource">990  </div><div class="sasSource">991  </div><div class="sasSource">992  </div><div class="sasSource">993  </div><div class="sasSource">994  ODS HTML CLOSE;</div><div class="sasSource">995  &amp;GRAPHTERM; ;*';*";*/;RUN;QUIT;</div><div class="sasSource">996  QUIT;RUN;</div><div class="sasSource">997  ODS HTML5 (ID=WEB) CLOSE;</div><div class="sasSource">998  </div><div class="sasSource">999  FILENAME _GSFNAME;</div><div class="sasNote" id="sasLogNote146_1580766237319">NOTE: Fileref _GSFNAME has been deassigned.</div><div class="sasSource">1000  DATA _NULL_;</div><div class="sasSource">1001  RUN;</div><div class="sasNote" id="sasLogNote147_1580766237319">NOTE: DATA statement used (Total process time):</div><div class="sasNote">      real time           0.00 seconds</div><div class="sasNote">      cpu time            0.00 seconds</div><div class="sasNote">      </div></pre></body></html>
+524  %studio_hide_wrapper;
+605  %studio_show_only_notes_wrapper;
+NOTE: ODS statements in the SAS Studio environment may disable some output features.
+608  *options cashost="frasepviya35smp.cloud.com" casport=5570;
+609  options set=CASCLIENTDEBUG=1;
+610  
+611  cas benchsess sessopts=(timeout=3600 metrics=true);
+NOTE: The session BENCHSESS connected successfully to Cloud Analytic Services frasepviya35smp.cloud.com using port 5570. The UUID 
+      is ee1c3c81-e8e7-2c49-ac09-c5889a43f469. The user is viyademo01 and the active caslib is CASUSER(viyademo01).
+NOTE: The SAS option SESSREF was updated with the value BENCHSESS.
+NOTE: The SAS macro _SESSREF_ was updated with the value BENCHSESS.
+NOTE: The session is using 0 workers.
+NOTE: Action 'sessionProp.setSessOpt' used (Total process time):
+NOTE:       real time               0.003061 seconds
+NOTE:       cpu time                0.003045 seconds (99.48%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  389.38K (0.00%)
+NOTE: The CAS statement request to update one or more session options for session BENCHSESS completed.
+612  
+613  /************************************************************************/
+614  /* This example illustrates various tools for assaying, assessing,      */
+615  /* modifying and preparing data prior to modeling. It uses HMEQ         */
+616  /* dataset as input and produces HMEQ_PREPPED dataset. The HMEQ_PREPPED */
+617  /* dataset is used in subsequent examples.                              */
+618  /*                                                                      */
+619  /* The steps include:                                                   */
+620  /*                                                                      */
+621  /* (1) PREPARE AND EXPLORE                                              */
+622  /*     a) Load data set into CAS                                        */
+623  /*     b) Explore                                                       */
+624  /*     c) Impute                                                        */
+625  /*     d) Identify variables that explain variance                      */
+626  /*     e) Perform a cluster analysis to identify homogeneous            */
+627  /*        groups in the data                                            */
+628  /*     f) Perform principal components analysis to assess collineary    */
+629  /*        among candidate, interval valued inputs                       */
+630  /************************************************************************/
+631  
+632  /************************************************************************/
+633  /* Setup and initialize for later use in the program                    */
+634  /************************************************************************/
+635  /* Define a CAS engine libref for CAS in-memory data tables */
+636  libname mycaslib cas caslib=casuser;
+NOTE: Libref MYCASLIB was successfully assigned as follows: 
+      Engine:        CAS 
+      Physical Name: ee1c3c81-e8e7-2c49-ac09-c5889a43f469
+637  
+638  /* Specify the data set names */
+639  %let sasdata          = sampsio.hmeq;
+640  %let casdata          = mycaslib.hmeq;
+641  
+642  /* Specify the data set inputs and target */
+643  %let class_inputs    = reason job;
+644  %let interval_inputs = clage clno debtinc loan mortdue value yoj derog delinq ninq;
+645  %let target          = bad;
+646  
+647  %let im_class_inputs    = reason job;
+648  %let im_interval_inputs = im_clage clno im_debtinc loan mortdue value im_yoj im_ninq derog im_delinq;
+649  %let cluster_inputs     = im_clage im_debtinc value;
+650  
+651  /* Specify a folder path to write the temporary output files */
+652  %let outdir = &_SASWORKINGDIR;
+653  
+654  /************************************************************************/
+655  /* Load data into CAS if needed. Data should have been loaded in        */
+656  /* step 1, it will be loaded here after checking if it exists in CAS    */
+657  /************************************************************************/
+658  %if not %sysfunc(exist(&casdata)) %then %do;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000908 seconds
+NOTE:       cpu time                0.000817 seconds (89.98%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  756.72K (0.00%)
+659    proc casutil;
+660      load data=&sasdata casout="hmeq" outcaslib=casuser;
+661    run;
+662  %end;
+663  
+664  /* Grow volume of input training dataset to 5960000 records */
+665  /* On 16 cores, 128 Go : 100:64s / 1000: 416s */
+666  
+667  data mycaslib.hmeq(drop=i) ;
+NOTE: Client is using the oauth identity provider
+NOTE: Sent challenge length 1395
+NOTE: Received response length 58
+NOTE: User viyademo01 connected to CAS using OAuth 2.
+668     set mycaslib.hmeq ;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000903 seconds
+NOTE:       cpu time                0.000813 seconds (90.03%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  752.34K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000736 seconds
+NOTE:       cpu time                0.000659 seconds (89.54%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  752.34K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000967 seconds
+NOTE:       cpu time                0.000900 seconds (93.07%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  1.17M (0.00%)
+669     do i=1 to 5000 ;
+670        output ;
+671     end ;
+672  run ;
+
+NOTE: Running DATA step in Cloud Analytic Services.
+NOTE: Executing action 'sessionProp.getSessOpt'.
+NOTE: Action 'sessionProp.getSessOpt' used (Total process time):
+NOTE:       real time               0.000231 seconds
+NOTE:       cpu time                0.000207 seconds (89.61%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  227.16K (0.00%)
+NOTE: Executing action 'sessionProp.setSessOpt'.
+NOTE: Action 'sessionProp.setSessOpt' used (Total process time):
+NOTE:       real time               0.000250 seconds
+NOTE:       cpu time                0.000225 seconds (90.00%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  281.44K (0.00%)
+NOTE: The DATA step will run in multiple threads.
+NOTE: Executing action 'dataStep.runBinary'.
+NOTE: There were 5960 observations read from the table HMEQ in caslib CASUSER(viyademo01).
+NOTE: The table hmeq in caslib CASUSER(viyademo01) has 29800000 observations and 13 variables.
+NOTE: Action 'dataStep.runBinary' used (Total process time):
+NOTE:       real time               1.980474 seconds
+NOTE:       cpu time                9.243348 seconds (466.72%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  39.09M (0.03%)
+NOTE: Executing action 'sessionProp.setSessOpt'.
+NOTE: Action 'sessionProp.setSessOpt' used (Total process time):
+NOTE:       real time               0.000396 seconds
+NOTE:       cpu time                0.000364 seconds (91.92%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  282.44K (0.00%)
+NOTE: DATA statement used (Total process time):
+      real time           2.02 seconds
+      cpu time            0.00 seconds
+      
+
+673  
+674  proc cas ;
+675     tabledetails / table="hmeq" ;
+676  quit ;
+
+NOTE: Active Session now BENCHSESS.
+NOTE: Executing action 'table.tableDetails'.
+NOTE: Action 'table.tableDetails' used (Total process time):
+NOTE:       real time               0.001067 seconds
+NOTE:       cpu time                0.001044 seconds (97.84%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  730.06K (0.00%)
+
+NOTE: PROCEDURE CAS used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+677  
+678  /************************************************************************/
+679  /* Explore the data and plot missing values                             */
+680  /************************************************************************/
+681  proc cardinality data=&casdata outcard=mycaslib.data_card;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000749 seconds
+NOTE:       cpu time                0.000725 seconds (96.80%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.50K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000712 seconds
+NOTE:       cpu time                0.000674 seconds (94.66%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.50K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000870 seconds
+NOTE:       cpu time                0.000853 seconds (98.05%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  869.09K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000452 seconds
+NOTE:       cpu time                0.000390 seconds (86.28%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  319.19K (0.00%)
+682  run;
+
+NOTE: Executing action 'builtins.loadActionSet'.
+NOTE: Added action set 'cardinality'.
+NOTE: Action 'builtins.loadActionSet' used (Total process time):
+NOTE:       real time               0.148767 seconds
+NOTE:       cpu time                0.001216 seconds (0.82%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  229.22K (0.00%)
+NOTE: Executing action 'cardinality.summarize'.
+NOTE: Writing cardinality.
+NOTE: status = 0.
+NOTE: The Cloud Analytic Services server processed the request in 8.379557 seconds.
+NOTE: Action 'cardinality.summarize' used (Total process time):
+NOTE:       real time               8.380997 seconds
+NOTE:       cpu time                107.606381 seconds (1283.93%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  3.63M (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.001375 seconds
+NOTE:       cpu time                0.001361 seconds (98.98%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  737.28K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.002105 seconds
+NOTE:       cpu time                0.002076 seconds (98.62%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  881.84K (0.00%)
+NOTE: PROCEDURE CARDINALITY used (Total process time):
+      real time           8.54 seconds
+      cpu time            0.01 seconds
+      
+
+683  
+684  proc print data=mycaslib.data_card(where=(_nmiss_>0));
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000804 seconds
+NOTE:       cpu time                0.000777 seconds (96.64%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.75K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000620 seconds
+NOTE:       cpu time                0.000562 seconds (90.65%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.75K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000997 seconds
+NOTE:       cpu time                0.000845 seconds (84.75%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  877.06K (0.00%)
+685    title "Data Summary";
+686  run;
+
+NOTE: Executing action 'table.fetch'.
+NOTE: Action 'table.fetch' used (Total process time):
+NOTE:       real time               0.002028 seconds
+NOTE:       cpu time                0.002009 seconds (99.06%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  1.34M (0.00%)
+NOTE: PROCEDURE PRINT used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.07 seconds
+      
+
+687  
+688  data data_missing;
+689    set mycaslib.data_card (where=(_nmiss_>0) keep=_varname_ _nmiss_ _nobs_);
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000789 seconds
+NOTE:       cpu time                0.000762 seconds (96.58%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.75K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000611 seconds
+NOTE:       cpu time                0.000591 seconds (96.73%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.75K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.001013 seconds
+NOTE:       cpu time                0.000973 seconds (96.05%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  877.06K (0.00%)
+690    _percentmiss_ = (_nmiss_/_nobs_)*100;
+691    label _percentmiss_ = 'Percent Missing';
+692  run;
+
+NOTE: Executing action 'table.fetch'.
+NOTE: Action 'table.fetch' used (Total process time):
+NOTE:       real time               0.000950 seconds
+NOTE:       cpu time                0.000930 seconds (97.89%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  1.30M (0.00%)
+NOTE: There were 11 observations read from the data set MYCASLIB.DATA_CARD.
+      WHERE _nmiss_>0;
+NOTE: The data set WORK.DATA_MISSING has 11 observations and 4 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.02 seconds
+      
+
+693  
+694  proc sgplot data=data_missing;
+695    title "Percentage of Missing Values";
+696    vbar _varname_ / response=_percentmiss_ datalabel categoryorder=respdesc;
+697  run;
+
+NOTE: PROCEDURE SGPLOT used (Total process time):
+      real time           10.73 seconds
+      cpu time            0.17 seconds
+      
+NOTE: There were 11 observations read from the data set WORK.DATA_MISSING.
+
+698  title;
+699  
+700  /************************************************************************/
+701  /* Impute missing values                                                */
+702  /************************************************************************/
+703  proc varimpute data=&casdata;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000729 seconds
+NOTE:       cpu time                0.000688 seconds (94.38%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.75K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000596 seconds
+NOTE:       cpu time                0.000570 seconds (95.64%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.75K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000636 seconds
+NOTE:       cpu time                0.000615 seconds (96.70%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  866.56K (0.00%)
+704    input clage /ctech=mean;
+705    input delinq /ctech=median;
+706    input ninq /ctech=random;
+707    input debtinc yoj /ctech=value cvalues=50,100;
+708    output out=mycaslib.hmeq_prepped copyvars=(_ALL_);
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000353 seconds
+NOTE:       cpu time                0.000309 seconds (87.54%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  319.38K (0.00%)
+709    code file="&outdir./impute_score.sas";
+710  run;
+
+NOTE: Using SEED=1949215732 for random imputation.
+NOTE: Executing action 'dataPreprocess.transform'.
+NOTE: External file 
+      /opt/sas/viya/config/var/tmp/compsrv/default/c72f585e-2a43-40f0-9308-eb2b96360ad3/SAS_work5F580000040D_frasepviya35smp.cloud.c
+      om/impute_score.sas opened.
+NOTE: The procedure wrote the DATA step code to external file 
+      /opt/sas/viya/config/var/tmp/compsrv/default/c72f585e-2a43-40f0-9308-eb2b96360ad3/SAS_work5F580000040D_frasepviya35smp.cloud.c
+      om/impute_score.sas.
+NOTE: Action 'dataPreprocess.transform' used (Total process time):
+NOTE:       real time               6.786288 seconds
+NOTE:       cpu time                87.362469 seconds (1287.34%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  89.99M (0.07%)
+NOTE: The Cloud Analytic Services server processed the request in 6.786288 seconds.
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000695 seconds
+NOTE:       cpu time                0.000672 seconds (96.69%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.75K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000740 seconds
+NOTE:       cpu time                0.000719 seconds (97.16%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  874.06K (0.00%)
+NOTE: The data set MYCASLIB.HMEQ_PREPPED has 29800000 observations and 18 variables.
+NOTE: PROCEDURE VARIMPUTE used (Total process time):
+      real time           6.84 seconds
+      cpu time            0.04 seconds
+      
+
+711  
+712  
+713  /************************************************************************/
+714  /* Identify variables that explain variance in the target               */
+715  /************************************************************************/
+716  /* Discriminant analysis for class target */
+717  proc varreduce data=mycaslib.hmeq_prepped technique=discriminantanalysis;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000567 seconds
+NOTE:       cpu time                0.000549 seconds (96.83%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.75K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000567 seconds
+NOTE:       cpu time                0.000547 seconds (96.47%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.75K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000616 seconds
+NOTE:       cpu time                0.000594 seconds (96.43%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  874.06K (0.00%)
+718    class &target &im_class_inputs.;
+719    reduce supervised &target=&im_class_inputs. &im_interval_inputs. / maxeffects=8;
+720    ods output selectionsummary=summary;	
+721  run;
+
+NOTE: Executing action 'varReduce.super'.
+NOTE: Action 'varReduce.super' used (Total process time):
+NOTE:       real time               7.555193 seconds
+NOTE:       cpu time                95.809060 seconds (1268.12%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  3.09M (0.00%)
+NOTE: The Cloud Analytic Services server processed the request in 7.555193 seconds.
+NOTE: The data set WORK.SUMMARY has 8 observations and 9 variables.
+NOTE: PROCEDURE VARREDUCE used (Total process time):
+      real time           8.08 seconds
+      cpu time            0.05 seconds
+      
+
+722  
+723  data out_iter (keep=Iteration VarExp Base Increment Parameter);
+724    set summary;
+725    Increment=dif(VarExp);
+726    if Increment=. then Increment=0;
+727    Base=VarExp - Increment;
+728  run;
+
+NOTE: There were 8 observations read from the data set WORK.SUMMARY.
+NOTE: The data set WORK.OUT_ITER has 8 observations and 5 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+729  
+730  proc transpose data=out_iter out=out_iter_trans;
+731    by Iteration VarExp Parameter;
+732  run;
+
+NOTE: There were 8 observations read from the data set WORK.OUT_ITER.
+NOTE: The data set WORK.OUT_ITER_TRANS has 16 observations and 5 variables.
+NOTE: PROCEDURE TRANSPOSE used (Total process time):
+      real time           0.06 seconds
+      cpu time            0.00 seconds
+      
+
+733  
+734  proc sort data=out_iter_trans;
+735    label _NAME_='Group';
+736    by _NAME_;
+737  run;
+
+NOTE: There were 16 observations read from the data set WORK.OUT_ITER_TRANS.
+NOTE: The data set WORK.OUT_ITER_TRANS has 16 observations and 5 variables.
+NOTE: PROCEDURE SORT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+738  
+739  /* Variance explained by Iteration plot */
+740  proc sgplot data=out_iter_trans;
+741    title "Variance Explained by Iteration";
+742    yaxis label="Variance Explained";
+743    vbar Iteration / response=COL1 group=_NAME_;
+744  run;
+
+NOTE: PROCEDURE SGPLOT used (Total process time):
+      real time           0.17 seconds
+      cpu time            0.04 seconds
+      
+NOTE: There were 16 observations read from the data set WORK.OUT_ITER_TRANS.
+
+745  title;
+746  
+747  
+748  /************************************************************************/
+749  /* Perform a cluster analysis based on demographic inputs               */
+750  /************************************************************************/
+751  proc kclus data=mycaslib.hmeq_prepped standardize=std distance=euclidean maxclusters=6;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000815 seconds
+NOTE:       cpu time                0.000792 seconds (97.18%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  738.78K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000578 seconds
+NOTE:       cpu time                0.000547 seconds (94.64%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  735.88K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000636 seconds
+NOTE:       cpu time                0.000603 seconds (94.81%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  872.28K (0.00%)
+752    input &cluster_inputs. / level=interval;
+753  run;
+
+NOTE: Executing action 'clustering.kClus'.
+NOTE: Using SEED=86829930.
+NOTE: Running for input data for K 6.
+NOTE: Clustering is finished. MAXITER is satisfied.
+NOTE: Action 'clustering.kClus' used (Total process time):
+NOTE:       real time               12.592890 seconds
+NOTE:       cpu time                146.836620 seconds (1166.03%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  1.56G (1.24%)
+NOTE: The Cloud Analytic Services server processed the request in 12.59289 seconds.
+NOTE: PROCEDURE KCLUS used (Total process time):
+      real time           12.82 seconds
+      cpu time            0.06 seconds
+      
+
+754  
+755  
+756  /************************************************************************/
+757  /* Perform a principal components analysis on the interval valued       */
+758  /* input variables                                                      */
+759  /************************************************************************/
+760  proc pca data=mycaslib.hmeq_prepped plots=(scree);
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000991 seconds
+NOTE:       cpu time                0.000970 seconds (97.88%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.75K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000567 seconds
+NOTE:       cpu time                0.000549 seconds (96.83%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  737.66K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000651 seconds
+NOTE:       cpu time                0.000622 seconds (95.55%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  871.25K (0.00%)
+761    var &im_interval_inputs;
+762  run;
+
+NOTE: Executing action 'pca.eig'.
+WARNING: 5690000 observations in table HMEQ_PREPPED omitted due to missing values.
+NOTE: Action 'pca.eig' used (Total process time):
+NOTE:       real time               0.675106 seconds
+NOTE:       cpu time                8.416618 seconds (1246.71%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  4.59M (0.00%)
+NOTE: The Cloud Analytic Services server processed the request in 0.675106 seconds.
+NOTE: PROCEDURE PCA used (Total process time):
+      real time           1.43 seconds
+      cpu time            0.12 seconds
+      
+
+763  
+764  
+765  
+766  /************************************************************************/
+767  /* This example illustrates fitting and comparing several Machine       */
+768  /* Learning algorithms for predicting the binary target in the          */
+769  /* HMEQ data set. The steps include:                                    */
+770  /*                                                                      */
+771  /* (1) PREPARE AND EXPLORE                                              */
+772  /*     a) Check data is loaded into CAS                                 */
+773  /*                                                                      */
+774  /* (2) PERFORM SUPERVISED LEARNING                                      */
+775  /*     a) Fit a model using a Random Forest                             */
+776  /*     b) Fit a model using Gradient Boosting                           */
+777  /*     c) Fit a model using a Neural Network                            */
+778  /*     d) Fit a model using a Support Vector Machine                    */
+779  /*                                                                      */
+780  /* (3) EVALUATE AND IMPLEMENT                                           */
+781  /*     a) Score the data                                                */
+782  /*     b) Assess model performance                                      */
+783  /*     c) Generate ROC and Lift charts                                  */
+784  /************************************************************************/
+785  
+786  /************************************************************************/
+787  /* Setup and initialize for later use in the program                    */
+788  /************************************************************************/
+789  
+790  /* Define a CAS engine libref for CAS in-memory data tables */
+791  libname mycaslib cas caslib=casuser;
+NOTE: Libref MYCASLIB was successfully assigned as follows: 
+      Engine:        CAS 
+      Physical Name: ee1c3c81-e8e7-2c49-ac09-c5889a43f469
+792  
+793  /* Specify the data set names */
+794  %let casdata          = mycaslib.hmeq_prepped;
+795  %let partitioned_data = mycaslib.hmeq_part;
+796  
+797  /* Specify the data set inputs and target */
+798  %let class_inputs    = reason job;
+799  %let interval_inputs = im_clage clno im_debtinc loan mortdue value im_yoj im_ninq derog im_delinq;
+800  %let target          = bad;
+801  
+802  
+803  /************************************************************************/
+804  /* Check if HMEQ_PREPPED data created in the Prepare and Explore Data   */
+805  /* snippet exists.  If not, print error message to run the program.     */
+806  /************************************************************************/
+807  %if not %sysfunc(exist(&casdata)) %then %do;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000564 seconds
+NOTE:       cpu time                0.000543 seconds (96.28%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  736.66K (0.00%)
+808    %put ERROR: The input dataset HMEQ_PREPPED is not loaded into CAS.;
+809    %put ERROR: Remember to run the Prepare and Explore Data snippet to load necessary data before executing this example.;
+810  %end;
+811  
+812  /************************************************************************/
+813  /* Partition the data into training and validation                      */
+814  /************************************************************************/
+815  proc partition data=&casdata partition samppct=70;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000581 seconds
+NOTE:       cpu time                0.000563 seconds (96.90%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.34K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000504 seconds
+NOTE:       cpu time                0.000483 seconds (95.83%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.34K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000638 seconds
+NOTE:       cpu time                0.000622 seconds (97.49%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  868.25K (0.00%)
+816    by &target;
+817    output out=&partitioned_data copyvars=(_ALL_);
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000336 seconds
+NOTE:       cpu time                0.000290 seconds (86.31%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  311.09K (0.00%)
+818  run;
+
+NOTE: Executing action 'sampling.stratified'.
+NOTE: Stratified sampling is in effect.
+NOTE: Using SEED=812859426 for sampling.
+NOTE: Action 'sampling.stratified' used (Total process time):
+NOTE:       real time               4.872429 seconds
+NOTE:       cpu time                55.225519 seconds (1133.43%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  96.15M (0.07%)
+NOTE: The Cloud Analytic Services server processed the request in 4.872429 seconds.
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000832 seconds
+NOTE:       cpu time                0.000810 seconds (97.36%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  733.75K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000885 seconds
+NOTE:       cpu time                0.000838 seconds (94.69%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  865.94K (0.00%)
+NOTE: The data set MYCASLIB.HMEQ_PART has 29800000 observations and 19 variables.
+NOTE: PROCEDURE PARTITION used (Total process time):
+      real time           5.08 seconds
+      cpu time            0.01 seconds
+      
+
+819  
+820  
+821  /************************************************************************/
+822  /* RANDOM FOREST predictive model                                       */
+823  /************************************************************************/
+824  proc forest data=&partitioned_data ntrees=50 intervalbins=20 minleafsize=5
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000684 seconds
+NOTE:       cpu time                0.000647 seconds (94.59%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  736.75K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000796 seconds
+NOTE:       cpu time                0.000756 seconds (94.97%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  733.75K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000822 seconds
+NOTE:       cpu time                0.000797 seconds (96.96%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  865.94K (0.00%)
+825              outmodel=mycaslib.forest_model;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000393 seconds
+NOTE:       cpu time                0.000349 seconds (88.80%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  310.50K (0.00%)
+826    input &interval_inputs. / level = interval;
+827    input &class_inputs. / level = nominal;
+828    target &target / level=nominal;
+829    partition rolevar=_partind_(train='1' validate='0');
+830  run;
+
+NOTE: Using SEED=57816620 for FOREST model building.
+NOTE: Executing action 'decisionTree.forestTrain'.
+NOTE: Action 'decisionTree.forestTrain' used (Total process time):
+NOTE:       real time               311.606198 seconds
+NOTE:       cpu time                4033.612404 seconds (1294.46%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  11.94G (9.50%)
+NOTE: The Cloud Analytic Services server processed the request in 311.606198 seconds.
+NOTE: Executing action 'decisionTree.forestScore'.
+NOTE: Action 'decisionTree.forestScore' used (Total process time):
+NOTE:       real time               126.399813 seconds
+NOTE:       cpu time                1812.039985 seconds (1433.58%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  566.07M (0.44%)
+NOTE: The Cloud Analytic Services server processed the request in 126.399813 seconds.
+NOTE: Executing action 'decisionTree.forestScore'.
+NOTE: Action 'decisionTree.forestScore' used (Total process time):
+NOTE:       real time               53.927506 seconds
+NOTE:       cpu time                781.162561 seconds (1448.54%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  566.07M (0.44%)
+NOTE: The Cloud Analytic Services server processed the request in 53.927506 seconds.
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000761 seconds
+NOTE:       cpu time                0.000737 seconds (96.85%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.34K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.001359 seconds
+NOTE:       cpu time                0.001339 seconds (98.53%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  875.44K (0.00%)
+NOTE: The data set MYCASLIB.FOREST_MODEL has 49026 observations and 42 variables.
+NOTE: PROCEDURE FOREST used (Total process time):
+      real time           8:12.57
+      cpu time            0.41 seconds
+      
+
+831  
+832  
+833  /************************************************************************/
+834  /* Score the data using the generated RF model                          */
+835  /************************************************************************/
+836  proc forest data=&partitioned_data inmodel=mycaslib.forest_model noprint;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000629 seconds
+NOTE:       cpu time                0.000592 seconds (94.12%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.34K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000611 seconds
+NOTE:       cpu time                0.000564 seconds (92.31%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.34K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000707 seconds
+NOTE:       cpu time                0.000691 seconds (97.74%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  865.34K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000780 seconds
+NOTE:       cpu time                0.000759 seconds (97.31%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.34K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000569 seconds
+NOTE:       cpu time                0.000537 seconds (94.38%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  734.34K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000902 seconds
+NOTE:       cpu time                0.000881 seconds (97.67%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  875.44K (0.00%)
+837    output out=mycaslib._scored_RF copyvars=(_ALL_);
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000387 seconds
+NOTE:       cpu time                0.000345 seconds (89.15%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  311.09K (0.00%)
+838  run;
+
+NOTE: When the INMODEL option is specified, only the DATA option, the NOPRINT option, and the OUTPUT and CODE statements are 
+      supported.
+NOTE: Executing action 'decisionTree.forestScore'.
+NOTE: Action 'decisionTree.forestScore' used (Total process time):
+NOTE:       real time               194.171316 seconds
+NOTE:       cpu time                2809.384325 seconds (1446.86%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  565.96M (0.44%)
+NOTE: The Cloud Analytic Services server processed the request in 194.171316 seconds.
+NOTE: PROCEDURE FOREST used (Total process time):
+      real time           4:17.87
+      cpu time            0.82 seconds
+      
+
+839  
+840  
+841  /************************************************************************/
+842  /* GRADIENT BOOSTING MACHINES predictive model                          */
+843  /************************************************************************/
+844  proc gradboost data=&partitioned_data ntrees=10 intervalbins=20 maxdepth=5
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+845                 outmodel=mycaslib.gb_model;
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+846    input &interval_inputs. / level = interval;
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+847    input &class_inputs. / level = nominal;
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+848    target &target / level=nominal;
+ERROR: No data set open to look up variables.
+849    partition rolevar=_partind_(train='1' validate='0');
+ERROR: No data set open to look up variables.
+850  run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE GRADBOOST used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+851  
+852  
+853  /************************************************************************/
+854  /* Score the data using the generated GBM model                         */
+855  /************************************************************************/
+
+
+856  proc gradboost  data=&partitioned_data inmodel=mycaslib.gb_model noprint;
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+857    output out=mycaslib._scored_GB copyvars=(_ALL_);
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+ERROR: No data set open to look up variables.
+858  run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE GRADBOOST used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+859  
+860  
+861  /************************************************************************/
+862  /* NEURAL NETWORK predictive model                                      */
+863  /************************************************************************/
+
+
+864  proc nnet data=&partitioned_data;
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+865    target &target / level=nom;
+ERROR: No data set open to look up variables.
+866    input &interval_inputs. / level=int;
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+867    input &class_inputs. / level=nom;
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+868    hidden 2;
+869    train outmodel=mycaslib.nnet_model;
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+870    partition rolevar=_partind_(train='1' validate='0');
+ERROR: No data set open to look up variables.
+871    ods exclude OptIterHistory;
+872  run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE NNET used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+873  
+874  
+875  /************************************************************************/
+876  /* Score the data using the generated NN model                          */
+877  /************************************************************************/
+
+
+878  proc nnet data=&partitioned_data inmodel=mycaslib.nnet_model noprint;
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+879    output out=mycaslib._scored_NN copyvars=(_ALL_);
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+ERROR: No data set open to look up variables.
+880  run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE NNET used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+881  
+882  
+883  /************************************************************************/
+884  /* SUPPORT VECTOR MACHINE predictive model                              */
+885  /************************************************************************/
+
+
+886  proc svmachine data=&partitioned_data(where=(_partind_=1));
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+887    kernel polynom / deg=2;
+888    target &target;
+ERROR: No data set open to look up variables.
+889    input &interval_inputs. / level=interval;
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+890    input &class_inputs. / level=nominal;
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+891    id bad _partind_;
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+892    savestate rstore=mycaslib.svm_astore_model;
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+893    ods exclude IterHistory;
+894  run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE SVMACHINE used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+895  
+896  
+897  /************************************************************************/
+898  /* Score data using ASTORE code generated for the SVM model             */
+899  /************************************************************************/
+
+
+900  proc astore;
+901    score data=&partitioned_data out=mycaslib._scored_SVM
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+902          rstore=mycaslib.svm_astore_model;
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+903  run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE ASTORE used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+904  
+905  
+906  /************************************************************************/
+907  /* Assess                                                               */
+908  /************************************************************************/
+909  %macro assess_model(prefix=, var_evt=, var_nevt=);
+910  proc assess data=mycaslib._scored_&prefix.(where=(_partind_=0));
+911      input &var_evt.;
+912      target &target / level=nominal event='1';
+913      fitstat pvar=&var_nevt. / pevent='0';
+914  
+915      ods output
+916        fitstat=&prefix._fitstat
+917        rocinfo=&prefix._rocinfo
+918        liftinfo=&prefix._liftinfo;
+919  run;
+920  %mend assess_model;
+921  
+922  ods exclude all;
+923  %assess_model(prefix=RF, var_evt=p_&target.1, var_nevt=p_&target.0);
+
+
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE ASSESS used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+WARNING: Output 'liftinfo' was not created.  Make sure that the output object name, label, or path is spelled correctly.  Also, 
+         verify that the appropriate procedure options are used to produce the requested output object.  For example, verify that 
+         the NOPRINT option is not used.
+WARNING: Output 'rocinfo' was not created.  Make sure that the output object name, label, or path is spelled correctly.  Also, 
+         verify that the appropriate procedure options are used to produce the requested output object.  For example, verify that 
+         the NOPRINT option is not used.
+WARNING: Output 'fitstat' was not created.  Make sure that the output object name, label, or path is spelled correctly.  Also, 
+         verify that the appropriate procedure options are used to produce the requested output object.  For example, verify that 
+         the NOPRINT option is not used.
+924  %assess_model(prefix=SVM, var_evt=p_&target.1, var_nevt=p_&target.0);
+
+
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE ASSESS used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+WARNING: Output 'liftinfo' was not created.  Make sure that the output object name, label, or path is spelled correctly.  Also, 
+         verify that the appropriate procedure options are used to produce the requested output object.  For example, verify that 
+         the NOPRINT option is not used.
+WARNING: Output 'rocinfo' was not created.  Make sure that the output object name, label, or path is spelled correctly.  Also, 
+         verify that the appropriate procedure options are used to produce the requested output object.  For example, verify that 
+         the NOPRINT option is not used.
+WARNING: Output 'fitstat' was not created.  Make sure that the output object name, label, or path is spelled correctly.  Also, 
+         verify that the appropriate procedure options are used to produce the requested output object.  For example, verify that 
+         the NOPRINT option is not used.
+925  %assess_model(prefix=GB, var_evt=p_&target.1, var_nevt=p_&target.0);
+
+
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE ASSESS used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+WARNING: Output 'liftinfo' was not created.  Make sure that the output object name, label, or path is spelled correctly.  Also, 
+         verify that the appropriate procedure options are used to produce the requested output object.  For example, verify that 
+         the NOPRINT option is not used.
+WARNING: Output 'rocinfo' was not created.  Make sure that the output object name, label, or path is spelled correctly.  Also, 
+         verify that the appropriate procedure options are used to produce the requested output object.  For example, verify that 
+         the NOPRINT option is not used.
+WARNING: Output 'fitstat' was not created.  Make sure that the output object name, label, or path is spelled correctly.  Also, 
+         verify that the appropriate procedure options are used to produce the requested output object.  For example, verify that 
+         the NOPRINT option is not used.
+926  %assess_model(prefix=NN, var_evt=p_&target.1, var_nevt=p_&target.0);
+
+
+ERROR: Session  is disconnected. There is no server connection to execute the action.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+ERROR: No data set open to look up variables.
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE ASSESS used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+WARNING: Output 'liftinfo' was not created.  Make sure that the output object name, label, or path is spelled correctly.  Also, 
+         verify that the appropriate procedure options are used to produce the requested output object.  For example, verify that 
+         the NOPRINT option is not used.
+WARNING: Output 'rocinfo' was not created.  Make sure that the output object name, label, or path is spelled correctly.  Also, 
+         verify that the appropriate procedure options are used to produce the requested output object.  For example, verify that 
+         the NOPRINT option is not used.
+WARNING: Output 'fitstat' was not created.  Make sure that the output object name, label, or path is spelled correctly.  Also, 
+         verify that the appropriate procedure options are used to produce the requested output object.  For example, verify that 
+         the NOPRINT option is not used.
+927  ods exclude none;
+928  
+929  
+930  /************************************************************************/
+931  /* ROC and Lift Charts using validation data                            */
+932  /************************************************************************/
+933  ods graphics on;
+934  
+
+
+935  data all_rocinfo;
+936    set SVM_rocinfo(in=s)
+937        GB_rocinfo(in=g)
+938        NN_rocinfo(in=n)
+939        RF_rocinfo(in=f);
+ERROR: File WORK.SVM_ROCINFO.DATA does not exist.
+ERROR: File WORK.GB_ROCINFO.DATA does not exist.
+ERROR: File WORK.NN_ROCINFO.DATA does not exist.
+ERROR: File WORK.RF_ROCINFO.DATA does not exist.
+940  
+941    length model $ 16;
+942    select;
+943      when (s) model='SVM';
+944      when (f) model='Forest';
+945      when (g) model='GradientBoosting';
+946      when (n) model='NeuralNetwork';
+947    end;
+948  run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+WARNING: The data set WORK.ALL_ROCINFO may be incomplete.  When this step was stopped there were 0 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+949  
+950  data all_liftinfo;
+951    set SVM_liftinfo(in=s)
+952        GB_liftinfo(in=g)
+953        NN_liftinfo(in=n)
+954        RF_liftinfo(in=f);
+ERROR: File WORK.SVM_LIFTINFO.DATA does not exist.
+ERROR: File WORK.GB_LIFTINFO.DATA does not exist.
+ERROR: File WORK.NN_LIFTINFO.DATA does not exist.
+ERROR: File WORK.RF_LIFTINFO.DATA does not exist.
+955  
+956    length model $ 16;
+957    select;
+958      when (s) model='SVM';
+959      when (f) model='Forest';
+960      when (g) model='GradientBoosting';
+961      when (n) model='NeuralNetwork';
+962    end;
+963  run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+WARNING: The data set WORK.ALL_LIFTINFO may be incomplete.  When this step was stopped there were 0 observations and 1 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+964  
+965  /* Print AUC (Area Under the ROC Curve) */
+966  title "AUC (using validation data) ";
+967  proc sql;
+968    select distinct model, c from all_rocinfo order by c desc;
+ERROR: The following columns were not found in the contributing tables: c.
+NOTE: PROC SQL set option NOEXEC and will continue to check the syntax of statements.
+969  quit;
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE SQL used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+970  
+971  /* Draw ROC charts */
+
+
+972  proc sgplot data=all_rocinfo aspect=1;
+973    title "ROC Curve (using validation data)";
+974    xaxis values=(0 to 1 by 0.25) grid offsetmin=.05 offsetmax=.05;
+975    yaxis values=(0 to 1 by 0.25) grid offsetmin=.05 offsetmax=.05;
+976    lineparm x=0 y=0 slope=1 / transparency=.7;
+977    series x=fpr y=sensitivity / group=model;
+ERROR: Variable FPR not found.
+ERROR: Variable SENSITIVITY not found.
+978  run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE SGPLOT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+979  
+980  /* Draw lift charts */
+
+
+981  proc sgplot data=all_liftinfo;
+982    title "Lift Chart (using validation data)";
+983    yaxis label=' ' grid;
+984    series x=depth y=lift / group=model markers markerattrs=(symbol=circlefilled);
+ERROR: Variable DEPTH not found.
+ERROR: Variable LIFT not found.
+985  run;
+
+NOTE: The SAS System stopped processing this step because of errors.
+NOTE: PROCEDURE SGPLOT used (Total process time):
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+986  
+987  title;
+988  ods graphics off;
+989  
+990  cas benchsess terminate;
+NOTE: Libref MYCASLIB has been deassigned.
+NOTE: Deletion of the session BENCHSESS was successful.
+NOTE: The default CAS session BENCHSESS identified by SAS option SESSREF= was terminated. Use the OPTIONS statement to set the 
+      SESSREF= option to an active session.
+NOTE: Request to TERMINATE completed for session BENCHSESS.
+991  
+992  
+993  
+994  
+995  
+996  %studio_hide_wrapper;
+

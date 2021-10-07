@@ -10,7 +10,7 @@ cas background4 sessopts=(caslib="casuser" timeout=10) ;
 libname mycaslib cas caslib=casuser;
 %let sasdata          = sampsio.hmeq;
 %let casdata          = mycaslib.hmeq;
-%let sizeMultiplier   = 1000; /* Baseline : 100 = 59,1 Mo */
+%let sizeMultiplier   = 5000; /* Baseline : 100 = 59,1 Mo */
                  
 %if not %sysfunc(exist(&casdata)) %then %do;
   proc casutil;
