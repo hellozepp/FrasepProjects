@@ -1,4 +1,4 @@
-filename in url 'https://frasepviya35smp/cas-shared-default-http/cas/sessions'  debug user='viyademo01' pass='demopw';
+filename in url 'https://frasepviya35smp.cloud.com/cas-shared-default-http/cas/sessions'  debug user='viyademo01' pass='demopw';
 libname in json automap=replace;
 
 data all;

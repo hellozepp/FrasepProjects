@@ -1,4 +1,4 @@
-%let idletime_threshold=300;
+%let idletime_threshold=3600;
 %let BASE_URI=http://frasepviya35smp.cloud.com;
 %let USERNAME=viyademo01;
 %let PASSWORD=demopw;
@@ -54,14 +54,14 @@ proc sql;
 	select A.uuid, A.name, A.state, A.user, (B.seconds+B.minutes*60+B.hours*3600) as idletime 
 	from obj2.root as A, obj2.idletime as B 
 	where A.ordinal_root=B.ordinal_root and 
-	((B.seconds+B.minutes*60+B.hours*3600)>&idletime_threshold or A.clientcount=0);
+	((B.seconds+B.minutes*60+B.hours*3600)>&idletime_threshold or A.clientcount=0 or state="terminate");
 quit;
 
 
 %macro drop_session(session_uuid);
 	proc http url="&BASE_URI/cas-shared-default-http/cas/sessions/&session_uuid" 
 		method='delete' out=respb headerout=resphdrb headerout_overwrite;
-		debug level=0;
+		debug level=3;
 		headers 'Authorization'="Bearer &ACCESS_TOKEN";
 	run;
 %mend drop_session;
