@@ -12,6 +12,7 @@ sudo ln -s /opt/sas/viya/config/data/modelsvr/astore /models/astores/viya
 sudo chmod -R 775 /models/astores
 sudo chown -R sas:sas /models
 
+2021-10-07 : new report, new training (model isolation forest), and new esp model pointing on trade.csv file instead of trade generator project
 
 Components :
 - trades ESP project trades.xml (to be imported in ESP Studio)
