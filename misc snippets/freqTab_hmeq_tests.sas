@@ -1,12 +1,6 @@
 cas mysess sessopts=(metrics=true);
-
 caslib _all_ assign;
-
 %let sasdata          = sampsio.hmeq;                     
-
-%let class_inputs    = reason job;
-%let interval_inputs = clage clno debtinc loan mortdue value yoj derog delinq ninq; 
-%let target          = bad;
 
 /************************************************************************/
 /* Load data into CAS if needed. Data should have been loaded in        */
@@ -29,18 +23,27 @@ proc cas ;
    tabledetails / table="hmeq" ;
 quit ;
 
+/*
+2000 : records 11920000 / bytes:	1,239,680,000
+5000 : records 29800000 : bytes:    3,0992,000,00
+*/
 
 proc cas;
-   action freqTab.freqTab result=freqResults /
+	action freqTab.freqTab result=freqResults /
       table='hmeq',
       order='Internal',
       tabulate={{vars='BAD', cross={'reason','job','clage','clno','debtinc','loan','mortdue','value','yoj','derog','delinq','ninq'}}}
 	  outputTables={includeAll=TRUE,replace=TRUE};
-run;
+	run;
 quit;
+/* 5000 : 25 secondes, */
+
+ods show;
+ods exclude where=(_name_ <> 'SpearmanCorr');
+ods output SpearmanCorr=casuser.SpearmanCorr;
 
 proc freqtab data=casuser.hmeq;
-	tables Bad * (reason job clage clno debtinc loan mortdue value yoj derog delinq ninq) / crosslist chisq measures(cl);
+	tables Bad * (reason job clage clno debtinc loan mortdue value yoj derog delinq ninq) / measures;
 run;
 
 cas mysess terminate;
