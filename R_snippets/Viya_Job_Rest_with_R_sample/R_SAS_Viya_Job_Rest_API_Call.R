@@ -55,23 +55,31 @@ client_id <- rstudioapi::showPrompt('User name', 'Enter your user name', default
 client_secret <- rstudioapi::askForPassword()
 viya_access_token <- get_viya_oauth_token('https://frasepviya35smp.cloud.com', '/SASLogon/oauth/token', client_id, client_secret)
 
+# MEGACORP5_4m (4,5 million rows)
+
 # Compute spearman correlation on Viya
 starttime <- Sys.time()
 r <- compute_freqtab('MEGACORP5_4m', 'AZUREDL', 'unitreliability * facilityage','measures','scorr')
 endtime <- Sys.time()
 difftime(endtime, starttime, unit = "secs")
 r
-
-# MEGACORP5_4m (4,5 million rows)
-# r <- compute_freqtab('MEGACORP5_4m', 'AZUREDL', 'unitreliability * facilityage','measures','scorr')
-# 10 seconds, output : ASE of Spearman Correlation Spearman Correlation
 # r['Spearman Correlation'] to get it
 
-# T thcurnow calculation : to be defined with simple formula based on freqtab outputs
-# MEGACORP5_4m (4,5 million rows)  : Expenses (66399) * facilityage(32), chisq, chisq , 10 seconds
-# N _PCHI_ DF_PCHI P_PCHI  _LRCHI_ DF_LRCHI P_LRCHI  _MHCHI_ DF_MHCHI P_MHCHI  _PHI_  _CONTGY_  _CRAMV_
+# T Tschuprow calculation : to be defined with simple formula based on freqtab outputs of pearson Chi square computed by freqtab
+starttime <- Sys.time()
+r <- compute_freqtab('MEGACORP5_4m', 'AZUREDL', 'unitreliability * facilityage','chisq','chisq')
+endtime <- Sys.time()
+difftime(endtime, starttime, unit = "secs")
+names(r)
+# outputs :
+#  [1] "DF for Likelihood Ratio Chi-Squa" "DF for Mantel-Haenszel Chi-Squar" "DF for Chi-Square"                "Number of Subjects in the Stratu"
+# [5] "P-value for Likelihood Ratio Chi" "P-value for Mantel-Haenszel Chi-" "P-value for Chi-Square"           "Contingency Coefficient"         
+# [9] "Cramer's V"                       "Likelihood Ratio Chi-Square"      "Mantel-Haenszel Chi-Square"       "Chi-Square"                      
+# [13] "Phi Coefficient" 
+T_Tschuprow <- (sqrt((r["Chi-Square"]/r["Number of Subjects in the Stratu"])/sqrt(r["DF for Chi-Square"])))
 
-# Compute Jeffreys confidence liimits on Viya
+
+# Compute Jeffreys confidence limits on Viya
 # Jeffreys : https://documentation.sas.com/doc/en/pgmsascdc/9.4_3.5/casstat/casstat_freqtab_details35.htm?homeOnFail=
 starttime <- Sys.time()
 r <- compute_freqtab('MEGACORP5_4m', 'AZUREDL', 'unitreliability','binomial(cl=jeffreys)','binomial')
