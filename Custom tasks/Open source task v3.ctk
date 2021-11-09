@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><Task runNLS="never" schemaVersion="5.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<Task schemaVersion="5.2">
 	<Registration>
 	<Name>Open source code task</Name>
-	<Description></Description>
+	<Description/>
 	<GUID>726B2B12-4542-4200-96F4-960C645D767F</GUID>
 	<Procedures>TBD</Procedures>
 	<Version>3.7</Version>
@@ -55,4 +56,10 @@ data _null_;
 run;
 		]]>
 	</CodeTemplate>
+<TemplateValues version="5.1">
+<![CDATA[
+{"tmp_dir":"/tmp","Python_exec":"/opt/anaconda3/envs/r_env/bin/Rscript","srccodefile":{"path":"/home/viyademo01/my_git/R_snippets","name":"R_swat_simple_script.R","fullPath":"/home/viyademo01/my_git/R_snippets/R_swat_simple_script.R","pathLocation":"filesystem","pathUri":"/home/viyademo01/my_git/R_snippets","parentUri":"/home/viyademo01/my_git"}}
+]]>
+</TemplateValues>
+
 </Task>
