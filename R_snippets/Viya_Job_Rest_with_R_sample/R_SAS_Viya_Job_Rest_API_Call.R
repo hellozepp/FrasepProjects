@@ -27,7 +27,7 @@ execute_viya_job <- function(viyaBaseUri, fulljobname, parameterstr, access_toke
   print("Generated URL :")
   print(jobcalluri)
   
-  rJson <- GET(url = jobcalluri, add_headers("Authorization"=paste("Bearer", access_token)), verbose())
+  rJson <- GET(url = jobcalluri, add_headers("Authorization"=paste("Bearer", access_token)), verbose(), timeout(1800))
   
   return(fromJSON(content(rJson,as="text")))
 }
@@ -54,7 +54,7 @@ compute_corr <- function(in_castablename, in_caslibname, corrclause, varclause, 
   r <- execute_viya_job(
     viyaBaseUri='https://frasepviya35smp.cloud.com',
     fulljobname='/Production/Job_definition/Job_proc_corr',
-    parameterstr=paste('&castabname=',in_castablename,'&caslibname=',in_caslibname,'&corrclause=',corrclause,'&varclause=',varclause,'&withclause=',withclause,sep=""),
+    parameterstr=paste('&castabname=',in_castablename,'&caslibname=',in_caslibname,'&corrclause=',corrclause,'&varclause=',varclause,'&withclause=',withclause,'&_timeout=3600',sep=""),
     access_token=viya_access_token
   )
   return(r)
@@ -71,9 +71,9 @@ viya_access_token <- get_viya_oauth_token('https://frasepviya35smp.cloud.com', '
 
 # MEGACORP5_4m (4,5 million rows)
 
-# Compute spearman correlation on Viya with proc corr (2 continous variables of 91000000 distinct values : 228 secondes)
+# Compute spearman correlation on Viya with proc corr (2 continous variables of 91000000 distinct values : 208 secondes)
 starttime <- Sys.time()
-r <- compute_corr(in_castablename='test_corr', in_caslibname='public', corrclause='spearman pearson', varclause='nums1', withclause='nums2')
+r <- compute_corr(in_castablename='test_corr', in_caslibname='public', corrclause='spearman', varclause='nums1', withclause='nums2')
 endtime <- Sys.time()
 difftime(endtime, starttime, unit = "secs")
 r
@@ -109,6 +109,5 @@ difftime(endtime, starttime, unit = "secs")
 names(r)
 # outputs :  [1] "H0 ASE of Binomial Proportion"    "ASE of Binomial Proportion"       "Lower CL (Jeffreys), Binomial Pr" "Number of Subjects"              
 # [5] "P-value, Binomial P (Two-sided)"  "P-value, Binomial P (Left-sided)" "P-value, Binomial P (Right-sided" "Upper CL (Jeffreys), Binomial Pr"
-# [9] "Standardized (Z) Binomial Propor" "Binomial Proportion P" 
-
+# [9] "Standardized (Z) Binomial Propor" "Binomial Proportion P"
 
