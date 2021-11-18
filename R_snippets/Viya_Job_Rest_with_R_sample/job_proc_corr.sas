@@ -1,3 +1,5 @@
+%JESBEGIN;
+
 options casdatalimit=10G;
 
 %global castabname caslibname corrclause varclause withclause;
@@ -39,3 +41,5 @@ run;
 quit;
 
 cas mysess terminate;
+
+%JESEND;
