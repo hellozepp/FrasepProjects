@@ -1,0 +1,249 @@
+524  %studio_hide_wrapper;
+605  %studio_show_only_notes_wrapper;
+NOTE: ODS statements in the SAS Studio environment may disable some output features.
+608  options cashost='frasepviya35smp.cloud.com' casport=5570 casdatalimit=10G;
+609  
+610  cas casauto sessopts=(timeout=3600, metrics=true);
+NOTE: The session CASAUTO connected successfully to Cloud Analytic Services frasepviya35smp.cloud.com using port 5570. The UUID is 
+      6e0f655f-2d58-7a46-92bf-98b0698417dc. The user is viyademo01 and the active caslib is CASUSER(viyademo01).
+NOTE: The SAS option SESSREF was updated with the value CASAUTO.
+NOTE: The SAS macro _SESSREF_ was updated with the value CASAUTO.
+NOTE: The session is using 0 workers.
+NOTE: Action 'sessionProp.setSessOpt' used (Total process time):
+NOTE:       real time               0.002627 seconds
+NOTE:       cpu time                0.002319 seconds (88.28%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  371.00K (0.00%)
+NOTE: The CAS statement request to update one or more session options for session CASAUTO completed.
+611  caslib _all_ assign;
+NOTE: Executing action 'table.caslibInfo'.
+NOTE: A SAS Library associated with a caslib can only reference library member names that conform to SAS Library naming conventions.
+NOTE: CASLIB AzureDL for session CASAUTO will be mapped to SAS Library AZUREDL.
+NOTE: CASLIB CASUSER(viyademo01) for session CASAUTO will be mapped to SAS Library CASUSER.
+NOTE: CASLIB Formats for session CASAUTO will be mapped to SAS Library FORMATS.
+NOTE: CASLIB ModelPerformanceData for session CASAUTO will not be mapped to SAS Library ModelPerformanceData. The CASLIB name is 
+      not valid for use as a libref.
+NOTE: CASLIB Models for session CASAUTO will be mapped to SAS Library MODELS.
+NOTE: CASLIB Public for session CASAUTO will be mapped to SAS Library PUBLIC.
+NOTE: CASLIB Samples for session CASAUTO will be mapped to SAS Library SAMPLES.
+NOTE: CASLIB SystemData for session CASAUTO will not be mapped to SAS Library SystemData. The CASLIB name is not valid for use as a 
+      libref.
+NOTE: CASLIB mycas for session CASAUTO will be mapped to SAS Library MYCAS.
+NOTE: Action 'table.caslibInfo' used (Total process time):
+NOTE:       real time               0.000686 seconds
+NOTE:       cpu time                0.000668 seconds (97.38%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  698.72K (0.00%)
+612  
+613  proc cas;
+614  	table.tabledetails / caslib='public' name='test_corr';
+615  quit;
+
+NOTE: Active Session now CASAUTO.
+NOTE: Executing action 'table.tableDetails'.
+NOTE: Action 'table.tableDetails' used (Total process time):
+NOTE:       real time               3.777122 seconds
+NOTE:       cpu time                0.827153 seconds (21.90%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  19.38M (0.02%)
+
+NOTE: PROCEDURE CAS used (Total process time):
+      real time           3.80 seconds
+      cpu time            0.03 seconds
+      
+
+616  
+617  proc corr data=public.test_corr(keep=nums1 nums2) spearman;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.001242 seconds
+NOTE:       cpu time                0.001177 seconds (94.77%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  730.44K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.001094 seconds
+NOTE:       cpu time                0.001041 seconds (95.16%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  727.16K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000993 seconds
+NOTE:       cpu time                0.000949 seconds (95.57%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  851.25K (0.00%)
+618     var nums1;
+619     with nums2;
+620  run;
+
+NOTE: Executing action 'table.fetch'.
+NOTE: Action 'table.fetch' used (Total process time):
+NOTE:       real time               20.805778 seconds
+NOTE:       cpu time                20.730774 seconds (99.64%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  1007.93M (0.78%)
+NOTE: Executing action 'table.fetch'.
+NOTE: Action 'table.fetch' used (Total process time):
+NOTE:       real time               21.922775 seconds
+NOTE:       cpu time                21.914214 seconds (99.96%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  1.96G (1.56%)
+NOTE: Executing action 'table.fetch'.
+NOTE: Action 'table.fetch' used (Total process time):
+NOTE:       real time               19.065357 seconds
+NOTE:       cpu time                19.046705 seconds (99.90%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  2.72G (2.16%)
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           3:33.85
+      cpu time            2:58.48
+      
+
+621  
+622  proc freqtab data=public.test_corr;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.001227 seconds
+NOTE:       cpu time                0.001135 seconds (92.50%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  727.06K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000806 seconds
+NOTE:       cpu time                0.000751 seconds (93.18%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  727.06K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000865 seconds
+NOTE:       cpu time                0.000829 seconds (95.84%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  851.16K (0.00%)
+623  	tables nums1 * nums2 / chisq;
+624  	output out=casuser.out_freqtab chisq;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000426 seconds
+NOTE:       cpu time                0.000345 seconds (80.99%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  319.56K (0.00%)
+625  	ods exclude all;
+626  run;
+
+NOTE: Executing action 'freqTab.freqTab'.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+ERROR: Connection failed. Server returned: Session reconnect failed: Could not find the specified session.
+NOTE: The SAS System stopped processing this step because of errors.
+WARNING: The data set CASUSER.OUT_FREQTAB may be incomplete.  When this step was stopped there were 0 observations and 0 variables.
+WARNING: Data set CASUSER.OUT_FREQTAB was not replaced because this step was stopped.
+NOTE: PROCEDURE FREQTAB used (Total process time):
+      real time           17:49.07
+      cpu time            3.11 seconds
+      
+627  
+
+
+628  proc cas;
+629  	table.droptable / caslib='public' name='out_freqtab' quiet=true;
+630      table.promote / caslib='casuser' name='out_freqtab' targetcaslib='public' target='out_freqtab' drop=true;
+631  quit;
+
+WARNING: Session CASAUTO is disconnected.
+ERROR: There is no server connection to execute the action 'table.droptable'.
+ERROR: Execution halted
+NOTE: PROCEDURE CAS used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+      
+
+632  
+633  /* 9 100 000 : 16,7 secondes */
+634  /* 91 000 000 : 207 secondes */
+635  
+636  cas casauto terminate;
+NOTE: Libref AZUREDL has been deassigned.
+NOTE: Libref MYCAS has been deassigned.
+NOTE: Libref SAMPLES has been deassigned.
+NOTE: Libref PUBLIC has been deassigned.
+NOTE: Libref MODELS has been deassigned.
+NOTE: Libref FORMATS has been deassigned.
+NOTE: Libref CASUSER has been deassigned.
+NOTE: Deletion of the session CASAUTO was successful.
+NOTE: The default CAS session CASAUTO identified by SAS option SESSREF= was terminated. Use the OPTIONS statement to set the 
+      SESSREF= option to an active session.
+NOTE: Request to TERMINATE completed for session CASAUTO.
+637  
+638  
+639  %studio_hide_wrapper;
+
