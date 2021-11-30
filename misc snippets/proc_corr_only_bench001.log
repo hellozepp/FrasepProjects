@@ -1,0 +1,133 @@
+524  %studio_hide_wrapper;
+605  options cashost='frasepviya35smp.cloud.com' casport=5570 casdatalimit=10G fullstimer;
+606  
+607  cas casauto sessopts=(timeout=3600, metrics=true);
+NOTE: The session CASAUTO connected successfully to Cloud Analytic Services frasepviya35smp.cloud.com using port 5570. The UUID is 
+      d9732adc-87b3-8049-a0fb-afa1cd8462e4. The user is viyademo01 and the active caslib is CASUSER(viyademo01).
+NOTE: The SAS option SESSREF was updated with the value CASAUTO.
+NOTE: The SAS macro _SESSREF_ was updated with the value CASAUTO.
+NOTE: The session is using 0 workers.
+NOTE: Action 'sessionProp.setSessOpt' used (Total process time):
+NOTE:       real time               0.002255 seconds
+NOTE:       cpu time                0.002031 seconds (90.07%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  371.00K (0.00%)
+NOTE: The CAS statement request to update one or more session options for session CASAUTO completed.
+608  caslib _all_ assign;
+NOTE: Executing action 'table.caslibInfo'.
+NOTE: A SAS Library associated with a caslib can only reference library member names that conform to SAS Library naming conventions.
+NOTE: CASLIB AzureDL for session CASAUTO will be mapped to SAS Library AZUREDL.
+NOTE: CASLIB CASUSER(viyademo01) for session CASAUTO will be mapped to SAS Library CASUSER.
+NOTE: CASLIB Formats for session CASAUTO will be mapped to SAS Library FORMATS.
+NOTE: CASLIB ModelPerformanceData for session CASAUTO will not be mapped to SAS Library ModelPerformanceData. The CASLIB name is 
+      not valid for use as a libref.
+NOTE: CASLIB Models for session CASAUTO will be mapped to SAS Library MODELS.
+NOTE: CASLIB Public for session CASAUTO will be mapped to SAS Library PUBLIC.
+NOTE: CASLIB Samples for session CASAUTO will be mapped to SAS Library SAMPLES.
+NOTE: CASLIB SystemData for session CASAUTO will not be mapped to SAS Library SystemData. The CASLIB name is not valid for use as a 
+      libref.
+NOTE: CASLIB mycas for session CASAUTO will be mapped to SAS Library MYCAS.
+NOTE: Action 'table.caslibInfo' used (Total process time):
+NOTE:       real time               0.000739 seconds
+NOTE:       cpu time                0.000718 seconds (97.16%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  698.72K (0.00%)
+609  
+610  proc corr data=public.test_corr(keep=nums1 nums2) spearman out=out_table;
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.001075 seconds
+NOTE:       cpu time                0.000965 seconds (89.77%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  750.38K (0.00%)
+NOTE: Executing action 'table.tableInfo'.
+NOTE: Action 'table.tableInfo' used (Total process time):
+NOTE:       real time               0.000682 seconds
+NOTE:       cpu time                0.000613 seconds (89.88%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  748.28K (0.00%)
+NOTE: Executing action 'table.columnInfo'.
+NOTE: Action 'table.columnInfo' used (Total process time):
+NOTE:       real time               0.000993 seconds
+NOTE:       cpu time                0.000902 seconds (90.84%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  1.16M (0.00%)
+611     var nums1;
+612     with nums2;
+613  run;
+
+NOTE: Executing action 'table.fetch'.
+NOTE: Action 'table.fetch' used (Total process time):
+NOTE:       real time               20.237900 seconds
+NOTE:       cpu time                20.165440 seconds (99.64%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  1.01G (0.81%)
+NOTE: Executing action 'table.fetch'.
+NOTE: Action 'table.fetch' used (Total process time):
+NOTE:       real time               20.790432 seconds
+NOTE:       cpu time                20.792908 seconds (100.01%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  1.96G (1.56%)
+NOTE: Executing action 'table.fetch'.
+NOTE: Action 'table.fetch' used (Total process time):
+NOTE:       real time               24.080573 seconds
+NOTE:       cpu time                22.925897 seconds (95.20%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  2.94G (2.34%)
+NOTE: Executing action 'table.fetch'.
+NOTE: Action 'table.fetch' used (Total process time):
+NOTE:       real time               23.561806 seconds
+NOTE:       cpu time                23.500530 seconds (99.74%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  3.91G (3.11%)
+NOTE: Executing action 'table.fetch'.
+NOTE: Action 'table.fetch' used (Total process time):
+NOTE:       real time               15.904224 seconds
+NOTE:       cpu time                15.845612 seconds (99.63%)
+NOTE:       total nodes             1 (16 cores)
+NOTE:       total memory            125.75G
+NOTE:       memory                  4.48G (3.56%)
+NOTE: The data set WORK.OUT_TABLE has 4 observations and 3 variables.
+NOTE: PROCEDURE CORR used (Total process time):
+      real time           4:28.42
+      user cpu time       3:02.89
+      system cpu time     24.68 seconds
+      memory              10168996.03k
+      OS Memory           10254884.00k
+      Timestamp           11/15/2021 02:03:53 PM
+      Step Count                        21  Switch Count  1
+      Page Faults                       0
+      Page Reclaims                     6777532
+      Page Swaps                        0
+      Voluntary Context Switches        596744
+      Involuntary Context Switches      649
+      Block Input Operations            0
+      Block Output Operations           248
+      
+
+614  
+615  cas casauto terminate;
+NOTE: Libref AZUREDL has been deassigned.
+NOTE: Libref MYCAS has been deassigned.
+NOTE: Libref SAMPLES has been deassigned.
+NOTE: Libref PUBLIC has been deassigned.
+NOTE: Libref MODELS has been deassigned.
+NOTE: Libref FORMATS has been deassigned.
+NOTE: Libref CASUSER has been deassigned.
+NOTE: Deletion of the session CASAUTO was successful.
+NOTE: The default CAS session CASAUTO identified by SAS option SESSREF= was terminated. Use the OPTIONS statement to set the 
+      SESSREF= option to an active session.
+NOTE: Request to TERMINATE completed for session CASAUTO.
+616  
+617  
+618  %studio_hide_wrapper;
+
