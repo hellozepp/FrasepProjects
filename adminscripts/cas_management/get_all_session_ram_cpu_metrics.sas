@@ -1,3 +1,7 @@
+cas sess_ctrl;
+
+caslib _ALL_ assign;
+
 /************************************************************************************************/
 /* Snippet used to get all disconnected and idle for too long cas sessions and terminate them   */
 /************************************************************************************************/
@@ -7,14 +11,6 @@
 /* 	FILEREFs for the response and the response headers; */
 filename respb temp encoding='UTF-8';
 filename resphdrb temp encoding='UTF-8';
-
-/************************************************************************************************/
-/* Macro used to terminate a specific CAS session */
-%macro terminate_session(session_uuid);
-	proc http url="&BASE_URI/cas-shared-default-http/cas/sessions/&session_uuid/terminate" oauth_bearer=sas_services
-		method='post' out=respb headerout=resphdrb headerout_overwrite;
-	run;
-%mend terminate_session;
 
 /************************************************************************************************/
 /* Macro used to get the list of of all current cas sessions */
@@ -28,7 +24,6 @@ filename resphdrb temp encoding='UTF-8';
 %get_detailed_cas_session_list();
 
 libname obj2 json "%sysfunc(pathname(respb))";
-
 /************************************************************************************************/
 /* Get all sessions with idle time greater than the theshold defined in idletime_threshod macro */
 /* variable or disconnected */
@@ -43,26 +38,53 @@ proc sql;
 	((B.seconds+B.minutes*60+B.hours*3600)>&idletime_threshold or A.clientcount=0);
 quit;
 
-/************************************************************************************************/
-/* Macro used to get node metrics fro a givens session uuid */
-%macro get_session_node_metrics(session_uuid);
+/************************************************************************************************************/
+/* Macro used to get node metrics for a given session uuid and append metrics data to dataset in parameter */
+%macro get_session_node_metrics(session_uuid, output_ds=SESSION_NODE_METRICS);
 	proc http url="&BASE_URI/cas-shared-default-http/cas/sessions/&session_uuid/nodes/metrics" oauth_bearer=sas_services
 		method='get' out=respb headerout=resphdrb headerout_overwrite;
-		debug level=3;
 	run;
+	libname obj3 json "%sysfunc(pathname(respb))";
+	data data_to_insert;
+		set obj3.root(drop=uuid id);
+		rename name=node_name type=node_type;
+		uuid="&session_uuid";
+		metrics_datetime = datetime();
+ 		format metrics_datetime datetime20.;
+	run;
+	proc append base=&output_ds data=data_to_insert force;
+	run;
+	LIBNAME obj3 CLEAR ;
 %mend get_session_node_metrics;
-
-%get_session_node_metrics(1f48359c-22e4-af44-baf8-fd7da2a471b3);
-
-libname obj3 json "%sysfunc(pathname(respb))";
 
 /************************************************************************************************/
 /* Main loop to terminate the selected sessions                                                 */
+*proc delete data=session_node_metrics; run;
 
 data _null_;
 	set detailed_session_list;
-	put "Terminating cas session with uuid : " uuid;
-	%get_session_node_metrics(uuid);
+	put "Getting metrics for cas session with uuid : " uuid;
+	call execute('%get_session_node_metrics('||uuid||')');
+run;
+/************************************************************************************************/
+proc sort data=WORK.DETAILED_SESSION_LIST;
+	by uuid;
 run;
 
-/************************************************************************************************/
+proc sort data=WORK.SESSION_NODE_METRICS;
+	by uuid;
+run;
+
+/********************************/
+/* Consolidate all session date */
+ DATA casuser.ALL_SESSION_DATA;
+   MERGE WORK.DETAILED_SESSION_LIST WORK.SESSION_NODE_METRICS;
+   BY uuid;
+ RUN;
+
+proc cas;
+	table.droptable / caslib='public' name='ALL_SESSION_DATA' quiet=true;
+	table.promote / sourcecaslib='casuser' name='ALL_SESSION_DATA' targetcaslib="public" target='ALL_SESSION_DATA';
+quit;
+
+cas sess_ctrl terminate;
