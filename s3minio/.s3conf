@@ -1,0 +1,4 @@
+ssl=no
+keyID=minioadmin
+secret=minioadmin
+region=fr-local-frasep
