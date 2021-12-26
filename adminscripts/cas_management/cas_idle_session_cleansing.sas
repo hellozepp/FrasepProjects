@@ -18,8 +18,7 @@ ods _all_ close;
 
 proc http url="&BASE_URI/SASLogon/oauth/token" method='post' 
 		in="grant_type=password%nrstr(&username=)&USERNAME%nrstr(&password=)&PASSWORD" 
-		username="&CLIENT_ID" password="&CLIENT_SECRET" out=respb auth_basic verbose;
-	debug level=3;
+		username="&CLIENT_ID" password="&CLIENT_SECRET" out=respb auth_basic;
 run;
 quit;
 
