@@ -1,3 +1,5 @@
+ods _all_ close;
+/* Job parameters */
 cas sess_ctrl;
 
 caslib _ALL_ assign;
@@ -77,14 +79,41 @@ run;
 
 /********************************/
 /* Consolidate all session date */
- DATA casuser.ALL_SESSION_DATA;
+ DATA casuser.ALL_SESSION_DATA_TMP;
    MERGE WORK.DETAILED_SESSION_LIST WORK.SESSION_NODE_METRICS;
    BY uuid;
  RUN;
 
+proc append base=casuser.all_session_data data=public.all_session_data force;
+run;
+
 proc cas;
+	function doesTableExist(casLib, casTable);
+  		table.tableExists result=r status=rc / caslib=casLib table=casTable;
+  		tableExists = dictionary(r, "exists");
+  		return tableExists;
+	end func;
+
+	tableExists = doesTableExist("public", "all_session_data");
+  	if tableExists != 0 then do;
+			print "Appending data";
+			dataStep.runCode result=r status=rc / code='
+			data "ALL_SESSION_DATA" (caslib="casuser" promote="no");
+			    set "ALL_SESSION_DATA" (caslib="Public") "ALL_SESSION_DATA_TMP" (caslib="casuser");
+			run;
+			';
+	end;
+	else do;
+			dataStep.runCode result=r status=rc / code='
+			data "ALL_SESSION_DATA" (caslib="casuser" promote="no");
+			    set ALL_SESSION_DATA_TMP" (caslib="casuser");
+			run;
+			';
+  	end;
+
 	table.droptable / caslib='public' name='ALL_SESSION_DATA' quiet=true;
-	table.promote / sourcecaslib='casuser' name='ALL_SESSION_DATA' targetcaslib="public" target='ALL_SESSION_DATA';
+	table.promote / sourcecaslib='casuser' name='ALL_SESSION_DATA_TMP' targetcaslib="public" target='ALL_SESSION_DATA';
 quit;
 
 cas sess_ctrl terminate;
+ods _all_ close;
