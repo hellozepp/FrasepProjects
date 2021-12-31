@@ -1,0 +1,2506 @@
+﻿{
+   "@element": "SASReport",
+   "xmlns": "http://www.sas.com/sasreportmodel/bird-4.14.0",
+   "label": "CAS_Session_RAM_CPU_monitoring",
+   "dateCreated": "2021-12-29T17:00:04Z",
+   "createdApplicationName": "SAS Visual Analytics 2020",
+   "dateModified": "2021-12-31T14:26:58.746Z",
+   "lastModifiedApplicationName": "SAS Visual Analytics 2020",
+   "createdVersion": "4.14.0",
+   "createdLocale": "en",
+   "nextUniqueNameIndex": 327,
+   "dataDefinitions": [
+      {
+         "@element": "ParentDataDefinition",
+         "name": "dd177",
+         "businessItems": [
+            {
+               "name": "bi175",
+               "base": "bi23",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi318",
+               "base": "bi215",
+               "@element": "RelationalDataItem"
+            }
+         ],
+         "source": "ds7",
+         "childQueryRelationshipType": "independent",
+         "dataDefinitionList": [
+            {
+               "@element": "DataDefinition",
+               "name": "dd178",
+               "type": "relational",
+               "relationalQueryList": [
+                  {
+                     "sortItems": [
+                        {
+                           "sortDirection": "ascending",
+                           "@element": "SortItem",
+                           "reference": "bi175"
+                        }
+                     ],
+                     "detail": false,
+                     "axes": [
+                        {
+                           "@element": "Query_Axis",
+                           "type": "column",
+                           "itemList": [
+                              "bi175"
+                           ]
+                        }
+                     ],
+                     "@element": "RelationalQuery"
+                  }
+               ],
+               "source": "ds7",
+               "resultDefinitions": [
+                  {
+                     "@element": "ResultDefinition",
+                     "name": "dd179",
+                     "purpose": "primary",
+                     "maxRowsBehavior": "truncate",
+                     "maxRowsLookup": "textInput"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "ParentDataDefinition",
+         "name": "dd218",
+         "businessItems": [
+            {
+               "name": "bi222",
+               "base": "bi215",
+               "usage": "quantitative",
+               "aggregation": "min",
+               "@element": "RelationalDataItem",
+               "binOption": "formatBin"
+            },
+            {
+               "name": "bi223",
+               "base": "bi215",
+               "usage": "quantitative",
+               "aggregation": "max",
+               "@element": "RelationalDataItem",
+               "binOption": "formatBin"
+            }
+         ],
+         "source": "ds7",
+         "childQueryRelationshipType": "independent",
+         "dataDefinitionList": [
+            {
+               "@element": "DataDefinition",
+               "name": "dd219",
+               "type": "relational",
+               "relationalQueryList": [
+                  {
+                     "axes": [
+                        {
+                           "@element": "Query_Axis",
+                           "type": "column",
+                           "itemList": [
+                              "bi222",
+                              "bi223"
+                           ]
+                        }
+                     ],
+                     "@element": "RelationalQuery"
+                  }
+               ],
+               "source": "ds7",
+               "resultDefinitions": [
+                  {
+                     "@element": "ResultDefinition",
+                     "name": "dd220",
+                     "purpose": "primary"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "ParentDataDefinition",
+         "name": "dd228",
+         "businessItems": [
+            {
+               "name": "bi135",
+               "base": "bi11",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi136",
+               "base": "bi50",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi235",
+               "base": "bi23",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi319",
+               "base": "bi215",
+               "@element": "RelationalDataItem"
+            }
+         ],
+         "source": "ds7",
+         "childQueryRelationshipType": "independent",
+         "dataDefinitionList": [
+            {
+               "@element": "DataDefinition",
+               "name": "dd229",
+               "type": "multidimensional",
+               "multidimensionalQueryList": [
+                  {
+                     "detail": false,
+                     "axes": [
+                        {
+                           "@element": "Query_Axis",
+                           "type": "column",
+                           "itemList": [
+                              "bi135",
+                              "bi235"
+                           ]
+                        },
+                        {
+                           "@element": "Query_Axis",
+                           "type": "row",
+                           "itemList": [
+                              "bi136"
+                           ]
+                        }
+                     ],
+                     "@element": "MultidimensionalQuery",
+                     "columnSortItems": [
+                        {
+                           "sortDirection": "ascending",
+                           "@element": "SortItem",
+                           "reference": "bi135"
+                        },
+                        {
+                           "sortDirection": "ascending",
+                           "@element": "SortItem",
+                           "reference": "bi235"
+                        }
+                     ]
+                  }
+               ],
+               "source": "ds7",
+               "resultDefinitions": [
+                  {
+                     "@element": "ResultDefinition",
+                     "name": "dd230",
+                     "purpose": "primary",
+                     "maxRowsBehavior": "truncate",
+                     "maxRowsLookup": "graphDefault"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "ParentDataDefinition",
+         "name": "dd250",
+         "businessItems": [
+            {
+               "name": "bi246",
+               "base": "bi11",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi320",
+               "base": "bi215",
+               "@element": "RelationalDataItem"
+            }
+         ],
+         "source": "ds7",
+         "childQueryRelationshipType": "independent",
+         "dataDefinitionList": [
+            {
+               "@element": "DataDefinition",
+               "name": "dd251",
+               "type": "relational",
+               "relationalQueryList": [
+                  {
+                     "sortItems": [
+                        {
+                           "sortDirection": "ascending",
+                           "@element": "SortItem",
+                           "reference": "bi246"
+                        }
+                     ],
+                     "axes": [
+                        {
+                           "@element": "Query_Axis",
+                           "type": "column",
+                           "itemList": [
+                              "bi246"
+                           ]
+                        }
+                     ],
+                     "@element": "RelationalQuery"
+                  }
+               ],
+               "source": "ds7",
+               "resultDefinitions": [
+                  {
+                     "@element": "ResultDefinition",
+                     "name": "dd252",
+                     "purpose": "primary",
+                     "maxRowsBehavior": "truncate",
+                     "maxRowsLookup": "dropdown"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "ParentDataDefinition",
+         "name": "dd258",
+         "businessItems": [
+            {
+               "name": "bi237",
+               "base": "bi25",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi64",
+               "base": "bi50",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi184",
+               "base": "bi10",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi254",
+               "base": "bi12",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi317",
+               "base": "bi275",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi321",
+               "base": "bi23",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi322",
+               "base": "bi215",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi323",
+               "base": "bi11",
+               "@element": "RelationalDataItem"
+            }
+         ],
+         "source": "ds7",
+         "childQueryRelationshipType": "independent",
+         "dataDefinitionList": [
+            {
+               "@element": "DataDefinition",
+               "name": "dd259",
+               "type": "relational",
+               "relationalQueryList": [
+                  {
+                     "sortItems": [
+                        {
+                           "sortDirection": "ascending",
+                           "@element": "SortItem",
+                           "reference": "bi237"
+                        }
+                     ],
+                     "axes": [
+                        {
+                           "@element": "Query_Axis",
+                           "type": "column",
+                           "itemList": [
+                              "bi237",
+                              "bi64",
+                              "bi184",
+                              "bi254",
+                              "bi317"
+                           ]
+                        }
+                     ],
+                     "@element": "RelationalQuery"
+                  }
+               ],
+               "source": "ds7",
+               "resultDefinitions": [
+                  {
+                     "@element": "ResultDefinition",
+                     "name": "dd260",
+                     "purpose": "primary",
+                     "maxRowsBehavior": "truncate",
+                     "maxRowsLookup": "listTable"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "ParentDataDefinition",
+         "name": "dd268",
+         "businessItems": [
+            {
+               "name": "bi265",
+               "base": "bi11",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi266",
+               "base": "bi23",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi276",
+               "base": "bi275",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi324",
+               "base": "bi215",
+               "@element": "RelationalDataItem"
+            }
+         ],
+         "source": "ds7",
+         "childQueryRelationshipType": "independent",
+         "dataDefinitionList": [
+            {
+               "@element": "DataDefinition",
+               "name": "dd269",
+               "type": "multidimensional",
+               "multidimensionalQueryList": [
+                  {
+                     "detail": false,
+                     "axes": [
+                        {
+                           "@element": "Query_Axis",
+                           "type": "column",
+                           "itemList": [
+                              "bi265",
+                              "bi266"
+                           ]
+                        },
+                        {
+                           "@element": "Query_Axis",
+                           "type": "row",
+                           "itemList": [
+                              "bi276"
+                           ]
+                        }
+                     ],
+                     "@element": "MultidimensionalQuery",
+                     "columnSortItems": [
+                        {
+                           "sortDirection": "ascending",
+                           "@element": "SortItem",
+                           "reference": "bi265"
+                        },
+                        {
+                           "sortDirection": "ascending",
+                           "@element": "SortItem",
+                           "reference": "bi266"
+                        }
+                     ]
+                  }
+               ],
+               "source": "ds7",
+               "resultDefinitions": [
+                  {
+                     "@element": "ResultDefinition",
+                     "name": "dd264",
+                     "purpose": "primary",
+                     "maxRowsBehavior": "truncate",
+                     "maxRowsLookup": "graphDefault"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "ParentDataDefinition",
+         "name": "dd280",
+         "businessItems": [
+            {
+               "name": "bi284",
+               "base": "bi11",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi285",
+               "base": "bi12",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi286",
+               "base": "bi13",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi287",
+               "base": "bi14",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi288",
+               "base": "bi16",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi289",
+               "base": "bi20",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi290",
+               "base": "bi23",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi291",
+               "base": "bi25",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi292",
+               "base": "bi9",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi293",
+               "base": "bi8",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi294",
+               "base": "bi10",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi295",
+               "base": "bi17",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi296",
+               "base": "bi21",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi297",
+               "base": "bi22",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi298",
+               "base": "bi275",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi299",
+               "base": "bi19",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi300",
+               "base": "bi50",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi301",
+               "base": "bi24",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi325",
+               "base": "bi215",
+               "@element": "RelationalDataItem"
+            }
+         ],
+         "source": "ds7",
+         "childQueryRelationshipType": "independent",
+         "dataDefinitionList": [
+            {
+               "@element": "DataDefinition",
+               "name": "dd281",
+               "type": "relational",
+               "relationalQueryList": [
+                  {
+                     "sortItems": [
+                        {
+                           "sortDirection": "ascending",
+                           "@element": "SortItem",
+                           "reference": "bi284"
+                        }
+                     ],
+                     "detail": true,
+                     "axes": [
+                        {
+                           "@element": "Query_Axis",
+                           "type": "column",
+                           "itemList": [
+                              "bi284",
+                              "bi285",
+                              "bi286",
+                              "bi287",
+                              "bi288",
+                              "bi289",
+                              "bi290",
+                              "bi291",
+                              "bi292",
+                              "bi293",
+                              "bi294",
+                              "bi295",
+                              "bi296",
+                              "bi297",
+                              "bi298",
+                              "bi299",
+                              "bi300",
+                              "bi301"
+                           ]
+                        }
+                     ],
+                     "@element": "RelationalQuery"
+                  }
+               ],
+               "source": "ds7",
+               "resultDefinitions": [
+                  {
+                     "@element": "ResultDefinition",
+                     "name": "dd282",
+                     "purpose": "primary",
+                     "maxRowsBehavior": "truncate",
+                     "maxRowsLookup": "listTable"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "ParentDataDefinition",
+         "name": "dd313",
+         "businessItems": [
+            {
+               "name": "bi309",
+               "base": "bi11",
+               "@element": "RelationalDataItem"
+            },
+            {
+               "name": "bi326",
+               "base": "bi215",
+               "@element": "RelationalDataItem"
+            }
+         ],
+         "source": "ds7",
+         "childQueryRelationshipType": "independent",
+         "dataDefinitionList": [
+            {
+               "@element": "DataDefinition",
+               "name": "dd314",
+               "type": "relational",
+               "relationalQueryList": [
+                  {
+                     "sortItems": [
+                        {
+                           "sortDirection": "ascending",
+                           "@element": "SortItem",
+                           "reference": "bi309"
+                        }
+                     ],
+                     "axes": [
+                        {
+                           "@element": "Query_Axis",
+                           "type": "column",
+                           "itemList": [
+                              "bi309"
+                           ]
+                        }
+                     ],
+                     "@element": "RelationalQuery"
+                  }
+               ],
+               "source": "ds7",
+               "resultDefinitions": [
+                  {
+                     "@element": "ResultDefinition",
+                     "name": "dd315",
+                     "purpose": "primary",
+                     "maxRowsBehavior": "truncate",
+                     "maxRowsLookup": "dropdown"
+                  }
+               ]
+            }
+         ]
+      }
+   ],
+   "dataSources": [
+      {
+         "@element": "DataSource",
+         "name": "ds7",
+         "label": "ALL_SESSION_DATA",
+         "type": "relational",
+         "casResource": {
+            "@element": "CasResource",
+            "server": "cas-shared-default",
+            "library": "Public",
+            "table": "ALL_SESSION_DATA",
+            "locale": "en"
+         },
+         "businessItemFolder": {
+            "@element": "BusinessItemFolder",
+            "items": [
+               {
+                  "name": "bi8",
+                  "xref": "clockTicksPerSecond",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi9",
+                  "xref": "connected",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi10",
+                  "xref": "idletime",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi11",
+                  "xref": "metrics_datetime",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi12",
+                  "xref": "name",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi13",
+                  "xref": "node_name",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi14",
+                  "xref": "node_type",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi15",
+                  "xref": "ordinal_root",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi16",
+                  "usage": "categorical",
+                  "xref": "pid",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi17",
+                  "xref": "port",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi18",
+                  "xref": "rank",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi19",
+                  "label": "Used RAM (in Bytes)",
+                  "xref": "rss",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi20",
+                  "xref": "state",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi21",
+                  "xref": "systemCPUTime",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi22",
+                  "xref": "totalCPUTime",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi23",
+                  "xref": "user",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi24",
+                  "xref": "userCPUTime",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi25",
+                  "xref": "uuid",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi26",
+                  "label": "Frequency",
+                  "usage": "quantitative",
+                  "format": "COMMA12.",
+                  "@element": "DataSource_PredefinedDataItem",
+                  "calculation": "totalCount"
+               },
+               {
+                  "name": "bi27",
+                  "label": "Frequency Percent",
+                  "usage": "quantitative",
+                  "format": "PERCENT20.2",
+                  "@element": "DataSource_PredefinedDataItem",
+                  "calculation": "totalCountPercent"
+               },
+               {
+                  "name": "bi50",
+                  "label": "Used RAM (In MB)",
+                  "usage": "quantitative",
+                  "aggregation": "sum",
+                  "format": "COMMA12.2",
+                  "@element": "CalculatedItem",
+                  "dataType": "double",
+                  "expression": {
+                     "@element": "Expression",
+                     "value": "div(${bi19,raw},1048576)"
+                  }
+               },
+               {
+                  "name": "bi215",
+                  "label": "metrics_date",
+                  "format": "DATETIME10",
+                  "xref": "metrics_datetime",
+                  "@element": "DataItem"
+               },
+               {
+                  "name": "bi275",
+                  "label": "Used CPU%",
+                  "usage": "quantitative",
+                  "aggregation": "sum",
+                  "format": "PERCENT12.2",
+                  "@element": "CalculatedItem",
+                  "dataType": "double",
+                  "expression": {
+                     "@element": "Expression",
+                     "value": "div(plus(${bi24,raw},${bi21,raw}),${bi22,raw})"
+                  }
+               }
+            ]
+         }
+      }
+   ],
+   "visualElements": [
+      {
+         "applyDynamicBrushes": "promptsOnly",
+         "name": "ve170",
+         "labelAttribute": "Text input - user 1",
+         "selectionDisabled": "true",
+         "sourceInteractionVariableList": [
+            "bi175"
+         ],
+         "editorProperties": [
+            {
+               "@element": "Editor_Property",
+               "key": "isAutoLabel",
+               "value": "true"
+            },
+            {
+               "@element": "Editor_Property",
+               "key": "autoChartCategory",
+               "value": "CONTROL"
+            },
+            {
+               "@element": "Editor_Property",
+               "key": "addedInteractionQueryDataItems",
+               "value": "bi318"
+            }
+         ],
+         "@element": "Prompt",
+         "promptVisual": {
+            "@element": "TextField"
+         },
+         "ref": "pr180"
+      },
+      {
+         "applyDynamicBrushes": "no",
+         "name": "ve217",
+         "labelAttribute": "Slider - metrics_date 1",
+         "selectionDisabled": "true",
+         "sourceInteractionVariableList": [
+            "bi222"
+         ],
+         "editorProperties": [
+            {
+               "@element": "Editor_Property",
+               "key": "autoChartCategory",
+               "value": "CONTROL"
+            },
+            {
+               "@element": "Editor_Property",
+               "key": "isAutoLabel",
+               "value": "true"
+            }
+         ],
+         "@element": "Prompt",
+         "promptVisual": {
+            "@element": "DualSlider"
+         },
+         "ref": "pr221"
+      },
+      {
+         "applyDynamicBrushes": "yes",
+         "name": "ve141",
+         "labelAttribute": "Bar - metrics_datetime 1",
+         "title": {
+            "@element": "Title",
+            "auto": true,
+            "paragraphList": [
+               {
+                  "elements": [
+                     {
+                        "@element": "DynamicSpan",
+                        "dynamicSpanKey": "bird.autotitle.template.oneByTwoGroupedByThree.fmt.txt",
+                        "substitutions": [
+                           {
+                              "@element": "Substitution",
+                              "valueType": "label",
+                              "itemsList": [
+                                 "bi50"
+                              ]
+                           },
+                           {
+                              "@element": "Substitution",
+                              "valueType": "label",
+                              "itemsList": [
+                                 "bi11"
+                              ]
+                           },
+                           {
+                              "@element": "Substitution",
+                              "valueType": "label",
+                              "itemsList": [
+                                 "bi23"
+                              ]
+                           }
+                        ]
+                     }
+                  ],
+                  "@element": "P"
+               }
+            ]
+         },
+         "sourceInteractionVariableList": [
+            "bi135",
+            "bi235"
+         ],
+         "action": "ac168",
+         "editorProperties": [
+            {
+               "@element": "Editor_Property",
+               "key": "isAutoLabel",
+               "value": "true"
+            },
+            {
+               "@element": "Editor_Property",
+               "key": "addedInteractionQueryDataItems",
+               "value": "bi319"
+            }
+         ],
+         "resultDefinitionList": [
+            "dd230"
+         ],
+         "dataList": [
+            "dd228"
+         ],
+         "@element": "Graph",
+         "graphType": "bar",
+         "supplementalVisualList": [
+            "ve232"
+         ],
+         "gtml": "<StatGraph border=\"false\" opaque=\"false\" includeMissingDiscrete=\"true\" selectionMode=\"multiple\" missingValueDisplay=\"autolabel\">\r\n    <PadAttrs top=\"0px\" bottom=\"0px\" left=\"0px\" right=\"0px\"/>\r\n    <Meta>\r\n        <DynVars>\r\n            <DynVar name=\"CATEGORY\" description=\"CATEGORY_VAR\" required=\"true\" assignedType=\"time\" type=\"character\">\r\n                <DefaultValues>\r\n                    <Value>dd230.bi135</Value>\r\n                </DefaultValues>\r\n            </DynVar>\r\n            <DynVar name=\"RESPONSE\" description=\"MEASURE_VAR\" required=\"true\" assignedType=\"numeric\" type=\"numeric\" multiplesAllowed=\"true\">\r\n                <DefaultValues>\r\n                    <Value>dd230.bi136</Value>\r\n                </DefaultValues>\r\n            </DynVar>\r\n            <DynVar name=\"GROUP\" description=\"SUBGROUP_VAR\" required=\"false\" assignedType=\"character\" type=\"character\">\r\n                <DefaultValues>\r\n                    <Value>dd230.bi235</Value>\r\n                </DefaultValues>\r\n            </DynVar>\r\n            <DynVar name=\"COLUMN\" description=\"HORIZONTAL_SERIES_VAR\" required=\"false\" type=\"character\" multiplesAllowed=\"true\"/>\r\n            <DynVar name=\"ROW\" description=\"VERTICAL_SERIES_VAR\" required=\"false\" assignedType=\"character\" type=\"character\" multiplesAllowed=\"true\"/>\r\n            <DynVar name=\"TIP\" description=\"TIP_VAR\" required=\"false\" assignedType=\"character\" type=\"any\" multiplesAllowed=\"true\">\r\n                <DefaultValues>\r\n                    <Value>dd230.bi135</Value>\r\n                    <Value>dd230.bi136</Value>\r\n                    <Value>dd230.bi235</Value>\r\n                </DefaultValues>\r\n            </DynVar>\r\n            <DynVar name=\"KEY_FRAME\" description=\"ANIMATION\" required=\"false\" type=\"time\" multiplesAllowed=\"false\"/>\r\n            <DynVar name=\"HIDDEN\" description=\"HIDDEN_VAR\" required=\"false\" type=\"character\" multiplesAllowed=\"true\"/>\r\n        </DynVars>\r\n        <DataNameMap>\r\n            <Entry model=\"LayoutDataMatrix_24\" data=\"dd230\"/>\r\n        </DataNameMap>\r\n    </Meta>\r\n    <LayoutDataMatrix name=\"LayoutDataMatrix_24\" cellHeightMin=\"1px\" cellWidthMin=\"1px\" includeMissingClass=\"true\" headerLabelAppearance=\"auto\" rowVars=\"ROW\" columnVars=\"COLUMN\" rowVarsSortOrder=\"ascending_unformatted\">\r\n        <LayoutPrototypeOverlay2D>\r\n            <BarChartParm name=\"BarChart\" tipListPolicy=\"replace\" _stmt=\"barchart\" compactLabelFormats=\"true\" groupDisplay=\"stack\" groupOrder=\"data\" orient=\"vertical\" group100=\"none\" stat=\"none\" tip=\"TIP\" category=\"CATEGORY\" responseVars=\"RESPONSE\" group=\"GROUP\" categoryOrderRole=\"response\"/>\r\n            <XAxisOpts reverse=\"false\">\r\n                <DiscreteOpts tickValueFitPolicy=\"staggertruncatedrop\" sortOrder=\"data\" tickValueAppearance=\"auto\"/>\r\n                <LinearOpts>\r\n                    <TickValueFormatOpts extractScale=\"true\"/>\r\n                </LinearOpts>\r\n            </XAxisOpts>\r\n            <YAxisOpts name=\"categoryAxis\">\r\n                <DiscreteOpts sortOrder=\"data\"/>\r\n                <LinearOpts>\r\n                    <TickValueFormatOpts extractScale=\"true\"/>\r\n                </LinearOpts>\r\n            </YAxisOpts>\r\n        </LayoutPrototypeOverlay2D>\r\n    </LayoutDataMatrix>\r\n    <LayoutGlobalLegend legendTitlePosition=\"top\" allowCollapsed=\"true\">\r\n        <AutoLegend sortOrder=\"ascending\">\r\n            <GraphNames>\r\n                <Value>BarChart</Value>\r\n            </GraphNames>\r\n        </AutoLegend>\r\n    </LayoutGlobalLegend>\r\n    <Animation keyFrameSortOrder=\"ascending_unformatted\" keyFrame=\"KEY_FRAME\"/>\r\n    <OverviewAxis maxPlotSize=\"60px\" minPlotSize=\"35px\" visible=\"off\" axis=\"categoryAxis\"/>\r\n</StatGraph>\r\n"
+      },
+      {
+         "applyDynamicBrushes": "yes",
+         "name": "ve232",
+         "sourceInteractionVariableList": [
+            "bi135",
+            "bi235"
+         ],
+         "resultDefinitionList": [
+            "dd230"
+         ],
+         "dataList": [
+            "dd228"
+         ],
+         "@element": "Table",
+         "columns": {
+            "@element": "Table_Columns",
+            "columns": [
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi135"
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi136"
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi235"
+               }
+            ]
+         },
+         "columnSizing": "autoFill"
+      },
+      {
+         "applyDynamicBrushes": "promptsOnly",
+         "name": "ve241",
+         "labelAttribute": "Drop-down list - metrics_datetime 1",
+         "selectionDisabled": "true",
+         "sourceInteractionVariableList": [
+            "bi246"
+         ],
+         "editorProperties": [
+            {
+               "@element": "Editor_Property",
+               "key": "isAutoLabel",
+               "value": "true"
+            },
+            {
+               "@element": "Editor_Property",
+               "key": "autoChartCategory",
+               "value": "CONTROL"
+            },
+            {
+               "@element": "Editor_Property",
+               "key": "addedInteractionQueryDataItems",
+               "value": "bi320"
+            }
+         ],
+         "@element": "Prompt",
+         "promptVisual": {
+            "@element": "ComboBox"
+         },
+         "ref": "pr253"
+      },
+      {
+         "applyDynamicBrushes": "yes",
+         "name": "ve57",
+         "labelAttribute": "List table - uuid 1",
+         "title": {
+            "@element": "Title",
+            "auto": false,
+            "paragraphList": [
+               {
+                  "elements": [
+                     {
+                        "elements": [
+                           {
+                              "@element": "TextString",
+                              "text": "Used RAM (In MB) by session name"
+                           }
+                        ],
+                        "@element": "Span"
+                     }
+                  ],
+                  "@element": "P"
+               }
+            ]
+         },
+         "sourceInteractionVariableList": [
+            "bi237",
+            "bi254"
+         ],
+         "editorProperties": [
+            {
+               "@element": "Editor_Property",
+               "key": "isAutoLabel",
+               "value": "true"
+            },
+            {
+               "@element": "Editor_Property",
+               "key": "addedInteractionQueryDataItems",
+               "value": "bi321,bi322,bi323"
+            }
+         ],
+         "resultDefinitionList": [
+            "dd260"
+         ],
+         "dataList": [
+            "dd258"
+         ],
+         "@element": "Table",
+         "columns": {
+            "@element": "Table_Columns",
+            "columns": [
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi237",
+                  "visible": true
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi254",
+                  "visible": true
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi64",
+                  "visible": true,
+                  "cell": {
+                     "@element": "Table_Cell",
+                     "cellVisuals": {
+                        "@element": "CellVisuals",
+                        "nestedElementPosition": "left",
+                        "list": [
+                           {
+                              "name": "cv261",
+                              "response": "bi64",
+                              "@element": "SparkValue",
+                              "type": "bar"
+                           }
+                        ]
+                     }
+                  },
+                  "compactFormat": false
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi184",
+                  "visible": true,
+                  "cell": {
+                     "@element": "Table_Cell",
+                     "cellVisuals": {
+                        "@element": "CellVisuals",
+                        "nestedElementPosition": "replace",
+                        "list": [
+                           {
+                              "name": "cv262",
+                              "response": "bi184",
+                              "@element": "SparkValue",
+                              "type": "heatmap"
+                           }
+                        ]
+                     }
+                  },
+                  "compactFormat": false
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi317",
+                  "visible": true,
+                  "compactFormat": false
+               }
+            ]
+         },
+         "columnSizing": "autoFill"
+      },
+      {
+         "applyDynamicBrushes": "yes",
+         "name": "ve271",
+         "labelAttribute": "Bar - metrics_datetime 2",
+         "title": {
+            "@element": "Title",
+            "auto": true,
+            "paragraphList": [
+               {
+                  "elements": [
+                     {
+                        "@element": "DynamicSpan",
+                        "dynamicSpanKey": "bird.autotitle.template.oneByTwoGroupedByThree.fmt.txt",
+                        "substitutions": [
+                           {
+                              "@element": "Substitution",
+                              "valueType": "label",
+                              "itemsList": [
+                                 "bi275"
+                              ]
+                           },
+                           {
+                              "@element": "Substitution",
+                              "valueType": "label",
+                              "itemsList": [
+                                 "bi11"
+                              ]
+                           },
+                           {
+                              "@element": "Substitution",
+                              "valueType": "label",
+                              "itemsList": [
+                                 "bi23"
+                              ]
+                           }
+                        ]
+                     }
+                  ],
+                  "@element": "P"
+               }
+            ]
+         },
+         "sourceInteractionVariableList": [
+            "bi265",
+            "bi266"
+         ],
+         "action": "ac263",
+         "editorProperties": [
+            {
+               "@element": "Editor_Property",
+               "key": "isAutoLabel",
+               "value": "true"
+            },
+            {
+               "@element": "Editor_Property",
+               "key": "addedInteractionQueryDataItems",
+               "value": "bi324"
+            }
+         ],
+         "resultDefinitionList": [
+            "dd264"
+         ],
+         "dataList": [
+            "dd268"
+         ],
+         "@element": "Graph",
+         "graphType": "bar",
+         "supplementalVisualList": [
+            "ve270"
+         ],
+         "gtml": "<StatGraph border=\"false\" opaque=\"false\" includeMissingDiscrete=\"true\" selectionMode=\"multiple\" missingValueDisplay=\"autolabel\">\r\n    <PadAttrs top=\"0px\" bottom=\"0px\" left=\"0px\" right=\"0px\"/>\r\n    <Meta>\r\n        <DynVars>\r\n            <DynVar name=\"CATEGORY\" description=\"CATEGORY_VAR\" required=\"true\" assignedType=\"time\" type=\"character\">\r\n                <DefaultValues>\r\n                    <Value>dd264.bi265</Value>\r\n                </DefaultValues>\r\n            </DynVar>\r\n            <DynVar name=\"RESPONSE\" description=\"MEASURE_VAR\" required=\"true\" assignedType=\"numeric\" type=\"numeric\" multiplesAllowed=\"true\">\r\n                <DefaultValues>\r\n                    <Value>dd264.bi276</Value>\r\n                </DefaultValues>\r\n            </DynVar>\r\n            <DynVar name=\"GROUP\" description=\"SUBGROUP_VAR\" required=\"false\" assignedType=\"character\" type=\"character\">\r\n                <DefaultValues>\r\n                    <Value>dd264.bi266</Value>\r\n                </DefaultValues>\r\n            </DynVar>\r\n            <DynVar name=\"COLUMN\" description=\"HORIZONTAL_SERIES_VAR\" required=\"false\" type=\"character\" multiplesAllowed=\"true\"/>\r\n            <DynVar name=\"ROW\" description=\"VERTICAL_SERIES_VAR\" required=\"false\" assignedType=\"character\" type=\"character\" multiplesAllowed=\"true\"/>\r\n            <DynVar name=\"TIP\" description=\"TIP_VAR\" required=\"false\" assignedType=\"numeric\" type=\"any\" multiplesAllowed=\"true\">\r\n                <DefaultValues>\r\n                    <Value>dd264.bi265</Value>\r\n                    <Value>dd264.bi266</Value>\r\n                    <Value>dd264.bi276</Value>\r\n                </DefaultValues>\r\n            </DynVar>\r\n            <DynVar name=\"KEY_FRAME\" description=\"ANIMATION\" required=\"false\" type=\"time\" multiplesAllowed=\"false\"/>\r\n            <DynVar name=\"HIDDEN\" description=\"HIDDEN_VAR\" required=\"false\" type=\"character\" multiplesAllowed=\"true\"/>\r\n        </DynVars>\r\n        <DataNameMap>\r\n            <Entry model=\"LayoutDataMatrix_24\" data=\"dd264\"/>\r\n        </DataNameMap>\r\n    </Meta>\r\n    <LayoutDataMatrix name=\"LayoutDataMatrix_24\" cellHeightMin=\"1px\" cellWidthMin=\"1px\" includeMissingClass=\"true\" headerLabelAppearance=\"auto\" rowVars=\"ROW\" columnVars=\"COLUMN\" rowVarsSortOrder=\"ascending_unformatted\">\r\n        <LayoutPrototypeOverlay2D>\r\n            <BarChartParm name=\"BarChart\" tipListPolicy=\"replace\" _stmt=\"barchart\" compactLabelFormats=\"true\" groupDisplay=\"stack\" groupOrder=\"data\" orient=\"vertical\" group100=\"none\" barLabel=\"true\" stat=\"none\" tip=\"TIP\" category=\"CATEGORY\" responseVars=\"RESPONSE\" group=\"GROUP\" categoryOrderRole=\"response\"/>\r\n            <XAxisOpts reverse=\"false\">\r\n                <DiscreteOpts tickValueFitPolicy=\"staggertruncatedrop\" sortOrder=\"data\" tickValueAppearance=\"auto\"/>\r\n                <LinearOpts>\r\n                    <TickValueFormatOpts extractScale=\"true\"/>\r\n                </LinearOpts>\r\n            </XAxisOpts>\r\n            <YAxisOpts name=\"categoryAxis\">\r\n                <DiscreteOpts sortOrder=\"data\"/>\r\n                <LinearOpts>\r\n                    <TickValueFormatOpts extractScale=\"true\"/>\r\n                </LinearOpts>\r\n            </YAxisOpts>\r\n        </LayoutPrototypeOverlay2D>\r\n    </LayoutDataMatrix>\r\n    <LayoutGlobalLegend legendTitlePosition=\"top\" allowCollapsed=\"true\">\r\n        <AutoLegend sortOrder=\"ascending\">\r\n            <GraphNames>\r\n                <Value>BarChart</Value>\r\n            </GraphNames>\r\n        </AutoLegend>\r\n    </LayoutGlobalLegend>\r\n    <Animation keyFrameSortOrder=\"ascending_unformatted\" keyFrame=\"KEY_FRAME\"/>\r\n    <OverviewAxis maxPlotSize=\"60px\" minPlotSize=\"35px\" visible=\"off\" axis=\"categoryAxis\"/>\r\n</StatGraph>\r\n"
+      },
+      {
+         "applyDynamicBrushes": "yes",
+         "name": "ve270",
+         "sourceInteractionVariableList": [
+            "bi265",
+            "bi266"
+         ],
+         "resultDefinitionList": [
+            "dd264"
+         ],
+         "dataList": [
+            "dd268"
+         ],
+         "@element": "Table",
+         "columns": {
+            "@element": "Table_Columns",
+            "columns": [
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi265"
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi276"
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi266"
+               }
+            ]
+         },
+         "columnSizing": "autoFill"
+      },
+      {
+         "applyDynamicBrushes": "yes",
+         "name": "ve279",
+         "labelAttribute": "List table - metrics_datetime 1",
+         "editorProperties": [
+            {
+               "@element": "Editor_Property",
+               "key": "isAutoLabel",
+               "value": "true"
+            },
+            {
+               "@element": "Editor_Property",
+               "key": "addedInteractionQueryDataItems",
+               "value": "bi325"
+            }
+         ],
+         "resultDefinitionList": [
+            "dd282"
+         ],
+         "dataList": [
+            "dd280"
+         ],
+         "@element": "Table",
+         "columns": {
+            "@element": "Table_Columns",
+            "columns": [
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi284",
+                  "visible": true
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi285",
+                  "visible": true
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi286",
+                  "visible": true
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi287",
+                  "visible": true
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi288",
+                  "visible": true
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi289",
+                  "visible": true
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi290",
+                  "visible": true
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi291",
+                  "visible": true
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi292",
+                  "visible": true,
+                  "compactFormat": false
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi293",
+                  "visible": true,
+                  "compactFormat": false
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi294",
+                  "visible": true,
+                  "compactFormat": false
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi295",
+                  "visible": true,
+                  "compactFormat": false
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi296",
+                  "visible": true,
+                  "compactFormat": false
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi297",
+                  "visible": true,
+                  "compactFormat": false
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi298",
+                  "visible": true,
+                  "compactFormat": false
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi299",
+                  "visible": true,
+                  "compactFormat": false
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi300",
+                  "visible": true,
+                  "compactFormat": false
+               },
+               {
+                  "@element": "Table_Column",
+                  "variable": "bi301",
+                  "visible": true,
+                  "compactFormat": false
+               }
+            ]
+         },
+         "columnSizing": "autoFill"
+      },
+      {
+         "applyDynamicBrushes": "promptsOnly",
+         "name": "ve304",
+         "labelAttribute": "Drop-down list - metrics_datetime 2",
+         "selectionDisabled": "true",
+         "sourceInteractionVariableList": [
+            "bi309"
+         ],
+         "editorProperties": [
+            {
+               "@element": "Editor_Property",
+               "key": "isAutoLabel",
+               "value": "true"
+            },
+            {
+               "@element": "Editor_Property",
+               "key": "autoChartCategory",
+               "value": "CONTROL"
+            },
+            {
+               "@element": "Editor_Property",
+               "key": "addedInteractionQueryDataItems",
+               "value": "bi326"
+            }
+         ],
+         "@element": "Prompt",
+         "promptVisual": {
+            "@element": "ComboBox"
+         },
+         "ref": "pr316"
+      }
+   ],
+   "promptDefinitions": [
+      {
+         "@element": "PromptDefinition",
+         "name": "pr180",
+         "data": "dd177",
+         "labelItem": "bi175",
+         "constraint": {
+            "@element": "StringConstraint"
+         },
+         "resultDefinitionList": [
+            "dd179"
+         ],
+         "valueItem": "bi175",
+         "defaultValue": {
+            "@element": "Prompt_DefaultValue",
+            "value": {
+               "@element": "String",
+               "value": "Sebastien.Poussart@sas.com"
+            }
+         }
+      },
+      {
+         "@element": "PromptDefinition",
+         "name": "pr221",
+         "data": "dd218",
+         "labelItem": "bi222",
+         "minVariable": "bi222",
+         "maxVariable": "bi223",
+         "constraint": {
+            "required": true,
+            "minInclusive": true,
+            "maxInclusive": true,
+            "@element": "NumericRangeConstraint"
+         },
+         "resultDefinitionList": [
+            "dd220"
+         ],
+         "defaultValue": {
+            "@element": "Prompt_DefaultValue",
+            "value": {
+               "@element": "NumericRange",
+               "doubleMinValue": 1956519000,
+               "doubleMaxValue": 1956578700,
+               "type": "double",
+               "minInclusive": true,
+               "maxInclusive": true
+            }
+         }
+      },
+      {
+         "@element": "PromptDefinition",
+         "name": "pr253",
+         "data": "dd250",
+         "labelItem": "bi246",
+         "constraint": {
+            "@element": "DateConstraint",
+            "dataType": "datetime"
+         },
+         "resultDefinitionList": [
+            "dd252"
+         ],
+         "valueItem": "bi246",
+         "defaultValue": {
+            "@element": "Prompt_DefaultValue",
+            "value": {
+               "@element": "Date_DefaultValue",
+               "value": 1956577215,
+               "dataType": "datetime"
+            }
+         }
+      },
+      {
+         "@element": "PromptDefinition",
+         "name": "pr316",
+         "data": "dd313",
+         "labelItem": "bi309",
+         "constraint": {
+            "required": true,
+            "@element": "DateConstraint",
+            "dataType": "datetime"
+         },
+         "resultDefinitionList": [
+            "dd315"
+         ],
+         "valueItem": "bi309",
+         "defaultValue": {
+            "@element": "Prompt_DefaultValue",
+            "value": {
+               "@element": "Date_DefaultValue",
+               "value": 1956578714,
+               "dataType": "datetime"
+            }
+         }
+      }
+   ],
+   "view": {
+      "@element": "View",
+      "header": {
+         "mediaContainerList": [
+            {
+               "@element": "MediaContainer",
+               "target": "mt2",
+               "layout": {
+                  "@element": "ResponsiveLayout",
+                  "orientation": "horizontal",
+                  "overflow": "fit",
+                  "weights": [
+                     {
+                        "mediaTarget": "mt5",
+                        "@element": "Weights",
+                        "unit": "percent",
+                        "values": [
+                           {
+                              "@element": "Weight",
+                              "value": "100%"
+                           }
+                        ]
+                     },
+                     {
+                        "mediaTarget": "mt4",
+                        "@element": "Weights",
+                        "unit": "percent",
+                        "values": [
+                           {
+                              "@element": "Weight",
+                              "value": "100%"
+                           }
+                        ]
+                     },
+                     {
+                        "mediaTarget": "mt3",
+                        "@element": "Weights",
+                        "unit": "percent",
+                        "values": [
+                           {
+                              "@element": "Weight",
+                              "value": "100%"
+                           }
+                        ]
+                     }
+                  ]
+               },
+               "containedElementList": [
+                  {
+                     "name": "vi216",
+                     "responsiveConstraint": {
+                        "@element": "ResponsiveConstraint",
+                        "widthConstraint": {
+                           "@element": "Responsive_WidthConstraint",
+                           "widths": [
+                              {
+                                 "mediaTarget": "mt3",
+                                 "preferredSizeBehavior": "honor",
+                                 "flexibility": "fixed",
+                                 "@element": "Width"
+                              }
+                           ]
+                        },
+                        "heightConstraint": {
+                           "@element": "Responsive_HeightConstraint",
+                           "heights": [
+                              {
+                                 "mediaTarget": "mt3",
+                                 "preferredSizeBehavior": "honor",
+                                 "flexibility": "fixed",
+                                 "@element": "Height"
+                              }
+                           ]
+                        }
+                     },
+                     "ref": "ve217",
+                     "@element": "Visual"
+                  }
+               ]
+            }
+         ],
+         "@element": "Header"
+      },
+      "sections": [
+         {
+            "@element": "Section",
+            "name": "vi44",
+            "label": "RAM USAGE",
+            "header": {
+               "mediaContainerList": [
+                  {
+                     "@element": "MediaContainer",
+                     "target": "mt2",
+                     "layout": {
+                        "@element": "ResponsiveLayout",
+                        "orientation": "horizontal",
+                        "overflow": "fit",
+                        "weights": [
+                           {
+                              "mediaTarget": "mt5",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           },
+                           {
+                              "mediaTarget": "mt4",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           },
+                           {
+                              "mediaTarget": "mt3",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           }
+                        ]
+                     }
+                  }
+               ],
+               "@element": "Header"
+            },
+            "body": {
+               "mediaContainerList": [
+                  {
+                     "@element": "MediaContainer",
+                     "target": "mt2",
+                     "layout": {
+                        "@element": "ResponsiveLayout",
+                        "orientation": "vertical",
+                        "overflow": "fit",
+                        "weights": [
+                           {
+                              "mediaTarget": "mt5",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           },
+                           {
+                              "mediaTarget": "mt4",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           },
+                           {
+                              "mediaTarget": "mt3",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           }
+                        ]
+                     },
+                     "containedElementList": [
+                        {
+                           "name": "vi142",
+                           "responsiveConstraint": {
+                              "@element": "ResponsiveConstraint",
+                              "widthConstraint": {
+                                 "@element": "Responsive_WidthConstraint",
+                                 "widths": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "ignore",
+                                       "flexibility": "shrinkable",
+                                       "value": "100%",
+                                       "@element": "Width"
+                                    }
+                                 ]
+                              },
+                              "heightConstraint": {
+                                 "@element": "Responsive_HeightConstraint",
+                                 "heights": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "ignore",
+                                       "flexibility": "flexible",
+                                       "@element": "Height"
+                                    }
+                                 ]
+                              }
+                           },
+                           "ref": "ve141",
+                           "@element": "Visual"
+                        },
+                        {
+                           "name": "vi272",
+                           "responsiveConstraint": {
+                              "@element": "ResponsiveConstraint",
+                              "widthConstraint": {
+                                 "@element": "Responsive_WidthConstraint",
+                                 "widths": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "ignore",
+                                       "flexibility": "shrinkable",
+                                       "value": "100%",
+                                       "@element": "Width"
+                                    }
+                                 ]
+                              },
+                              "heightConstraint": {
+                                 "@element": "Responsive_HeightConstraint",
+                                 "heights": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "ignore",
+                                       "flexibility": "flexible",
+                                       "@element": "Height"
+                                    }
+                                 ]
+                              }
+                           },
+                           "ref": "ve271",
+                           "@element": "Visual"
+                        }
+                     ]
+                  }
+               ],
+               "@element": "Body"
+            }
+         },
+         {
+            "@element": "HiddenSection",
+            "name": "vi165",
+            "label": "BY SESSION",
+            "header": {
+               "mediaContainerList": [
+                  {
+                     "@element": "MediaContainer",
+                     "target": "mt2",
+                     "layout": {
+                        "@element": "ResponsiveLayout",
+                        "orientation": "horizontal",
+                        "overflow": "fit",
+                        "weights": [
+                           {
+                              "mediaTarget": "mt5",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           },
+                           {
+                              "mediaTarget": "mt4",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           },
+                           {
+                              "mediaTarget": "mt3",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           }
+                        ]
+                     },
+                     "containedElementList": [
+                        {
+                           "name": "vi169",
+                           "responsiveConstraint": {
+                              "@element": "ResponsiveConstraint",
+                              "widthConstraint": {
+                                 "@element": "Responsive_WidthConstraint",
+                                 "widths": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "honor",
+                                       "flexibility": "fixed",
+                                       "@element": "Width"
+                                    }
+                                 ]
+                              },
+                              "heightConstraint": {
+                                 "@element": "Responsive_HeightConstraint",
+                                 "heights": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "honor",
+                                       "flexibility": "fixed",
+                                       "@element": "Height"
+                                    }
+                                 ]
+                              }
+                           },
+                           "ref": "ve170",
+                           "@element": "Visual"
+                        },
+                        {
+                           "name": "vi240",
+                           "responsiveConstraint": {
+                              "@element": "ResponsiveConstraint",
+                              "widthConstraint": {
+                                 "@element": "Responsive_WidthConstraint",
+                                 "widths": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "honor",
+                                       "flexibility": "fixed",
+                                       "@element": "Width"
+                                    }
+                                 ]
+                              },
+                              "heightConstraint": {
+                                 "@element": "Responsive_HeightConstraint",
+                                 "heights": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "honor",
+                                       "flexibility": "fixed",
+                                       "@element": "Height"
+                                    }
+                                 ]
+                              }
+                           },
+                           "ref": "ve241",
+                           "@element": "Visual"
+                        }
+                     ]
+                  }
+               ],
+               "@element": "Header",
+               "location": "top"
+            },
+            "body": {
+               "mediaContainerList": [
+                  {
+                     "@element": "MediaContainer",
+                     "target": "mt2",
+                     "layout": {
+                        "@element": "ResponsiveLayout",
+                        "orientation": "vertical",
+                        "overflow": "fit",
+                        "weights": [
+                           {
+                              "mediaTarget": "mt5",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           },
+                           {
+                              "mediaTarget": "mt4",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           },
+                           {
+                              "mediaTarget": "mt3",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           }
+                        ]
+                     },
+                     "containedElementList": [
+                        {
+                           "name": "vi56",
+                           "responsiveConstraint": {
+                              "@element": "ResponsiveConstraint",
+                              "widthConstraint": {
+                                 "@element": "Responsive_WidthConstraint",
+                                 "widths": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "ignore",
+                                       "flexibility": "shrinkable",
+                                       "value": "100%",
+                                       "@element": "Width"
+                                    }
+                                 ]
+                              },
+                              "heightConstraint": {
+                                 "@element": "Responsive_HeightConstraint",
+                                 "heights": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "ignore",
+                                       "flexibility": "flexible",
+                                       "@element": "Height"
+                                    }
+                                 ]
+                              }
+                           },
+                           "ref": "ve57",
+                           "@element": "Visual"
+                        }
+                     ]
+                  }
+               ],
+               "@element": "Body"
+            },
+            "width": "75%",
+            "height": "75%",
+            "purpose": "information"
+         },
+         {
+            "@element": "Section",
+            "name": "vi277",
+            "label": "Detailed logs",
+            "header": {
+               "mediaContainerList": [
+                  {
+                     "@element": "MediaContainer",
+                     "target": "mt2",
+                     "layout": {
+                        "@element": "ResponsiveLayout",
+                        "orientation": "horizontal",
+                        "overflow": "fit",
+                        "weights": [
+                           {
+                              "mediaTarget": "mt5",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           },
+                           {
+                              "mediaTarget": "mt4",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           },
+                           {
+                              "mediaTarget": "mt3",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           }
+                        ]
+                     },
+                     "containedElementList": [
+                        {
+                           "name": "vi303",
+                           "responsiveConstraint": {
+                              "@element": "ResponsiveConstraint",
+                              "widthConstraint": {
+                                 "@element": "Responsive_WidthConstraint",
+                                 "widths": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "honor",
+                                       "flexibility": "fixed",
+                                       "@element": "Width"
+                                    }
+                                 ]
+                              },
+                              "heightConstraint": {
+                                 "@element": "Responsive_HeightConstraint",
+                                 "heights": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "honor",
+                                       "flexibility": "fixed",
+                                       "@element": "Height"
+                                    }
+                                 ]
+                              }
+                           },
+                           "ref": "ve304",
+                           "@element": "Visual"
+                        }
+                     ]
+                  }
+               ],
+               "@element": "Header",
+               "location": "top"
+            },
+            "body": {
+               "mediaContainerList": [
+                  {
+                     "@element": "MediaContainer",
+                     "target": "mt2",
+                     "layout": {
+                        "@element": "ResponsiveLayout",
+                        "orientation": "vertical",
+                        "overflow": "fit",
+                        "weights": [
+                           {
+                              "mediaTarget": "mt5",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           },
+                           {
+                              "mediaTarget": "mt4",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           },
+                           {
+                              "mediaTarget": "mt3",
+                              "@element": "Weights",
+                              "unit": "percent",
+                              "values": [
+                                 {
+                                    "@element": "Weight",
+                                    "value": "100%"
+                                 }
+                              ]
+                           }
+                        ]
+                     },
+                     "containedElementList": [
+                        {
+                           "name": "vi278",
+                           "responsiveConstraint": {
+                              "@element": "ResponsiveConstraint",
+                              "widthConstraint": {
+                                 "@element": "Responsive_WidthConstraint",
+                                 "widths": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "ignore",
+                                       "flexibility": "flexible",
+                                       "@element": "Width"
+                                    }
+                                 ]
+                              },
+                              "heightConstraint": {
+                                 "@element": "Responsive_HeightConstraint",
+                                 "heights": [
+                                    {
+                                       "mediaTarget": "mt3",
+                                       "preferredSizeBehavior": "ignore",
+                                       "flexibility": "flexible",
+                                       "@element": "Height"
+                                    }
+                                 ]
+                              }
+                           },
+                           "ref": "ve279",
+                           "@element": "Visual"
+                        }
+                     ]
+                  }
+               ],
+               "@element": "Body"
+            }
+         }
+      ]
+   },
+   "actions": [
+      {
+         "name": "ac168",
+         "label": "BY SESSION",
+         "@element": "NavigationAction",
+         "type": "section",
+         "value": "vi165",
+         "behavior": "setHeaderValue"
+      },
+      {
+         "name": "ac263",
+         "label": "BY SESSION",
+         "@element": "NavigationAction",
+         "type": "section",
+         "value": "vi165",
+         "behavior": "setHeaderValue"
+      }
+   ],
+   "interactions": [
+      {
+         "@element": "Interaction",
+         "name": "ia176",
+         "type": "filter",
+         "derived": true,
+         "elementReferenceList": [
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "source",
+               "ref": "ve170",
+               "variables": [
+                  [
+                     "bi175"
+                  ]
+               ]
+            },
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "target",
+               "ref": "ve57",
+               "variables": [
+                  [
+                     "bi321"
+                  ]
+               ]
+            }
+         ],
+         "dataStage": "detail"
+      },
+      {
+         "@element": "Interaction",
+         "name": "ia224",
+         "type": "filter",
+         "derived": true,
+         "elementReferenceList": [
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "source",
+               "ref": "ve217",
+               "variables": [
+                  [
+                     "bi222"
+                  ]
+               ]
+            },
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "target",
+               "ref": "ve57",
+               "variables": [
+                  [
+                     "bi322"
+                  ]
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "Interaction",
+         "name": "ia225",
+         "type": "filter",
+         "derived": true,
+         "elementReferenceList": [
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "source",
+               "ref": "ve217",
+               "variables": [
+                  [
+                     "bi222"
+                  ]
+               ]
+            },
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "target",
+               "ref": "ve141",
+               "variables": [
+                  [
+                     "bi319"
+                  ]
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "Interaction",
+         "name": "ia226",
+         "type": "filter",
+         "derived": true,
+         "elementReferenceList": [
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "source",
+               "ref": "ve217",
+               "variables": [
+                  [
+                     "bi222"
+                  ]
+               ]
+            },
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "target",
+               "ref": "ve170",
+               "variables": [
+                  [
+                     "bi318"
+                  ]
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "Interaction",
+         "name": "ia248",
+         "type": "filter",
+         "derived": true,
+         "elementReferenceList": [
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "source",
+               "ref": "ve217",
+               "variables": [
+                  [
+                     "bi222"
+                  ]
+               ]
+            },
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "target",
+               "ref": "ve241",
+               "variables": [
+                  [
+                     "bi320"
+                  ]
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "Interaction",
+         "name": "ia249",
+         "type": "filter",
+         "derived": true,
+         "elementReferenceList": [
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "source",
+               "ref": "ve241",
+               "variables": [
+                  [
+                     "bi246"
+                  ]
+               ]
+            },
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "target",
+               "ref": "ve57",
+               "variables": [
+                  [
+                     "bi323"
+                  ]
+               ]
+            }
+         ],
+         "dataStage": "detail"
+      },
+      {
+         "@element": "Interaction",
+         "name": "ia273",
+         "type": "filter",
+         "derived": true,
+         "elementReferenceList": [
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "source",
+               "ref": "ve217",
+               "variables": [
+                  [
+                     "bi222"
+                  ]
+               ]
+            },
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "target",
+               "ref": "ve271",
+               "variables": [
+                  [
+                     "bi324"
+                  ]
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "Interaction",
+         "name": "ia283",
+         "type": "filter",
+         "derived": true,
+         "elementReferenceList": [
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "source",
+               "ref": "ve217",
+               "variables": [
+                  [
+                     "bi222"
+                  ]
+               ]
+            },
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "target",
+               "ref": "ve279",
+               "variables": [
+                  [
+                     "bi325"
+                  ]
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "Interaction",
+         "name": "ia311",
+         "type": "filter",
+         "derived": true,
+         "elementReferenceList": [
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "source",
+               "ref": "ve217",
+               "variables": [
+                  [
+                     "bi222"
+                  ]
+               ]
+            },
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "target",
+               "ref": "ve304",
+               "variables": [
+                  [
+                     "bi326"
+                  ]
+               ]
+            }
+         ]
+      },
+      {
+         "@element": "Interaction",
+         "name": "ia312",
+         "type": "filter",
+         "derived": true,
+         "elementReferenceList": [
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "source",
+               "ref": "ve304",
+               "variables": [
+                  [
+                     "bi309"
+                  ]
+               ]
+            },
+            {
+               "@element": "InteractionElementReference",
+               "purpose": "target",
+               "ref": "ve279",
+               "variables": [
+                  [
+                     "bi284"
+                  ]
+               ]
+            }
+         ],
+         "dataStage": "detail"
+      }
+   ],
+   "mediaSchemes": [
+      {
+         "@element": "MediaScheme",
+         "name": "ms1",
+         "baseStylesheetResource": {
+            "@element": "BaseStylesheetResource",
+            "theme": "opal"
+         },
+         "stylesheet": {
+            "styles": {
+               "#vi165 .ReportPagePadding": {
+                  "@element": "Style",
+                  "styleName": "#vi165 .ReportPagePadding",
+                  "properties": {
+                     "padding": "0px"
+                  }
+               }
+            },
+            "@element": "Stylesheet"
+         }
+      }
+   ],
+   "mediaTargets": [
+      {
+         "@element": "MediaTarget",
+         "name": "mt2",
+         "windowSize": "default",
+         "scheme": "ms1"
+      },
+      {
+         "@element": "MediaTarget",
+         "name": "mt3",
+         "windowSize": "small",
+         "scheme": "ms1"
+      },
+      {
+         "@element": "MediaTarget",
+         "name": "mt4",
+         "windowSize": "medium",
+         "scheme": "ms1"
+      },
+      {
+         "@element": "MediaTarget",
+         "name": "mt5",
+         "windowSize": "large",
+         "scheme": "ms1"
+      }
+   ],
+   "properties": [
+      {
+         "@element": "Property",
+         "key": "displayDataSource",
+         "value": "ds7"
+      }
+   ],
+   "exportProperties": [
+      {
+         "@element": "Export",
+         "destination": "pdf",
+         "exportPropertyList": [
+            {
+               "@element": "Export_Property",
+               "key": "showCoverPage",
+               "value": "true",
+               "content": ""
+            },
+            {
+               "@element": "Export_Property",
+               "key": "showPageNumbers",
+               "value": "true",
+               "content": ""
+            }
+         ]
+      }
+   ],
+   "history": {
+      "@element": "History",
+      "versions": [
+         {
+            "@element": "Version",
+            "versionKey": "4.14.0",
+            "lastDate": "2021-12-29T17:00:04Z"
+         }
+      ],
+      "editors": [
+         {
+            "@element": "Editor",
+            "revisions": [
+               {
+                  "@element": "Revision",
+                  "editorVersion": "2021.2.1",
+                  "lastDate": "2021-12-31T14:26:58.746Z"
+               }
+            ],
+            "applicationName": "VA"
+         }
+      ]
+   },
+   "sasReportState": {
+      "@element": "SASReportState",
+      "view": {
+         "@element": "View_State"
+      },
+      "date": "2021-12-31T14:28:01.576Z"
+   }
+}
