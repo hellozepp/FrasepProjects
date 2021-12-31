@@ -10,6 +10,7 @@ caslib _ALL_ assign;
 
 /* Flag to force final table truncation (=1) */
 %let truncate_flag=0;
+
 /* idle time threshold in seconds */
 %let idletime_threshold=0;
 
@@ -17,7 +18,6 @@ caslib _ALL_ assign;
 
 proc cas;
 	if &truncate_flag == 1 then do;
-		print("Dropping table...");
 		table.droptable / caslib='public' name='ALL_SESSION_DATA' quiet=true;
 	end;
 quit;
@@ -81,7 +81,6 @@ run;
 
 data _null_;
 	set detailed_session_list;
-	put "Getting metrics for cas session with uuid : " uuid;
 	call execute('%get_session_node_metrics('||uuid||')');
 run;
 
@@ -112,15 +111,13 @@ proc cas;
 
 	if tableExists !=0 then
 		do;
-			print("Appending table...");
 			dataStep.runCode result=r status=rc / code='
 			data "ALL_SESSION_DATA" (caslib="casuser" promote="no");
-			    set "ALL_SESSION_DATA" (caslib="Public") "ALL_SESSION_DATA_TMP" (caslib="casuser");
+			    set "ALL_SESSION_DATA"(caslib="Public") "ALL_SESSION_DATA_TMP"(caslib="casuser");
 			run;
 			';
 		end;
 	else do;
-			print("Creating table...");
 			dataStep.runCode result=r status=rc / code='
 			data "ALL_SESSION_DATA" (caslib="casuser" promote="no");
 			    set "ALL_SESSION_DATA_TMP" (caslib="casuser");
@@ -131,7 +128,7 @@ quit;
 
 proc cas;
 	table.droptable / caslib='public' name='ALL_SESSION_DATA' quiet=true;
-	table.promote / sourcecaslib='casuser' name='ALL_SESSION_DATA_TMP' targetcaslib="public" target='ALL_SESSION_DATA';
+	table.promote / sourcecaslib='casuser' name='ALL_SESSION_DATA' targetcaslib="public" target='ALL_SESSION_DATA';
 quit;
 
 cas sess_ctrl terminate;
