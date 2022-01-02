@@ -9,12 +9,12 @@
 filename respb temp encoding='UTF-8';
 filename resphdrb temp encoding='UTF-8';
 
-/* Macro used to terminate a specific CAS session */
-%macro drop_session(session_uuid);
-	proc http url="&BASE_URI/cas-shared-default-http/cas/sessions/&session_uuid" oauth_bearer=sas_services
-		method='delete' out=respb headerout=resphdrb headerout_overwrite;
-	run;
-%mend drop_session;
+%macro terminate_session(session_uuid);
+  proc http url="&BASE_URI/cas-shared-default-http/cas/sessions/&session_uuid/terminate" oauth_bearer=sas_services
+  	method='post' out=respb headerout=resphdrb headerout_overwrite;
+	debug level=3;
+run;
+%mend terminate_session;
 
 /* Macro used to get the list of of all current cas sessions */
 %macro get_detailed_cas_session_list();
@@ -48,7 +48,7 @@ quit;
 data _null_;
 	set detailed_session_list;
 	put "Terminating cas session with uuid : " uuid;
-	call execute('%drop_session('||uuid||')');
+	call execute('%terminate_session('||uuid||')');
 run;
 
 /************************************************************************************************/

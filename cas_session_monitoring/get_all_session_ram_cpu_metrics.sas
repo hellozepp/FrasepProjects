@@ -19,6 +19,8 @@ caslib _ALL_ assign;
 proc cas;
 	if &truncate_flag == 1 then do;
 		table.droptable / caslib='public' name='ALL_SESSION_DATA' quiet=true;
+		table.droptable / caslib='public' name='system_memory_metrics' quiet=true;
+		table.droptable / caslib='public' name='system_cpu_metrics' quiet=true;
 	end;
 quit;
 
@@ -33,10 +35,29 @@ filename resphdrb temp encoding='UTF-8';
 			oauth_bearer=sas_services method='get' out=respb headerout=resphdrb 
 			headerout_overwrite;
 	run;
-
 %mend get_detailed_cas_session_list;
 
+/************************************************************************************************/
+/* Macro used to get the node memory metrics */
+%macro get_node_memory_metrics();
+	proc http url="&BASE_URI/cas-shared-default-http/cas/nodes/memoryMetrics" 
+			oauth_bearer=sas_services method='get' out=respb headerout=resphdrb 
+			headerout_overwrite;
+	run;
+%mend get_node_memory_metrics;
+
+/************************************************************************************************/
+/* Macro used to get the node cpu metrics */
+%macro get_node_cpu_metrics();
+	proc http url="&BASE_URI/cas-shared-default-http/cas/nodes/cpuTime"
+			oauth_bearer=sas_services method='get' out=respb headerout=resphdrb 
+			headerout_overwrite;
+	run;
+%mend get_node_cpu_metrics;
+
+
 /* Get all current CAS Sessions */
+libname obj2 clear;
 %get_detailed_cas_session_list();
 libname obj2 json "%sysfunc(pathname(respb))";
 
@@ -45,10 +66,30 @@ libname obj2 json "%sysfunc(pathname(respb))";
 /* variable */
 /************************************************************************************************/
 proc sql;
-	create table detailed_session_list as select A.uuid, A.name, A.state, A.user, 
+	create table detailed_session_list as select A.uuid, A.name, A.state, A.user, A.activeAction, A.owner, A.provider ,
 		(B.seconds+B.minutes*60+B.hours*3600) as idletime from obj2.root as A, 
 		obj2.idletime as B where A.ordinal_root=B.ordinal_root and ((B.seconds+B.minutes*60+B.hours*3600)>&idletime_threshold);
 quit;
+
+%get_node_memory_metrics();
+LIBNAME obj2 CLEAR;
+libname obj2 json "%sysfunc(pathname(respb))";
+
+data casuser.system_memory_metrics_tmp;
+	set obj2.root;
+	format metrics_datetime datetime20.;
+	metrics_datetime=&start_datetime;
+run;
+
+%get_node_cpu_metrics();
+LIBNAME obj2 CLEAR;
+libname obj2 json "%sysfunc(pathname(respb))";
+
+data casuser.system_cpu_metrics_tmp;
+	set obj2.root;
+	format metrics_datetime datetime20.;
+	metrics_datetime=&start_datetime;
+run;
 
 /************************************************************************************************************/
 /* Macro used to get node metrics for a given session uuid and append metrics data to dataset in parameter */
@@ -124,11 +165,53 @@ proc cas;
 			run;
 			';
 		end;
+
+	tableExists=doesTableExist("public", "system_memory_metrics");
+
+	if tableExists !=0 then
+		do;
+			dataStep.runCode result=r status=rc / code='
+			data "system_memory_metrics" (caslib="casuser" promote="no");
+			    set "system_memory_metrics"(caslib="Public") "system_memory_metrics_TMP"(caslib="casuser");
+			run;
+			';
+		end;
+	else do;
+			dataStep.runCode result=r status=rc / code='
+			data "system_memory_metrics" (caslib="casuser" promote="no");
+			    set "system_memory_metrics_tmp" (caslib="casuser");
+			run;
+			';
+		end;
+
+	tableExists=doesTableExist("public", "system_cpu_metrics");
+
+	if tableExists !=0 then
+		do;
+			dataStep.runCode result=r status=rc / code='
+			data "system_cpu_metrics" (caslib="casuser" promote="no");
+			    set "system_cpu_metrics"(caslib="Public") "system_cpu_metrics_TMP"(caslib="casuser");
+			run;
+			';
+		end;
+	else do;
+			dataStep.runCode result=r status=rc / code='
+			data "system_cpu_metrics" (caslib="casuser" promote="no");
+			    set "system_cpu_metrics_tmp" (caslib="casuser");
+			run;
+			';
+		end;
+
 quit;
 
 proc cas;
 	table.droptable / caslib='public' name='ALL_SESSION_DATA' quiet=true;
+	table.droptable / caslib='public' name='system_memory_metrics' quiet=true;
+	table.droptable / caslib='public' name='system_cpu_metrics' quiet=true;
+
 	table.promote / sourcecaslib='casuser' name='ALL_SESSION_DATA' targetcaslib="public" target='ALL_SESSION_DATA';
+	table.promote / sourcecaslib='casuser' name='system_cpu_metrics' targetcaslib="public" target='system_cpu_metrics';
+	table.promote / sourcecaslib='casuser' name='system_memory_metrics' targetcaslib="public" target='system_memory_metrics';
 quit;
 
 cas sess_ctrl terminate;
