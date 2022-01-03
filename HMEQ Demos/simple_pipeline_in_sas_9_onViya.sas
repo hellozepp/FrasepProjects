@@ -168,26 +168,6 @@ proc treesplit data=MYCASLIB.HMEQ_PREPPED maxdepth=10;
 	prune none;
 run;
 
-libname _tmpcas_ cas caslib="CASUSER";
-
-proc cas;
-	session %sysfunc(getlsessref(MYCASLIB));
-	action dataSciencePilot.featureMachine / 
-		table={caslib="%sysfunc(getlcaslib(MYCASLIB))", name="HMEQ"} target="BAD" 
-		event="1" rankPolicy={} featureOut={caslib="CASUSER", name="_featureOut_", 
-		replace=TRUE} transformationOut={caslib="CASUSER", 
-		name="_transformationOut_", replace=TRUE};
-	run;
-quit;
-
-proc print data=_tmpcas_._featureOut_(obs=50 drop=FeatureId FTGPipelineId 
-		NInputs InputVar2 InputVar3);
-run;
-
-proc delete data=_tmpcas_._featureOut_;
-run;
-
-libname _tmpcas_;
 
 cas benchsess terminate;
 
