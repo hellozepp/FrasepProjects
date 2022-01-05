@@ -212,6 +212,10 @@ proc cas;
 	table.promote / sourcecaslib='casuser' name='ALL_SESSION_DATA' targetcaslib="public" target='ALL_SESSION_DATA';
 	table.promote / sourcecaslib='casuser' name='system_cpu_metrics' targetcaslib="public" target='system_cpu_metrics';
 	table.promote / sourcecaslib='casuser' name='system_memory_metrics' targetcaslib="public" target='system_memory_metrics';
+
+	table.save / caslib="public"  name='ALL_SESSION_DATA.sashdat' table={caslib="public" name='ALL_SESSION_DATA'};
+	table.save / caslib="public"  name='system_cpu_metrics.sashdat' table={caslib="public" name='system_cpu_metrics'};
+	table.save / caslib="public"  name='system_memory_metrics.sashdat' table={caslib="public" name='system_memory_metrics'};
 quit;
 
 cas sess_ctrl terminate;
