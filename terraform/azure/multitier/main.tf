@@ -122,11 +122,7 @@ resource "azurerm_network_security_group" "nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_ranges     = ["22","636","80","443","5570"]
-<<<<<<< HEAD
     source_address_prefixes    = ["149.173.0.0/16","90.127.106.134/32","86.238.106.195","10.0.0.0/16"]
-=======
-    source_address_prefixes    = ["149.173.0.0/16","90.127.106.134/32","10.0.0.0/16"]
->>>>>>> 07f8e1d3fb254f0ed9119eee2f53c84122e41f8d
     destination_address_prefix = "*"
   }
 
@@ -195,11 +191,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
 
   # Copies the ssh key files
   provisioner "file" {
-<<<<<<< HEAD
     source      = "../key_viya.pub"
-=======
-    source      = "./key_viya.pub"
->>>>>>> 07f8e1d3fb254f0ed9119eee2f53c84122e41f8d
     destination = "/tmp/key_viya.pub"
     
     connection {
@@ -211,11 +203,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
   }
 
   provisioner "file" {
-<<<<<<< HEAD
     source      = "../key_viya"
-=======
-    source      = "./key_viya"
->>>>>>> 07f8e1d3fb254f0ed9119eee2f53c84122e41f8d
     destination = "/tmp/key_viya"
     connection {
       type     = "ssh"
@@ -226,11 +214,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
   }
 
   provisioner "file" {
-<<<<<<< HEAD
     source      = "../SAS_Viya_deployment_data.zip"
-=======
-    source      = "./SAS_Viya_deployment_data.zip"
->>>>>>> 07f8e1d3fb254f0ed9119eee2f53c84122e41f8d
     destination = "/tmp/SAS_Viya_deployment_data.zip"
     connection {
       type     = "ssh"
@@ -342,11 +326,7 @@ resource "azurerm_linux_virtual_machine" "vm2" {
 
   # Copies the ssh key file
   provisioner "file" {
-<<<<<<< HEAD
     source      = "../key_viya.pub"
-=======
-    source      = "./key_viya.pub"
->>>>>>> 07f8e1d3fb254f0ed9119eee2f53c84122e41f8d
     destination = "/tmp/key_viya.pub"
     connection {
       type     = "ssh"
