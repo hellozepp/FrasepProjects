@@ -65,7 +65,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "frasepViya35multiTier_rg"
+  name     = "frasepViya35mpp_rg"
   location = var.location
   tags = {
         Environment = "Multi tier SAS Viya 3.5 environment"
@@ -76,7 +76,7 @@ resource "azurerm_resource_group" "rg" {
 ###########################################################
 # Create a virtual network
 resource "azurerm_virtual_network" "vnet" {
-    name                = "frasepViya35multiTier_vnet"
+    name                = "frasepViya35mpp_vnet"
     address_space       = ["10.0.0.0/16"]
     location            = var.location
     resource_group_name = azurerm_resource_group.rg.name
@@ -85,7 +85,7 @@ resource "azurerm_virtual_network" "vnet" {
 ###########################################################
 # Create subnet
 resource "azurerm_subnet" "subnet" {
-  name                 = "frasepViya35multiTier_Subnet"
+  name                 = "frasepViya35mpp_Subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.1.0/24"]
@@ -148,7 +148,7 @@ data "azurerm_public_ip" "vm4ip" {
 ###########################################################
 # Create Network Security Group and rule
 resource "azurerm_network_security_group" "nsg" {
-  name                = "frasepViya35multiTier_NSG"
+  name                = "frasepViya35mpp_NSG"
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -292,6 +292,29 @@ resource "azurerm_linux_virtual_machine" "vm1" {
     }
   }
 
+  provisioner "file" {
+    source      = "./inventory_cas_multi_machine.ini"
+    destination = "/tmp/inventory_cas_multi_machine.ini"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
+  provisioner "file" {
+    source      = "./openldap_inventory.ini"
+    destination = "/tmp/openldap_inventory.ini"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
+
   provisioner "remote-exec" {
     inline = [
       "sudo yum install -y cloud-utils-growpart gdisk git",
@@ -348,12 +371,9 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "ssh-keyscan frasepViya35vm2.cloud.com >> ~/.ssh/known_hosts",
       "ansible-playbook viya_pre_install_playbook.yml -i pre-install.inventory.ini --skip-tags skipmemfail",
       "cd ~/sas_viya_playbook",
-      "cp ./samples/inventory_local.ini inventory.ini",
-      "sed -i '/deployTarget ansible_connection/ a deployTarget02 ansible_host=frasepViya35vm2.cloud.com' inventory.ini",
-      "sed -i '/\\[sas_casserver_primary\\]/!b;n;cdeployTarget02' inventory.ini",
+      "mv /tmp/inventory_cas_multi_machine.ini ./inventory.ini",
       "cd ~/FrasepProjects/OpenLDAP_forViya3",
-      "sed -i '/apple     ansible_connection=local/ a orange    ansible_host=frasepViya35vm2.cloud.com' inventory.ini",
-      "sed -i '/\\[openldapclients\\]/ a orange' inventory.ini"
+      "mv /tmp/openldap_inventory.ini ./inventory.ini"
     ]
 
     connection {
@@ -406,6 +426,17 @@ resource "azurerm_linux_virtual_machine" "vm2" {
     }
   }
 
+  provisioner "file" {
+    source      = "../key_viya"
+    destination = "/tmp/key_viya"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo yum install cloud-utils-growpart gdisk",
@@ -418,7 +449,6 @@ resource "azurerm_linux_virtual_machine" "vm2" {
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
       "echo \"${azurerm_linux_virtual_machine.vm2.private_ip_address} ${azurerm_linux_virtual_machine.vm2.computer_name}\" | sudo tee -a /etc/hosts",
-      "echo \"10.0.1.4 frasepViya35vm1.cloud.com\" | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
       "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
@@ -490,6 +520,17 @@ resource "azurerm_linux_virtual_machine" "vm3" {
     }
   }
 
+  provisioner "file" {
+    source      = "../key_viya"
+    destination = "/tmp/key_viya"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo yum install cloud-utils-growpart gdisk",
@@ -502,7 +543,6 @@ resource "azurerm_linux_virtual_machine" "vm3" {
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
       "echo \"${azurerm_linux_virtual_machine.vm3.private_ip_address} ${azurerm_linux_virtual_machine.vm3.computer_name}\" | sudo tee -a /etc/hosts",
-      "echo \"10.0.1.4 frasepViya35vm1.cloud.com\" | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
       "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
@@ -573,6 +613,17 @@ resource "azurerm_linux_virtual_machine" "vm4" {
     }
   }
 
+  provisioner "file" {
+    source      = "../key_viya"
+    destination = "/tmp/key_viya"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo yum install cloud-utils-growpart gdisk",
@@ -585,7 +636,6 @@ resource "azurerm_linux_virtual_machine" "vm4" {
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
       "echo \"${azurerm_linux_virtual_machine.vm4.private_ip_address} ${azurerm_linux_virtual_machine.vm4.computer_name}\" | sudo tee -a /etc/hosts",
-      "echo \"10.0.1.4 frasepViya35vm1.cloud.com\" | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
       "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
