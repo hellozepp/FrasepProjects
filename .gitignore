@@ -3,3 +3,4 @@ terraform/azure/multiserver/.terraform/providers/registry.terraform.io/hashicorp
 terraform/azure/multiserver/terraform.tfstate.backup
 terraform/azure/multiserver/terraform.tfstate
 terraform/azure/multiserver/.terraform.lock.hcl
+terraform/azure/multiserver/.terraform.tfstate.lock.info

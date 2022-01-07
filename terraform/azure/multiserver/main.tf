@@ -177,7 +177,7 @@ resource "azurerm_network_interface" "vm1nic" {
     name                          = "vm1NICConfg"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "static"
-    private_ip_address            = "10.0.1.4/32"
+    private_ip_address            = "10.0.1.4"
     public_ip_address_id          = azurerm_public_ip.vm1publicip.id
   }
 }
@@ -193,7 +193,7 @@ resource "azurerm_network_interface" "vm2nic" {
     name                          = "vm2NICConfg"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "static"
-    private_ip_address            = "10.0.1.5/32"
+    private_ip_address            = "10.0.1.5"
     public_ip_address_id          = azurerm_public_ip.vm2publicip.id
   }
 }
@@ -209,7 +209,7 @@ resource "azurerm_network_interface" "vm3nic" {
     name                          = "vm3NICConfg"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "static"
-    private_ip_address            = "10.0.1.6/32"
+    private_ip_address            = "10.0.1.6"
     public_ip_address_id          = azurerm_public_ip.vm3publicip.id
   }
 }
@@ -225,7 +225,7 @@ resource "azurerm_network_interface" "vm4nic" {
     name                          = "vm4NICConfg"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "static"
-    private_ip_address            = "10.0.1.7/32"
+    private_ip_address            = "10.0.1.7"
     public_ip_address_id          = azurerm_public_ip.vm4publicip.id
   }
 }
