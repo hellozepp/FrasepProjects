@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Get Session</title>
+</head>
+
+<body>
+    <div id="content">
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/function.js"></script>
+    <script>
+        $(document).ready(function () {
+            getToken("viyademo01", "demopw")
+                .then(response => getSession(response.access_token))
+                .then(response => $("#content").html(response.session))
+        });
+    </script>
+</body>
+
+</html>

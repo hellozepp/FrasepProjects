@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Interact with CAS</title>
+</head>
+
+<body>
+    <div id="content">
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/function.js"></script>
+    <script>
+        $(document).ready(function () {
+            const baseURL = "https://frasepviya35smp.cloud.com";
+            let token = null;
+            let session = null;
+            getToken("viyademo01", "demopw")
+                .then(response => {
+                    token = response.access_token;
+                    tokenProm = getSession(response.access_token);
+                    return tokenProm;
+                })
+                .then(response => {
+                    session = response.session;
+                    // The payload object that will be passed to the request.
+                    const data = {
+                        "casout": {
+                            "caslib": "CASUSER(viyademo01)",
+                            "name": "costchange"
+                        },
+                        "caslib": "Samples",
+                        "path": "COSTCHANGE.sashdat"
+                    };
+                    const action = "table.loadTable";
+                    casProm = callCAS(baseURL, action, token, session, data);
+                    return casProm;
+                }).then(response => {
+                    const action = "simple.summary";
+
+                    // The payload object that will be passed to the request.
+                    const data = {
+                        "table": {
+                            "caslib": "CASUSER(viyademo01)",
+                            "name": "costchange",
+                            "groupBy": "primarylaborgroup"
+                        },
+                        "casout": {
+                            "caslib": "CASUSER(viyademo01)",
+                            "name": "costchange_summary"
+                        },
+                        "inputs": "total_Claim_Count",
+                        "subset": ["SUM", "N"]
+                    };
+
+                    summaryProm = callCAS(baseURL, action, token, session, data);
+                    return summaryProm;   
+                }).then(response => {
+                    const action =  "table.fetch";
+                    const data = {
+                        "table":{
+                            "caslib":"CASUSER(viyademo01)",
+                            "name":"costchange_summary"
+                        }
+                    }
+                    fetchProm = callCAS(baseURL, action, token, session, data);
+                    return fetchProm;
+                }).then(response =>{
+                        //If you want to see how the response looks like, uncomment the following line.
+                        //console.log(response);
+
+                        // Retrieve the header's information
+                        const headers = response["results"]["Fetch"]["schema"];
+                        // Retrieve the values.
+                        const rows = response["results"]["Fetch"]["rows"];
+                        // Generate an html table
+                        const table = displayData(headers, rows);
+                        //Display the html table
+                        $("#content").html(table);
+                })
+
+                });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Get Star Wars</title>
+</head>
+
+<body>
+    <!-- Define a div as a placeholder for the HTML generated using the data from the REST API-->
+    <div id="content">
+    </div>
+    <!-- Load jQuery script -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Define our custom javascript functions -->
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "https://swapi.dev/api/people/1"
+            }).then(data => {
+                // Create a variable that holds the HTML tags for an unordered list
+                let html = "<ul>";
+
+                // Add elements to the list
+                html += "<li> Name: " + data.name + "</li>"
+                html += "<li> Gender: " + data.gender + "</li>"
+                html += "<li> Height: " + data.height + "</li>"
+
+                // Write the generated list to the content placeholder
+                $("#content").html(html);
+            });
+        });
+    </script>
+</body>
+</html>

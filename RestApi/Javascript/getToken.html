@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Get Token</title>
+</head>
+
+<body>
+    <div id="content">
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/function.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Call the getToken function with the required parameters.
+            // Thanks to the promise we can populate the content div when the getToken function has finished execution.
+            getToken("viyademo01", "demopw")
+                .then(response => $("#content").html(response.access_token));
+        });
+    </script>
+</body>
+
+</html>

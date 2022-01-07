@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Get Token</title>
+</head>
+
+<body>
+    <div id="content">
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/function.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Call the getToken function with the required parameters.
+            // Thanks to the promise we can populate the content div when the getToken function has finished execution.
+            getToken("viyademo01", "demopw")
+                .then(response => $("#content").html(response.access_token));
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Call the getToken function with the required parameters.
+            // Thanks to the promise we can execute the function when the getToken function has finished execution.
+            getToken("viyademo01", "demopw")
+                .then( response => {
+                    // Define a constant which contains the headers information for the HTTP request.
+                    // The Authorization header contains the token that was received from the getToken function
+                    const headers = {
+                        'Accept': 'application/vnd.sas.collection+json',
+                        'Authorization': "Bearer " + response.access_token
+                    };
+
+                    // Create a new constant which contains URL parameters used to filter folders
+                    const data = {
+                        'limit' : 10,
+                        'filter' : 'contains("name","SAS")'
+                    };
+
+                    // Call the REST API endpoint for folders
+                    $.ajax({
+                        url: "https://frasepviya35smp.cloud.com/folders/folders",
+                        type: "GET",
+                        headers: headers,
+                        data: data
+                    }).then(function (response) {
+                            // Define a variable that will hold an unordered list
+                            let html = "<ul>";
+                                // Loop through the list of folders
+                                response.items.forEach(element => {
+                                    // Add a list element for each folder
+                                    html += "<li>" + element.name + "</li>";
+                                });
+                                // Close the unordered list tag
+                                html += "</ul>"
+                                // Write the html tags to the content placeholder
+                                $("#content").html(html);
+                    });
+                });
+        });
+    </script>
+</body>
+
+</html>
