@@ -176,7 +176,8 @@ resource "azurerm_network_interface" "vm1nic" {
   ip_configuration {
     name                          = "vm1NICConfg"
     subnet_id                     = azurerm_subnet.subnet.id
-    private_ip_address_allocation = "dynamic"
+    private_ip_address_allocation = "static"
+    private_ip_address            = "10.0.1.4/32"
     public_ip_address_id          = azurerm_public_ip.vm1publicip.id
   }
 }
@@ -191,7 +192,8 @@ resource "azurerm_network_interface" "vm2nic" {
   ip_configuration {
     name                          = "vm2NICConfg"
     subnet_id                     = azurerm_subnet.subnet.id
-    private_ip_address_allocation = "dynamic"
+    private_ip_address_allocation = "static"
+    private_ip_address            = "10.0.1.5/32"
     public_ip_address_id          = azurerm_public_ip.vm2publicip.id
   }
 }
@@ -206,7 +208,8 @@ resource "azurerm_network_interface" "vm3nic" {
   ip_configuration {
     name                          = "vm3NICConfg"
     subnet_id                     = azurerm_subnet.subnet.id
-    private_ip_address_allocation = "dynamic"
+    private_ip_address_allocation = "static"
+    private_ip_address            = "10.0.1.6/32"
     public_ip_address_id          = azurerm_public_ip.vm3publicip.id
   }
 }
@@ -221,7 +224,8 @@ resource "azurerm_network_interface" "vm4nic" {
   ip_configuration {
     name                          = "vm4NICConfg"
     subnet_id                     = azurerm_subnet.subnet.id
-    private_ip_address_allocation = "dynamic"
+    private_ip_address_allocation = "static"
+    private_ip_address            = "10.0.1.7/32"
     public_ip_address_id          = azurerm_public_ip.vm4publicip.id
   }
 }
@@ -304,6 +308,17 @@ resource "azurerm_linux_virtual_machine" "vm1" {
   }
 
   provisioner "file" {
+    source      = "./pre-install.inventory.ini"
+    destination = "/tmp/pre-install.inventory.ini"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
+  provisioner "file" {
     source      = "./openldap_inventory.ini"
     destination = "/tmp/openldap_inventory.ini"
     connection {
@@ -366,9 +381,10 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "mv viya-ark/ ./sas_viya_playbook/",
       "sudo sed -i '/ClientAliveInterval/c\\ClientAliveInterval 3600' /etc/ssh/sshd_config",
       "cd ./sas_viya_playbook/viya-ark/playbooks/pre-install-playbook",
-      "sed -i '/deployTarget ansible_connection/ a deployTarget02 ansible_host=frasepViya35vm2.cloud.com' pre-install.inventory.ini",
-      "sed -i '$ a deployTarget02' pre-install.inventory.ini",
+      "mv /tmp/pre-install.inventory.ini ./pre-install.inventory.ini",
       "ssh-keyscan frasepViya35vm2.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm3.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm4.cloud.com >> ~/.ssh/known_hosts",
       "ansible-playbook viya_pre_install_playbook.yml -i pre-install.inventory.ini --skip-tags skipmemfail",
       "cd ~/sas_viya_playbook",
       "mv /tmp/inventory_cas_multi_machine.ini ./inventory.ini",
@@ -448,7 +464,6 @@ resource "azurerm_linux_virtual_machine" "vm2" {
       "sudo lvresize -r -L +10G /dev/rootvg/homelv",
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
-      "echo \"${azurerm_linux_virtual_machine.vm2.private_ip_address} ${azurerm_linux_virtual_machine.vm2.computer_name}\" | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
       "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
