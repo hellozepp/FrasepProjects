@@ -355,7 +355,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "cat /tmp/hosts_addin | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
-      "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys"
+      "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
       "mv /tmp/key_viya.pub ~/.ssh/id_rsa.pub",
       "mv /tmp/key_viya ~/.ssh/id_rsa",
       "mv /tmp/SAS_Viya_deployment_data.zip ~/SAS_Viya_deployment_data.zip",
