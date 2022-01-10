@@ -286,6 +286,17 @@ resource "azurerm_linux_virtual_machine" "vm1" {
   }
 
   provisioner "file" {
+    source      = "./hosts_addin"
+    destination = "/tmp/hosts_addin"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
+  provisioner "file" {
     source      = "../SAS_Viya_deployment_data.zip"
     destination = "/tmp/SAS_Viya_deployment_data.zip"
     connection {
@@ -341,12 +352,10 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "sudo lvresize -r -L +10G /dev/rootvg/homelv",
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
-      "echo \"${azurerm_linux_virtual_machine.vm1.private_ip_address} ${azurerm_linux_virtual_machine.vm1.computer_name}\" | sudo tee -a /etc/hosts",
-      "echo \"${azurerm_linux_virtual_machine.vm2.private_ip_address} ${azurerm_linux_virtual_machine.vm2.computer_name}\" | sudo tee -a /etc/hosts",
-      "echo \"${azurerm_linux_virtual_machine.vm3.private_ip_address} ${azurerm_linux_virtual_machine.vm3.computer_name}\" | sudo tee -a /etc/hosts",
-      "echo \"${azurerm_linux_virtual_machine.vm4.private_ip_address} ${azurerm_linux_virtual_machine.vm4.computer_name}\" | sudo tee -a /etc/hosts",
+      "cat /tmp/hosts_addin | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
+      "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys"
       "mv /tmp/key_viya.pub ~/.ssh/id_rsa.pub",
       "mv /tmp/key_viya ~/.ssh/id_rsa",
       "mv /tmp/SAS_Viya_deployment_data.zip ~/SAS_Viya_deployment_data.zip",
@@ -442,6 +451,17 @@ resource "azurerm_linux_virtual_machine" "vm2" {
     }
   }
 
+
+  provisioner "file" {
+    source      = "./hosts_addin"
+    destination = "/tmp/hosts_addin"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
   provisioner "file" {
     source      = "../key_viya"
     destination = "/tmp/key_viya"
@@ -464,12 +484,17 @@ resource "azurerm_linux_virtual_machine" "vm2" {
       "sudo lvresize -r -L +10G /dev/rootvg/homelv",
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
+      "cat /tmp/hosts_addin | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
       "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
       "mv /tmp/key_viya.pub ~/.ssh/id_rsa.pub",
       "mv /tmp/key_viya ~/.ssh/id_rsa",
       "chmod 600 ~/.ssh/*",
+      "ssh-keyscan frasepViya35vm1.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm2.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm3.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm4.cloud.com >> ~/.ssh/known_hosts",
       "sudo systemctl stop firewalld",
       "sudo systemctl disable firewalld",
       "sudo setenforce Permissive",
@@ -537,6 +562,18 @@ resource "azurerm_linux_virtual_machine" "vm3" {
     }
   }
 
+
+  provisioner "file" {
+    source      = "./hosts_addin"
+    destination = "/tmp/hosts_addin"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
   provisioner "file" {
     source      = "../key_viya"
     destination = "/tmp/key_viya"
@@ -559,12 +596,17 @@ resource "azurerm_linux_virtual_machine" "vm3" {
       "sudo lvresize -r -L +10G /dev/rootvg/homelv",
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
-      "echo \"${azurerm_linux_virtual_machine.vm3.private_ip_address} ${azurerm_linux_virtual_machine.vm3.computer_name}\" | sudo tee -a /etc/hosts",
+      "cat /tmp/hosts_addin | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
+      "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
       "mv /tmp/key_viya.pub ~/.ssh/id_rsa.pub",
       "mv /tmp/key_viya ~/.ssh/id_rsa",
       "chmod 600 ~/.ssh/*",
+      "ssh-keyscan frasepViya35vm1.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm2.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm3.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm4.cloud.com >> ~/.ssh/known_hosts",
       "sudo systemctl stop firewalld",
       "sudo systemctl disable firewalld",
       "sudo setenforce Permissive",
@@ -631,6 +673,18 @@ resource "azurerm_linux_virtual_machine" "vm4" {
     }
   }
 
+
+  provisioner "file" {
+    source      = "./hosts_addin"
+    destination = "/tmp/hosts_addin"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
   provisioner "file" {
     source      = "../key_viya"
     destination = "/tmp/key_viya"
@@ -653,12 +707,17 @@ resource "azurerm_linux_virtual_machine" "vm4" {
       "sudo lvresize -r -L +10G /dev/rootvg/homelv",
       "sudo lvresize -r -L +10G /dev/rootvg/varlv",
       "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
-      "echo \"${azurerm_linux_virtual_machine.vm4.private_ip_address} ${azurerm_linux_virtual_machine.vm4.computer_name}\" | sudo tee -a /etc/hosts",
+      "cat /tmp/hosts_addin | sudo tee -a /etc/hosts",
       "mkdir ~/.ssh",
       "chmod 700 ~/.ssh",
+      "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
       "mv /tmp/key_viya.pub ~/.ssh/id_rsa.pub",
       "mv /tmp/key_viya ~/.ssh/id_rsa",
       "chmod 600 ~/.ssh/*",
+      "ssh-keyscan frasepViya35vm1.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm2.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm3.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm4.cloud.com >> ~/.ssh/known_hosts",
       "sudo systemctl stop firewalld",
       "sudo systemctl disable firewalld",
       "sudo setenforce Permissive",
