@@ -330,6 +330,17 @@ resource "azurerm_linux_virtual_machine" "vm1" {
   }
 
   provisioner "file" {
+    source      = "./vars_mpp.yml.ini"
+    destination = "/tmp/vars.yml"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
+  provisioner "file" {
     source      = "./openldap_inventory.ini"
     destination = "/tmp/openldap_inventory.ini"
     connection {
@@ -398,7 +409,17 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "cd ~/sas_viya_playbook",
       "mv /tmp/inventory_cas_multi_machine.ini ./inventory.ini",
       "cd ~/FrasepProjects/OpenLDAP_forViya3",
-      "mv /tmp/openldap_inventory.ini ./inventory.ini"
+      "mv /tmp/openldap_inventory.ini ./inventory.ini",
+      "ansible-playbook gel.openldapsetup.yml --skip-tags user_login",
+      "cp ./sitedefault.yml  ~/sas_viya_playbook/roles/consul/files/sitedefault.yml",
+      "cd ~/sas_viya_playbook",
+      "mv /tmp/vars.yml ./vars.yml",
+      "ansible-playbook site.yml",
+      "sudo su - sas",
+      "source /opt/sas/viya/config/consul.conf",
+      "export CONSUL_TOKEN=`cat /opt/sas/viya/config/etc/SASSecurityCertificateFramework/tokens/consul/default/client.token`",
+      "/opt/sas/viya/home/bin/sas-bootstrap-config kv write --force --key config/launcher-server/global/environment/SASMAKEHOMEDIR --value 1",
+      "sudo systemctl restart sas-viya-runlauncher-default"
     ]
 
     connection {
