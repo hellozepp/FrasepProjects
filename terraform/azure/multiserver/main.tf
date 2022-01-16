@@ -330,7 +330,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
   }
 
   provisioner "file" {
-    source      = "./vars_mpp.yml.ini"
+    source      = "./vars_mpp.yml"
     destination = "/tmp/vars.yml"
     connection {
       type     = "ssh"
@@ -419,6 +419,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "source /opt/sas/viya/config/consul.conf",
       "export CONSUL_TOKEN=`cat /opt/sas/viya/config/etc/SASSecurityCertificateFramework/tokens/consul/default/client.token`",
       "/opt/sas/viya/home/bin/sas-bootstrap-config kv write --force --key config/launcher-server/global/environment/SASMAKEHOMEDIR --value 1",
+      "exit",
       "sudo systemctl restart sas-viya-runlauncher-default"
     ]
 
