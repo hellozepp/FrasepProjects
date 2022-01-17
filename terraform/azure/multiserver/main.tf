@@ -425,7 +425,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
   }
 
 ###########################################################
-# Manual steps to execute on vm2 (controller node)
+# Manual steps to execute on vm2 (controller node). After 2h
 ###########################################################
 #      "sudo su - ",
 #      "su - sas",
