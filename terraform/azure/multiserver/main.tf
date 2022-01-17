@@ -414,22 +414,28 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "cp ./sitedefault.yml  ~/sas_viya_playbook/roles/consul/files/sitedefault.yml",
       "cd ~/sas_viya_playbook",
       "mv /tmp/vars.yml ./vars.yml",
-      "ansible-playbook site.yml",
-      "sudo su - sas",
-      "source /opt/sas/viya/config/consul.conf",
-      "export CONSUL_TOKEN=`cat /opt/sas/viya/config/etc/SASSecurityCertificateFramework/tokens/consul/default/client.token`",
-      "/opt/sas/viya/home/bin/sas-bootstrap-config kv write --force --key config/launcher-server/global/environment/SASMAKEHOMEDIR --value 1",
-      "exit",
-      "sudo systemctl restart sas-viya-runlauncher-default"
+      "ansible-playbook site.yml"
     ]
-
-    connection {
+        connection {
       type     = "ssh"
       user     = "${var.admin_username}"
       password = "${var.admin_password}"
       host     = "${self.public_ip_address}"
     }
   }
+
+###########################################################
+# Manual steps to execute on vm2 (controller node)
+###########################################################
+#      "sudo su - ",
+#      "su - sas",
+#      "source /opt/sas/viya/config/consul.conf",
+#      "export CONSUL_TOKEN=`cat /opt/sas/viya/config/etc/SASSecurityCertificateFramework/tokens/consul/default/client.token`",
+#      "/opt/sas/viya/home/bin/sas-bootstrap-config kv write --force --key config/launcher-server/global/environment/SASMAKEHOMEDIR --value 1",
+#      "exit",
+#      "sudo systemctl restart sas-viya-runlauncher-default"
+
+
 }
 
 ###########################################################
