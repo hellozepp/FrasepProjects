@@ -21,6 +21,7 @@ proc cas;
 		table.droptable / caslib='public' name='ALL_SESSION_DATA' quiet=true;
 		table.droptable / caslib='public' name='system_memory_metrics' quiet=true;
 		table.droptable / caslib='public' name='system_cpu_metrics' quiet=true;
+		table.droptable / caslib='public' name='cascache_info' quiet=true;
 	end;
 quit;
 
@@ -116,7 +117,7 @@ run;
 %mend get_session_node_metrics;
 
 /************************************************************************************************/
-/* Main loop to terminate the selected sessions                                                 */
+/* Main loop to get metrics of the selected sessions                                                 */
 proc delete data=session_node_metrics;
 run;
 
@@ -141,6 +142,32 @@ DATA casuser.ALL_SESSION_DATA_TMP;
 	BY uuid;
 RUN;
 
+/* Get cascache information in casuser.cascache_info_tmp cas table */
+proc cas;
+  	accessControl.assumeRole / adminRole="superuser";
+   	builtins.getCacheInfo result=results;
+	table.droptable / caslib="casuser" name="cascache_info" quiet=true;
+	do current_node over results.diskCacheInfo[1:results.diskCacheInfo.nrows];
+		ds1_code='
+		data casuser.cascache_info(append=yes);
+		   length node varchar(100) FS_free 8. FS_usage 8. FS_size 8. path varchar(150);
+		   node="' || current_node.node || '";
+		   FS_free=' || scan(current_node.FS_free,1) || ';
+		   FS_usage=' || scan(current_node.FS_usage,1) || ';
+		   FS_size=' || scan(current_node.FS_size,1) || ';
+		   path="' || current_node.path || '";
+		   output;
+		run;';
+		datastep.runcode / code=ds1_code single='yes';
+	 end;
+quit;
+/* We add the global timestamp */
+data casuser.cascache_info_tmp;
+		set casuser.cascache_info;
+		format metrics_datetime datetime20.;
+		metrics_datetime=&start_datetime;
+run;
+
 proc cas;
 	function doesTableExist(casLib, casTable);
 		table.tableExists result=r status=rc / caslib=casLib table=casTable;
@@ -148,6 +175,24 @@ proc cas;
 		return tableExists;
 	end func;
 	
+	tableExists=doesTableExist("public", "cascache_info");
+
+	if tableExists !=0 then
+		do;
+			dataStep.runCode result=r status=rc / code='
+			data "cascache_info" (caslib="casuser" promote="no");
+			    set "cascache_info"(caslib="Public") "cascache_info_TMP"(caslib="casuser");
+			run;
+			';
+		end;
+	else do;
+			dataStep.runCode result=r status=rc / code='
+			data "cascache_info" (caslib="casuser" promote="no");
+			    set "cascache_info_TMP" (caslib="casuser");
+			run;
+			';
+		end;
+
 	tableExists=doesTableExist("public", "all_session_data");
 
 	if tableExists !=0 then
@@ -208,14 +253,17 @@ proc cas;
 	table.droptable / caslib='public' name='ALL_SESSION_DATA' quiet=true;
 	table.droptable / caslib='public' name='system_memory_metrics' quiet=true;
 	table.droptable / caslib='public' name='system_cpu_metrics' quiet=true;
+	table.droptable / caslib='public' name='cascache_info' quiet=true;
 
 	table.promote / sourcecaslib='casuser' name='ALL_SESSION_DATA' targetcaslib="public" target='ALL_SESSION_DATA';
 	table.promote / sourcecaslib='casuser' name='system_cpu_metrics' targetcaslib="public" target='system_cpu_metrics';
 	table.promote / sourcecaslib='casuser' name='system_memory_metrics' targetcaslib="public" target='system_memory_metrics';
+	table.promote / sourcecaslib='casuser' name='cascache_info' targetcaslib="public" target='cascache_info';
 
-	table.save / caslib="public"  name='ALL_SESSION_DATA.sashdat' table={caslib="public" name='ALL_SESSION_DATA'};
-	table.save / caslib="public"  name='system_cpu_metrics.sashdat' table={caslib="public" name='system_cpu_metrics'};
-	table.save / caslib="public"  name='system_memory_metrics.sashdat' table={caslib="public" name='system_memory_metrics'};
+	table.save / caslib="public"  name='ALL_SESSION_DATA.sashdat' table={caslib="public" name='ALL_SESSION_DATA'} replace=true;
+	table.save / caslib="public"  name='system_cpu_metrics.sashdat' table={caslib="public" name='system_cpu_metrics'} replace=true;
+	table.save / caslib="public"  name='system_memory_metrics.sashdat' table={caslib="public" name='system_memory_metrics'} replace=true;
+	table.save / caslib="public"  name='cascache_info.sashdat' table={caslib="public" name='cascache_info'} replace=true;
 quit;
 
 cas sess_ctrl terminate;
