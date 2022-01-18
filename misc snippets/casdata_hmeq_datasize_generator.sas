@@ -15,12 +15,20 @@ libname mycaslib cas caslib=casuser;
 
 %put "techFactor = " &techFactor;
 
+/************************************************************************************/
+/* Generate artificially data records in casuser.hmeq personal table without copies */
+/************************************************************************************/
+
 data mycaslib.hmeq(drop=i copies=0 replace=yes) ;
    set mycaslib.hmeq ;
    do i=1 to &techFactor ;
       output ;
    end ;
 run ;
+
+/************************************************************************************/
+/* Display table details                                                            */
+/************************************************************************************/
 
 proc cas ;
    table.tabledetails / caslib="casuser" table="hmeq" ;
