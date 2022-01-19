@@ -2,25 +2,31 @@
 /* Code used to get all node metrics about CPU and RAM for all cas sessions visible by current user  */
 /*****************************************************************************************************/
 ods _all_ close;
-
 cas sess_ctrl;
 caslib _ALL_ assign;
 
-%let BASE_URI=%sysfunc(getoption(servicesbaseurl));
+/****************************************/
+/* Define caslib and cas tables targets */
+/****************************************/
+%let CASMONITOR_CASLIB=public;
+%let CASMONITOR_SESSION_METRICS=ALL_SESSION_DATA;
+%let CASMONITOR_SYS_RAM_METRICS=system_memory_metrics;
+%let CASMONITOR_SYS_CPU_METRICS=system_cpu_metrics;
+%let CASMONITOR_CASCACHE_METRICS=cascache_info;
 
+%let BASE_URI=%sysfunc(getoption(servicesbaseurl));
 /* Flag to force final table truncation (=1) */
 %let truncate_flag=0;
-
-/* idle time threshold in seconds */
+/* idle time threshold in seconds to filter sessions */
 %let idletime_threshold=0;
-
 %let start_datetime=%sysfunc(datetime());
 
 proc cas;
 	if &truncate_flag == 1 then do;
-		table.droptable / caslib='public' name='ALL_SESSION_DATA' quiet=true;
-		table.droptable / caslib='public' name='system_memory_metrics' quiet=true;
-		table.droptable / caslib='public' name='system_cpu_metrics' quiet=true;
+		table.droptable / caslib="&CASMONITOR_CASLIB" name="&CASMONITOR_SESSION_METRICS" quiet=true;
+		table.droptable / caslib="&CASMONITOR_CASLIB" name="&CASMONITOR_SYS_RAM_METRICS" quiet=true;
+		table.droptable / caslib="&CASMONITOR_CASLIB" name="&CASMONITOR_SYS_CPU_METRICS" quiet=true;
+		table.droptable / caslib="&CASMONITOR_CASLIB" name="&CASMONITOR_CASCACHE_METRICS" quiet=true;
 	end;
 quit;
 
@@ -91,58 +97,6 @@ data casuser.system_cpu_metrics_tmp;
 	metrics_datetime=&start_datetime;
 run;
 
-/************************************************************************************************/
-/* Macro used to get cas node memory metrics */
-%macro get_cas_nodes_memorymetrics();
-	proc http url="&BASE_URI/cas-shared-default-http/cas/nodes/memoryMetrics"
-			oauth_bearer=sas_services method='get' out=respb headerout=resphdrb 
-			headerout_overwrite;
-	run;
-%mend get_cas_nodes_memorymetrics;
-
-libname obj2 clear;
-%get_cas_nodes_memorymetrics();
-libname obj2 json "%sysfunc(pathname(respb))";
-
-data work.get_cas_nodes_memorymetrics;
-	set obj2.root;
-run;
-
-/************************************************************************************************/
-/* Macro used to get cas grid nodes list */
-
-%macro get_test();
-	proc http url="&BASE_URI/cas-shared-default-http/grid/frasepViya35vm3.cloud.com/processes"
-			oauth_bearer=sas_services method='get' out=respb headerout=resphdrb 
-			headerout_overwrite;
-	run;
-%mend get_test;
-
-libname obj2 clear;
-%get_test();
-libname obj2 json "%sysfunc(pathname(respb))";
-
-data work.grid_node_list;
-set obj2.root(keep=name);
-run;
-
-
-/* Get list of user processes PID liked to user CAS sessions */
-%macro get_test2();
-	proc http url="&BASE_URI/cas-shared-default-http/cas/nodes/frasepViya35vm3.cloud.com/sessionProcessesForUser"
-			oauth_bearer=sas_services method='get' out=respb headerout=resphdrb 
-			headerout_overwrite;
-	run;
-%mend get_test2;
-
-libname obj2 clear;
-%get_test2();
-libname obj2 json "%sysfunc(pathname(respb))";
-
-data work.cas_node_user_processes;
-	set obj2.alldata(keep=value rename=(value=PID));
-run;
-
 /************************************************************************************************************/
 /* Macro used to get node metrics for a given session uuid and append metrics data to dataset in parameter */
 %macro get_session_node_metrics(session_uuid, output_ds=SESSION_NODE_METRICS);
@@ -168,7 +122,7 @@ run;
 %mend get_session_node_metrics;
 
 /************************************************************************************************/
-/* Main loop to terminate the selected sessions                                                 */
+/* Main loop to get metrics of the selected sessions                                                 */
 proc delete data=session_node_metrics;
 run;
 
@@ -188,85 +142,112 @@ run;
 
 /********************************/
 /* Consolidate all session date */
-DATA work.ALL_SESSION_DATA_TMP;
+DATA casuser.ALL_SESSION_DATA_TMP;
 	MERGE WORK.DETAILED_SESSION_LIST WORK.SESSION_NODE_METRICS;
 	BY uuid;
 RUN;
 
-proc sort data=WORK.ALL_SESSION_DATA_TMP;
-	by pid;
+/* Get cascache information in casuser.cascache_info_tmp cas table */
+proc cas;
+  	accessControl.assumeRole / adminRole="superuser";
+   	builtins.getCacheInfo result=results;
+	table.droptable / caslib="casuser" name="cascache_info" quiet=true;
+	do current_node over results.diskCacheInfo[1:results.diskCacheInfo.nrows];
+		ds1_code='
+		data casuser.cascache_info(append=yes);
+		   length node varchar(100) FS_free 8. FS_usage 8. FS_size 8. path varchar(150);
+		   node="' || current_node.node || '";
+		   FS_free=' || scan(current_node.FS_free,1) || ';
+		   FS_usage=' || scan(current_node.FS_usage,1) || ';
+		   FS_size=' || scan(current_node.FS_size,1) || ';
+		   path="' || current_node.path || '";
+		   output;
+		run;';
+		datastep.runcode / code=ds1_code single='yes';
+	 end;
+quit;
+/* We add the global timestamp */
+data casuser.cascache_info_tmp;
+		set casuser.cascache_info;
+		format metrics_datetime datetime20.;
+		metrics_datetime=&start_datetime;
 run;
-
-proc sort data=WORK.CAS_PROCESSES;
-	by pid;
-run;
-
-DATA casuser.ALL_SESSION_DATA_TMP;
-	MERGE WORK.ALL_SESSION_DATA_TMP(IN=fromleft) WORK.CAS_PROCESSES;
-	BY pid;
-	leftInd=fromleft;
-	if leftInd eq 1;
-RUN;
-
 
 
 proc cas;
-	
 	function doesTableExist(casLib, casTable);
 		table.tableExists result=r status=rc / caslib=casLib table=casTable;
 		tableExists=dictionary(r, "exists");
 		return tableExists;
 	end func;
 	
-	tableExists=doesTableExist("public", "all_session_data");
+	tableExists=doesTableExist("&CASMONITOR_CASLIB", "&CASMONITOR_CASCACHE_METRICS");
 
 	if tableExists !=0 then
 		do;
 			dataStep.runCode result=r status=rc / code='
-			data "ALL_SESSION_DATA" (caslib="casuser" promote="no");
-			    set "ALL_SESSION_DATA"(caslib="Public") "ALL_SESSION_DATA_TMP"(caslib="casuser");
+			data "' || "&CASMONITOR_CASCACHE_METRICS" || '" (caslib="casuser" promote="no");
+			    set "' || "&CASMONITOR_CASCACHE_METRICS" || '"(caslib="' || "&CASMONITOR_CASLIB" || '") "cascache_info_TMP"(caslib="casuser");
 			run;
 			';
 		end;
 	else do;
 			dataStep.runCode result=r status=rc / code='
-			data "ALL_SESSION_DATA" (caslib="casuser" promote="no");
+			data "' || "&CASMONITOR_CASCACHE_METRICS" || '" (caslib="casuser" promote="no");
+			    set "cascache_info_TMP" (caslib="casuser");
+			run;
+			';
+		end;
+
+	tableExists=doesTableExist("&CASMONITOR_CASLIB", "&CASMONITOR_SESSION_METRICS");
+
+	if tableExists !=0 then
+		do;
+			dataStep.runCode result=r status=rc / code='
+			data "' || "&CASMONITOR_SESSION_METRICS" || '" (caslib="casuser" promote="no");
+			   set "' || "&CASMONITOR_SESSION_METRICS" || '"(caslib="' || "&CASMONITOR_CASLIB" || '") "ALL_SESSION_DATA_TMP"(caslib="casuser");
+			run;
+			';
+		end;
+	else do;
+			dataStep.runCode result=r status=rc / code='
+			data "' || "&CASMONITOR_SESSION_METRICS" || '" (caslib="casuser" promote="no");
 			    set "ALL_SESSION_DATA_TMP" (caslib="casuser");
 			run;
 			';
 		end;
 
-	tableExists=doesTableExist("public", "system_memory_metrics");
+	tableExists=doesTableExist("&CASMONITOR_CASLIB", "&CASMONITOR_SYS_RAM_METRICS");
 
 	if tableExists !=0 then
 		do;
 			dataStep.runCode result=r status=rc / code='
-			data "system_memory_metrics" (caslib="casuser" promote="no");
-			    set "system_memory_metrics"(caslib="Public") "system_memory_metrics_TMP"(caslib="casuser");
+			data "' || "&CASMONITOR_SYS_RAM_METRICS" || '" (caslib="casuser" promote="no");
+			    set "' || "&CASMONITOR_SYS_RAM_METRICS" || '"(caslib="' || "&CASMONITOR_CASLIB" || '") "system_memory_metrics_tmp"(caslib="casuser");
 			run;
 			';
 		end;
 	else do;
 			dataStep.runCode result=r status=rc / code='
-			data "system_memory_metrics" (caslib="casuser" promote="no");
+			data "' || "&CASMONITOR_SYS_RAM_METRICS" || '" (caslib="casuser" promote="no");
 			    set "system_memory_metrics_tmp" (caslib="casuser");
 			run;
 			';
 		end;
 
-	tableExists=doesTableExist("public", "system_cpu_metrics");
+	tableExists=doesTableExist("&CASMONITOR_CASLIB", "&CASMONITOR_SYS_CPU_METRICS");
 
 	if tableExists !=0 then
 		do;
 			dataStep.runCode result=r status=rc / code='
-			data "system_cpu_metrics" (caslib="casuser" promote="no");
-			    set "system_cpu_metrics"(caslib="Public") "system_cpu_metrics_TMP"(caslib="casuser");
+			data "' || "&CASMONITOR_SYS_CPU_METRICS" || '" (caslib="casuser" promote="no");
+			    set "' || "&CASMONITOR_SYS_CPU_METRICS" || '"(caslib="' || "&CASMONITOR_CASLIB" || '") "system_cpu_metrics_tmp"(caslib="casuser");
 			run;
 			';
 		end;
 	else do;
 			dataStep.runCode result=r status=rc / code='
-			data "system_cpu_metrics" (caslib="casuser" promote="no");
+			data "' || "&CASMONITOR_SYS_CPU_METRICS" || '" (caslib="casuser" promote="no");
 			    set "system_cpu_metrics_tmp" (caslib="casuser");
 			run;
 			';
@@ -275,51 +256,21 @@ proc cas;
 quit;
 
 proc cas;
-	table.droptable / caslib='public' name='ALL_SESSION_DATA' quiet=true;
-	table.droptable / caslib='public' name='system_memory_metrics' quiet=true;
-	table.droptable / caslib='public' name='system_cpu_metrics' quiet=true;
+	table.droptable / caslib="&CASMONITOR_CASLIB" name="&CASMONITOR_SESSION_METRICS" quiet=true;
+	table.droptable / caslib="&CASMONITOR_CASLIB" name="&CASMONITOR_SYS_RAM_METRICS" quiet=true;
+	table.droptable / caslib="&CASMONITOR_CASLIB" name="&CASMONITOR_SYS_CPU_METRICS" quiet=true;
+	table.droptable / caslib="&CASMONITOR_CASLIB" name="&CASMONITOR_CASCACHE_METRICS" quiet=true;
 
-	table.promote / sourcecaslib='casuser' name='ALL_SESSION_DATA' targetcaslib="public" target='ALL_SESSION_DATA';
-	table.promote / sourcecaslib='casuser' name='system_cpu_metrics' targetcaslib="public" target='system_cpu_metrics';
-	table.promote / sourcecaslib='casuser' name='system_memory_metrics' targetcaslib="public" target='system_memory_metrics';
+	table.promote / sourcecaslib='casuser' name="&CASMONITOR_SESSION_METRICS" targetcaslib="&CASMONITOR_CASLIB" target="&CASMONITOR_SESSION_METRICS";
+	table.promote / sourcecaslib='casuser' name="&CASMONITOR_SYS_CPU_METRICS" targetcaslib="&CASMONITOR_CASLIB" target="&CASMONITOR_SYS_CPU_METRICS";
+	table.promote / sourcecaslib='casuser' name="&CASMONITOR_SYS_RAM_METRICS" targetcaslib="&CASMONITOR_CASLIB" target="&CASMONITOR_SYS_RAM_METRICS";
+	table.promote / sourcecaslib='casuser' name="&CASMONITOR_CASCACHE_METRICS" targetcaslib="&CASMONITOR_CASLIB" target="&CASMONITOR_CASCACHE_METRICS";
 
-	table.save / caslib="public"  name='ALL_SESSION_DATA.sashdat' table={caslib="public" name='ALL_SESSION_DATA'};
-	table.save / caslib="public"  name='system_cpu_metrics.sashdat' table={caslib="public" name='system_cpu_metrics'};
-	table.save / caslib="public"  name='system_memory_metrics.sashdat' table={caslib="public" name='system_memory_metrics'};
+	table.save / caslib="&CASMONITOR_CASLIB"  name="&CASMONITOR_SESSION_METRICS" || ".sashdat" table={caslib="&CASMONITOR_CASLIB" name="&CASMONITOR_SESSION_METRICS"} replace=true;
+	table.save / caslib="&CASMONITOR_CASLIB"  name="&CASMONITOR_SYS_CPU_METRICS" || ".sashdat" table={caslib="&CASMONITOR_CASLIB" name="&CASMONITOR_SYS_CPU_METRICS"} replace=true;
+	table.save / caslib="&CASMONITOR_CASLIB"  name="&CASMONITOR_SYS_RAM_METRICS" || ".sashdat" table={caslib="&CASMONITOR_CASLIB" name="&CASMONITOR_SYS_RAM_METRICS"} replace=true;
+	table.save / caslib="&CASMONITOR_CASLIB"  name="&CASMONITOR_CASCACHE_METRICS" || ".sashdat" table={caslib="&CASMONITOR_CASLIB" name="&CASMONITOR_CASCACHE_METRICS"} replace=true;
 quit;
 
 cas sess_ctrl terminate;
 ods _all_ close;
-
-
-
-
-/************************************************************************************************/
-/* Macro used to get cas grid information */
-/* /grid */
-%macro get_cas_grid_information();
-	proc http url="&BASE_URI/cas-shared-default-http/grid"
-			oauth_bearer=sas_services method='get' out=respb headerout=resphdrb 
-			headerout_overwrite;
-	run;
-%mend get_cas_grid_information;
-
-libname obj2 clear;
-%get_cas_grid_information();
-libname obj2 json "%sysfunc(pathname(respb))";
-
-/************************************************************************************************/
-/* Macro used to get the top metrics by user */
-/* /grid/{node name}/top/{user} */
-%macro get_top_metrics_by_user(nodename,username);
-	proc http url="&BASE_URI/cas-shared-default-http/grid/&nodename/top/&username"
-			oauth_bearer=sas_services method='get' out=respb headerout=resphdrb 
-			headerout_overwrite;
-	run;
-%mend get_top_metrics_by_user;
-
-
-/* Get all current CAS Sessions */
-libname obj2 clear;
-%get_top_metrics_by_user(frasepViya35vm2.cloud.com,viyademo02);
-libname obj2 json "%sysfunc(pathname(respb))";
