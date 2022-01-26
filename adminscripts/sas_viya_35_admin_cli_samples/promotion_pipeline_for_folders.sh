@@ -26,3 +26,10 @@ importpackageid=$(/opt/sas/viya/home/bin/sas-admin --output json transfer list -
 # /opt/sas/viya/home/bin/sas-admin --output text transfer show --tree --id $importpackageid
 # Import actually the package in the SAS Viya content
 /opt/sas/viya/home/bin/sas-admin --output text transfer import --id $importpackageid
+
+
+
+# For specific report
+# list reports
+/opt/sas/viya/home/bin/sas-admin --output text reports list --sort-by "name"
+# Get report id for a specific name
