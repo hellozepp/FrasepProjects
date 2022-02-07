@@ -4,7 +4,7 @@ RUN yum install --assumeyes --noplugins epel-release && \
     yum clean all && \
     rm -rf /tmp/rpms && \
     rm -rf /root/.cache /var/cache/yum
-RUN yum install --assumeyes --noplugins gcc gcc-c++ openssl python34-devel python34-pip && \
+RUN yum install --assumeyes --noplugins gcc gcc-c++ openssl python36-devel python36-pip && \
     yum clean all && rm -rf /tmp/rpms && \
     rm -rf /root/.cache /var/cache/yum
 

@@ -12,11 +12,11 @@ export CAS_CLIENT_SSL_CA_LIST="/data/casconfig/sascas.pem"
 runuser --shell "/bin/sh" --login ${RUN_USER} \
     --command "mkdir -p ~/jupyter"
 
-cp /usr/lib/python3.4/site-packages/saspy/sascfg.py\
-/usr/lib/python3.4/site-packages/saspy/sascfg_personal.py
+cp /usr/lib/python3.6/site-packages/saspy/sascfg.py\
+/usr/lib/python3.6/site-packages/saspy/sascfg_personal.py
 && sed -i -e "s#/opt/sasinside/SASHome/SASFoundation\
 /9.4/bin/sas_u8#/opt/sas/spre/home/SASFoundation/sas#g"\
- /usr/lib/python3.4/site-packages/saspy/sascfg_personal.py
+ /usr/lib/python3.6/site-packages/saspy/sascfg_personal.py
 
 
 echo "Starting ${SASSERVICENAME}..."
