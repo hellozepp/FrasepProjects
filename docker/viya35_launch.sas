@@ -1,6 +1,8 @@
 #! /bin/bash -e
 
-IMAGE=ses.sas.download/va-125-x64_redhat_linux_7-docker/sas-viya-programming:3.5.13-20210830.1630366147028
+#IMAGE=ses.sas.download/va-125-x64_redhat_linux_7-docker/sas-viya-programming:3.5.13-20210830.1630366147028
+IMAGE=viya/ds_viya_sandbox:latest
+
 SAS_HTTP_PORT=8081
 
 run_args="
@@ -16,6 +18,7 @@ run_args="
 --publish-all
 --publish 5570:5570
 --publish 8591:8591
+--publish 8888:8888
 --publish ${SAS_HTTP_PORT}:80
 --volume ${PWD}/sasinside:/sasinside
 --volume ${PWD}/sasdemo:/data
@@ -24,9 +27,9 @@ run_args="
 --volume ${PWD}/cas/permstore:/cas/permstore"
 
 # Run in detached mode
-docker run --detach ${run_args} $IMAGE "$@"
+#docker run --detach ${run_args} $IMAGE "$@"
 
 # For debugging startup, comment out the detached mode
 # command and uncomment the following
 
-#docker run --interactive --tty ${run_args} $IMAGE "$@"
+docker run --interactive --tty ${run_args} $IMAGE "$@"

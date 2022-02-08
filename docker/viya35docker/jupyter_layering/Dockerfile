@@ -4,19 +4,12 @@ RUN yum install --assumeyes --noplugins epel-release && \
     yum clean all && \
     rm -rf /tmp/rpms && \
     rm -rf /root/.cache /var/cache/yum
-RUN yum install --assumeyes --noplugins gcc gcc-c++ openssl python36-devel python36-pip && \
+RUN yum install --assumeyes --noplugins gcc gcc-c++ openssl python3-devel python3-pip && \
     yum clean all && rm -rf /tmp/rpms && \
     rm -rf /root/.cache /var/cache/yum
 
-RUN pip3 --no-cache-dir install notebook saspy sas_kernel \
-    swat && \
-    jupyter nbextension install --py sas_kernel.showSASLog && \
-    jupyter nbextension enable sas_kernel.showSASLog --py && \
-    jupyter nbextension install --py sas_kernel.theme && \
-    jupyter nbextension enable sas_kernel.theme --py
-    # Uncomment the following and add '&& \' to the previous line to disable the Python kernel
-    #pip3 uninstall -y terminado && \
-    #jupyter kernelspec remove python3 -f
+RUN pip3 --no-cache-dir install notebook saspy swat
+RUN pip3 --no-cache-dir install sas_kernel matplotlib
 
 COPY post_deploy.sh /tmp/post_deploy.sh
 RUN chmod +x /tmp/post_deploy.sh
