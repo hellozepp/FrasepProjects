@@ -21,8 +21,8 @@ echo "Starting ${SASSERVICENAME}..."
 _jupyterpid=${DOCKERPIDFILE}
 
 # create jupyter config file
-runuser --shell "/bin/sh" --login ${RUN_USER} \
-    --command "jupyter notebook --generate-config"
+#runuser --shell "/bin/sh" --login ${RUN_USER} \
+#    --command "jupyter notebook --generate-config"
 
 runuser --shell "/bin/sh" --login ${RUN_USER} \
     --command "JPY_COOKIE_SECRET=${JPY_COOKIE_SECRET} \

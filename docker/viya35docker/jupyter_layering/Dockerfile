@@ -4,12 +4,12 @@ RUN yum install --assumeyes --noplugins epel-release && \
     yum clean all && \
     rm -rf /tmp/rpms && \
     rm -rf /root/.cache /var/cache/yum
-RUN yum install --assumeyes --noplugins gcc gcc-c++ openssl python3-devel python3-pip && \
+RUN yum install --assumeyes --noplugins gcc gcc-c++ openssl python36-devel python36-pip zlib-devel libjpeg-devel && \
     yum clean all && rm -rf /tmp/rpms && \
     rm -rf /root/.cache /var/cache/yum
 
-RUN pip3 --no-cache-dir install notebook saspy swat
-RUN pip3 --no-cache-dir install sas_kernel matplotlib
+RUN pip3 --no-cache-dir install notebook matplotlib scikit-learn saspy swat sasctl sas-esppy
+RUN pip3 --no-cache-dir install sas_kernel
 
 COPY post_deploy.sh /tmp/post_deploy.sh
 RUN chmod +x /tmp/post_deploy.sh
