@@ -15,4 +15,3 @@ COPY post_deploy.sh /tmp/post_deploy.sh
 RUN chmod +x /tmp/post_deploy.sh
 
 COPY jupyter_proxy.conf /etc/httpd/conf.d/jupyter_proxy.conf
-
