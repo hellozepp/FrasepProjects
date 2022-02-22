@@ -205,3 +205,62 @@ START PIPELINE tweet;
 
 SELECT * FROM tweets_location;
 SELECT * FROM tweets_txt;
+
+
+RESTORE DATABASE employees
+  FROM S3 'backup-employees'
+  CONFIG'{"region":"us-east-1"}'
+  CREDENTIALS'{"aws_access_key":"","aws_secret_access_key":""}';
+
+USE employees;
+
+
+SHOW tables;
+
+
+SELECT COUNT(*) from <table_name>;
+
+SELECT COUNT(DISTINCT emp_no) 
+  FROM salaries 
+  WHERE salary > 150000;
+
+SELECT DISTINCT e.first_name, e.last_name, d.dept_name
+  FROM employees e
+  INNER JOIN dept_emp de ON e.emp_no=de.emp_no
+  INNER JOIN departments d ON de.dept_no=d.dept_no
+  WHERE dept_name='Marketing';
+
+SELECT count(emp_no)
+  FROM (SELECT emp_no, count(title) as title_count
+          FROM titles
+          GROUP BY emp_no)
+  WHERE title_count >= 3;
+
+
+SHOW plancache;
+
+
+
+
+SELECT e.first_name, e.last_name, d.dept_name, t.title, t.from_date, t.to_date
+  FROM employees e
+  INNER JOIN dept_emp de ON e.emp_no=de.emp_no
+  INNER JOIN departments d ON de.dept_no=d.dept_no
+  INNER JOIN titles t ON e.emp_no=t.emp_no
+  ORDER BY e.first_name, e.last_name, d.dept_name, t.from_date
+  LIMIT 10;
+
+CREATE REFERENCE TABLE departments_ref(
+  dept_no CHAR(4) not null,
+  dept_name varchar(40) not null,
+  primary key (dept_no),
+  key(dept_name)
+);
+
+INSERT INTO departments_ref (SELECT * FROM departments);
+
+
+
+
+
+
