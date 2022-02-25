@@ -10,7 +10,7 @@ libname mycaslib cas caslib=casuser;
   run;
 %end;
 
-%let sizeGbFactor=10; /* Number of GB to generate */
+%let sizeGbFactor=100; /* Number of GB to generate */
 %let techFactor=%eval(1700*&sizeGbFactor);
 
 %put "techFactor = " &techFactor;
@@ -30,9 +30,10 @@ run ;
 /* Display table details                                                            */
 /************************************************************************************/
 
-proc cas ;
-   table.tabledetails / caslib="casuser" table="hmeq" ;
-quit ;
-
+proc cas;
+	table.droptable / caslib="public" name="hmeq" quiet=true;
+	table.tabledetails / caslib="casuser" table="hmeq" ;
+	table.promote / sourcecaslib="casuser" name="hmeq" target="hmeq" targetcaslib="public" drop=true;
+quit;
      
 cas benchsess terminate;
