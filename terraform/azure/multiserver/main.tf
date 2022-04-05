@@ -44,6 +44,13 @@ variable "vm4disksizegb" {
     type = string
 }
 
+variable "vm5vmtype" {
+    type = string
+}
+variable "vm5disksizegb" {
+    type = string
+}
+
 ###########################################################
 # End of variable declaration block
 ###########################################################
@@ -145,6 +152,19 @@ data "azurerm_public_ip" "vm4ip" {
   depends_on          = [azurerm_linux_virtual_machine.vm4]
 }
 
+resource "azurerm_public_ip" "vm5publicip" {
+  name                = "frasepViya35vm5_PublicIP"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method   = "Static"
+}
+
+data "azurerm_public_ip" "vm5ip" {
+  name                = azurerm_public_ip.vm5publicip.name
+  resource_group_name = azurerm_linux_virtual_machine.vm5.resource_group_name
+  depends_on          = [azurerm_linux_virtual_machine.vm5]
+}
+
 ###########################################################
 # Create Network Security Group and rule
 resource "azurerm_network_security_group" "nsg" {
@@ -160,7 +180,7 @@ resource "azurerm_network_security_group" "nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_ranges     = ["22","636","80","443","5570"]
-    source_address_prefixes    = ["149.173.0.0/16","90.127.106.134/32","86.238.106.195","10.0.0.0/16"]
+    source_address_prefixes    = ["149.173.0.0/16","90.127.233.58/32","10.0.0.0/16"]
     destination_address_prefix = "*"
   }
 
@@ -215,7 +235,7 @@ resource "azurerm_network_interface" "vm3nic" {
 }
 
 ###########################################################
-# Create network interface for vm3 (worker 2)
+# Create network interface for vm4 (worker 2)
 resource "azurerm_network_interface" "vm4nic" {
   name                      = "frasepViya35vm4_NIC"
   location                  = var.location
@@ -227,6 +247,22 @@ resource "azurerm_network_interface" "vm4nic" {
     private_ip_address_allocation = "static"
     private_ip_address            = "10.0.1.7"
     public_ip_address_id          = azurerm_public_ip.vm4publicip.id
+  }
+}
+
+###########################################################
+# Create network interface for vm5 (worker 3)
+resource "azurerm_network_interface" "vm5nic" {
+  name                      = "frasepViya35vm5_NIC"
+  location                  = var.location
+  resource_group_name       = azurerm_resource_group.rg.name
+
+  ip_configuration {
+    name                          = "vm5NICConfg"
+    subnet_id                     = azurerm_subnet.subnet.id
+    private_ip_address_allocation = "static"
+    private_ip_address            = "10.0.1.8"
+    public_ip_address_id          = azurerm_public_ip.vm5publicip.id
   }
 }
 
@@ -405,6 +441,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
       "ssh-keyscan frasepViya35vm2.cloud.com >> ~/.ssh/known_hosts",
       "ssh-keyscan frasepViya35vm3.cloud.com >> ~/.ssh/known_hosts",
       "ssh-keyscan frasepViya35vm4.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm5.cloud.com >> ~/.ssh/known_hosts",
       "ansible-playbook viya_pre_install_playbook.yml -i pre-install.inventory.ini --skip-tags skipmemfail",
       "cd ~/sas_viya_playbook",
       "mv /tmp/inventory_cas_multi_machine.ini ./inventory.ini",
@@ -523,6 +560,7 @@ resource "azurerm_linux_virtual_machine" "vm2" {
       "ssh-keyscan frasepViya35vm2.cloud.com >> ~/.ssh/known_hosts",
       "ssh-keyscan frasepViya35vm3.cloud.com >> ~/.ssh/known_hosts",
       "ssh-keyscan frasepViya35vm4.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm5.cloud.com >> ~/.ssh/known_hosts",
       "sudo systemctl stop firewalld",
       "sudo systemctl disable firewalld",
       "sudo setenforce Permissive",
@@ -635,6 +673,7 @@ resource "azurerm_linux_virtual_machine" "vm3" {
       "ssh-keyscan frasepViya35vm2.cloud.com >> ~/.ssh/known_hosts",
       "ssh-keyscan frasepViya35vm3.cloud.com >> ~/.ssh/known_hosts",
       "ssh-keyscan frasepViya35vm4.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm5.cloud.com >> ~/.ssh/known_hosts",
       "sudo systemctl stop firewalld",
       "sudo systemctl disable firewalld",
       "sudo setenforce Permissive",
@@ -746,6 +785,119 @@ resource "azurerm_linux_virtual_machine" "vm4" {
       "ssh-keyscan frasepViya35vm2.cloud.com >> ~/.ssh/known_hosts",
       "ssh-keyscan frasepViya35vm3.cloud.com >> ~/.ssh/known_hosts",
       "ssh-keyscan frasepViya35vm4.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm5.cloud.com >> ~/.ssh/known_hosts",
+      "sudo systemctl stop firewalld",
+      "sudo systemctl disable firewalld",
+      "sudo setenforce Permissive",
+      "sudo rpm -Uvh https://packages.microsoft.com/config/rhel/7/packages-microsoft-prod.rpm",
+      "sudo yum -y install blobfuse",
+      "sudo mkdir -p /mnt/viyarepo",
+      "sudo mkdir -p /mnt/blobfusetmp",
+      "tee  ~/fuse_connection.cfg /dev/null << \"EOF\"",
+      "accountName frasepstorage", 
+      "accountKey pHW64tt3HqQSvKgZS5ez6ZNKe4idzqYXnYRvXd5sMODrNgArDOBtO42omzcicw1LTat9BBpuBVz1WnKQxVrGEg==",
+      "containerName sasviya35mirror",
+      "EOF",
+      "chmod 600 fuse_connection.cfg",
+      "sudo blobfuse /mnt/viyarepo --tmp-path=/mnt/blobfusetmp --config-file=./fuse_connection.cfg -o attr_timeout=240 -o entry_timeout=240 -o negative_timeout=120 -o allow_other"
+    ]
+
+      connection {
+        type     = "ssh"
+        user     = "${var.admin_username}"
+        password = "${var.admin_password}"
+        host     = "${self.public_ip_address}"
+      }
+  }  
+}
+
+###########################################################
+# Create a Linux virtual machine (worker 3)
+
+resource "azurerm_linux_virtual_machine" "vm5" {
+  name                  = "frasepViya35vm5.cloud.com"
+  location              = var.location
+  resource_group_name   = azurerm_resource_group.rg.name
+  network_interface_ids = [azurerm_network_interface.vm5nic.id]
+  size                  = var.vm5vmtype
+
+  disable_password_authentication = false
+  computer_name  = "frasepViya35vm5.cloud.com"
+  admin_username = var.admin_username
+  admin_password = var.admin_password
+
+  os_disk {
+    name              = "frasepViya35vm5_OsDisk"
+    caching           = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+    disk_size_gb      = var.vm5disksizegb
+  }
+
+  source_image_reference {
+    publisher = "RedHat"
+    offer     = "RHEL"
+    sku       = "7-LVM"
+    version   = "latest"
+  }
+
+  # Copies the ssh key file
+  provisioner "file" {
+    source      = "../key_viya.pub"
+    destination = "/tmp/key_viya.pub"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
+
+  provisioner "file" {
+    source      = "./hosts_addin"
+    destination = "/tmp/hosts_addin"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
+  provisioner "file" {
+    source      = "../key_viya"
+    destination = "/tmp/key_viya"
+    connection {
+      type     = "ssh"
+      user     = "${var.admin_username}"
+      password = "${var.admin_password}"
+      host     = "${self.public_ip_address}"
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum install cloud-utils-growpart gdisk",
+      "sudo growpart /dev/sda 4",
+      "sudo pvresize /dev/sda4",
+      "sudo lvresize -r -L +100G /dev/rootvg/tmplv",
+      "sudo lvresize -r -L +10G /dev/rootvg/usrlv",
+      "sudo lvresize -r -L +120G /dev/rootvg/optlv",
+      "sudo lvresize -r -L +10G /dev/rootvg/homelv",
+      "sudo lvresize -r -L +10G /dev/rootvg/varlv",
+      "sudo lvresize -r -L +5G /dev/rootvg/rootlv",
+      "cat /tmp/hosts_addin | sudo tee -a /etc/hosts",
+      "mkdir ~/.ssh",
+      "chmod 700 ~/.ssh",
+      "cat /tmp/key_viya.pub >> ~/.ssh/authorized_keys",
+      "mv /tmp/key_viya.pub ~/.ssh/id_rsa.pub",
+      "mv /tmp/key_viya ~/.ssh/id_rsa",
+      "chmod 600 ~/.ssh/*",
+      "ssh-keyscan frasepViya35vm1.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm2.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm3.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm4.cloud.com >> ~/.ssh/known_hosts",
+      "ssh-keyscan frasepViya35vm5.cloud.com >> ~/.ssh/known_hosts",
       "sudo systemctl stop firewalld",
       "sudo systemctl disable firewalld",
       "sudo setenforce Permissive",
