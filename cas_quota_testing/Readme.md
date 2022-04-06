@@ -16,6 +16,9 @@ The requested resource management policy for the CAS server was created successf
     "type": "priorityLevels"
 }
 
+Don't forget to restart the cas-controller service to take into account the new policies with a command below (executed on the cas controller node) :!
+sudo systemctl stop sas-viya-cascontroller-default
+sudo systemctl start sas-viya-cascontroller-default
 
 Create corresponding custom group cas-shared-default-priority-1 in EV and add members (not SAS Administrators)
 
