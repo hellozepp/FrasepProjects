@@ -1,0 +1,211 @@
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:flowable="http://flowable.org/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:sasbpmn="http://www.sas.com/xml/schema/bpmn" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/Test" typeLanguage="http://www.w3.org/2001/XMLSchema">
+    <process id="WF7BA2D804-8BEB-43E6-B84D-7755002397B6" isExecutable="true" name="Deployer_modele_en_production">
+        <extensionElements>
+            <sasbpmn:prompt dataObjectRef="WF49B9CE51-DB95-4224-BBA0-83319219F259" id="WF5DDF4538-5A3C-4E5E-A573-DF2C5ACA7266" name="Saisissez le UUID du modèle à déployer en production"/>
+            <sasbpmn:prompt dataObjectRef="WF664B3776-7D3F-4E36-8885-197B1C820998" id="WFE1B0DC53-5864-4E75-951C-022A23A36CF4" name="Saisissez un nom de modèle cible :"/>
+            <sasbpmn:prompt dataObjectRef="WF16D600E1-56BE-4DDB-B2D4-118BED53605C" id="WF52590114-5C25-4321-A14E-6372AA9C0709" name="Saisissez le UUID du projet model manager cible :"/>
+            <sasbpmn:prompt dataObjectRef="WF9623065C-ED2B-418A-9F33-54CA4B7724A9" id="WF0F10FFB4-D89E-4399-BA75-BAB06210CE6E" name="Sélectionner l'url du serveur de production"/>
+            <sasbpmn:promptValue id="WF087D0B0C-22AF-4F73-8FDE-C68F7568B10F" name="Production tenant1" type="xsd:string" value="https://tenant1.sasserver.demo.sas.com:443/"/>
+            <sasbpmn:promptValue id="WF4E5E5721-D6C7-42AD-9128-4EDFA0669DD4" name="Datalab tenant2" type="xsd:string" value="https://tenant2.sasserver.demo.sas.com:443/"/>
+            <sasbpmn:promptValue id="WF52925800-6AF7-4B2B-85D1-1971B3702C6C" name="Projet QS_HMEQ datalab (tenant2)" type="xsd:string" value="41efd9b7-d7ea-47f7-a0ba-802c8a6e367c"/>
+            <sasbpmn:promptValue id="WF56E3911B-FBA5-4F89-A80E-BCCADCE28E1D" name="Projet QS_HMEQ production (tenant1)" type="xsd:string" value="???"/>
+        </extensionElements>
+        <dataObject id="WF664B3776-7D3F-4E36-8885-197B1C820998" itemSubjectRef="xsd:string" name="modelName">
+            <extensionElements>
+                <flowable:value/>
+            </extensionElements>
+        </dataObject>
+        <dataObject id="WF49B9CE51-DB95-4224-BBA0-83319219F259" itemSubjectRef="xsd:string" name="srcModelId">
+            <extensionElements>
+                <flowable:value/>
+            </extensionElements>
+        </dataObject>
+        <dataObject id="WF402FD709-AD6A-41B7-9F5E-15DD8010DCDA" itemSubjectRef="xsd:string" name="resultDeployJob">
+            <extensionElements>
+                <flowable:value/>
+            </extensionElements>
+        </dataObject>
+        <dataObject id="WF16D600E1-56BE-4DDB-B2D4-118BED53605C" itemSubjectRef="xsd:string" name="desProjectId">
+            <extensionElements>
+                <flowable:value>41efd9b7-d7ea-47f7-a0ba-802c8a6e367c</flowable:value>
+            </extensionElements>
+        </dataObject>
+        <dataObject id="WF9623065C-ED2B-418A-9F33-54CA4B7724A9" itemSubjectRef="xsd:string" name="productionUrl">
+            <extensionElements>
+                <flowable:value>https://tenant2.sasserver.demo.sas.com:443/</flowable:value>
+            </extensionElements>
+        </dataObject>
+        <sequenceFlow id="WFAE01F53B-06CA-4222-A6AD-A8629F656A61" sourceRef="WFE6C128E5-1E11-4B8E-84F5-C3579397F363" targetRef="WFF156A21E-12C3-4891-87C0-3E2F6BAF423C"/>
+        <sequenceFlow id="WF300AD7CD-A807-4697-AA95-CFDA4DC65ADC" sourceRef="WF0F5CC010-71B1-4B65-87F7-F8531D3B8774" targetRef="WF06041CA7-2E07-4D20-B81D-A9F6130F5FCC"/>
+        <sequenceFlow id="WF9BB77659-DA04-4398-B5F9-47D997244E6B" sourceRef="WF06041CA7-2E07-4D20-B81D-A9F6130F5FCC" targetRef="WFE6C128E5-1E11-4B8E-84F5-C3579397F363"/>
+        <endEvent id="WFF156A21E-12C3-4891-87C0-3E2F6BAF423C" name="End"/>
+        <startEvent id="WF0F5CC010-71B1-4B65-87F7-F8531D3B8774" name="Start"/>
+        <serviceTask flowable:delegateExpression="${jobTask}" flowable:triggerable="true" id="WFE6C128E5-1E11-4B8E-84F5-C3579397F363" name="Livraison modèle en production">
+            <extensionElements>
+                <flowable:field name="jobDefinitionId">
+                    <flowable:string><![CDATA[af194f2f-73e8-4dcd-ab49-03cc1b6facd6]]></flowable:string>
+                </flowable:field>
+                <flowable:executionListener delegateExpression="${jobArgumentListener}" event="start">
+                    <flowable:field name="jobArgumentValue">
+                        <flowable:expression><![CDATA[${srcModelId}]]></flowable:expression>
+                    </flowable:field>
+                    <flowable:field name="jobArgumentName">
+                        <flowable:string><![CDATA[srcModelId]]></flowable:string>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener delegateExpression="${jobArgumentListener}" event="start">
+                    <flowable:field name="jobArgumentValue">
+                        <flowable:string><![CDATA[/tmp]]></flowable:string>
+                    </flowable:field>
+                    <flowable:field name="jobArgumentName">
+                        <flowable:string><![CDATA[location]]></flowable:string>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener delegateExpression="${jobArgumentListener}" event="start">
+                    <flowable:field name="jobArgumentValue">
+                        <flowable:string><![CDATA[https://tenant2.sasserver.demo.sas.com:443/]]></flowable:string>
+                    </flowable:field>
+                    <flowable:field name="jobArgumentName">
+                        <flowable:string><![CDATA[datalabUrl]]></flowable:string>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener delegateExpression="${jobArgumentListener}" event="start">
+                    <flowable:field name="jobArgumentValue">
+                        <flowable:expression><![CDATA[${productionUrl}]]></flowable:expression>
+                    </flowable:field>
+                    <flowable:field name="jobArgumentName">
+                        <flowable:string><![CDATA[productionUrl]]></flowable:string>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener delegateExpression="${jobArgumentListener}" event="start">
+                    <flowable:field name="jobArgumentValue">
+                        <flowable:string><![CDATA[execute]]></flowable:string>
+                    </flowable:field>
+                    <flowable:field name="jobArgumentName">
+                        <flowable:string><![CDATA[_action]]></flowable:string>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener delegateExpression="${jobArgumentListener}" event="start">
+                    <flowable:field name="jobArgumentValue">
+                        <flowable:expression><![CDATA[${modelName}]]></flowable:expression>
+                    </flowable:field>
+                    <flowable:field name="jobArgumentName">
+                        <flowable:string><![CDATA[destModelName]]></flowable:string>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener delegateExpression="${jobArgumentListener}" event="start">
+                    <flowable:field name="jobArgumentValue">
+                        <flowable:expression><![CDATA[${desProjectId}]]></flowable:expression>
+                    </flowable:field>
+                    <flowable:field name="jobArgumentName">
+                        <flowable:string><![CDATA[destProjectId]]></flowable:string>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener delegateExpression="${jobArgumentListener}" event="start">
+                    <flowable:field name="jobArgumentValue">
+                        <flowable:string><![CDATA[NEW]]></flowable:string>
+                    </flowable:field>
+                    <flowable:field name="jobArgumentName">
+                        <flowable:string><![CDATA[versionOption]]></flowable:string>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener delegateExpression="${jobArgumentListener}" event="start">
+                    <flowable:field name="jobArgumentValue">
+                        <flowable:string><![CDATA[SAS Job Execution compute context]]></flowable:string>
+                    </flowable:field>
+                    <flowable:field name="jobArgumentName">
+                        <flowable:string><![CDATA[_contextName]]></flowable:string>
+                    </flowable:field>
+                </flowable:executionListener>
+                <flowable:executionListener delegateExpression="${jobStateListener}" event="end">
+                    <flowable:field name="outputDataObjectName">
+                        <flowable:string><![CDATA[resultDeployJob]]></flowable:string>
+                    </flowable:field>
+                </flowable:executionListener>
+            </extensionElements>
+        </serviceTask>
+        <userTask id="WF06041CA7-2E07-4D20-B81D-A9F6130F5FCC" name="Paramètrage de la livraison">
+            <extensionElements>
+                <sasbpmn:promptDefinition promptRef="WF5DDF4538-5A3C-4E5E-A573-DF2C5ACA7266" required="false"/>
+                <sasbpmn:promptDefinition promptRef="WFE1B0DC53-5864-4E75-951C-022A23A36CF4" required="false"/>
+                <sasbpmn:promptDefinition promptRef="WF52590114-5C25-4321-A14E-6372AA9C0709" required="true">
+                    <sasbpmn:promptValueDefinition promptValueRef="WF52925800-6AF7-4B2B-85D1-1971B3702C6C"/>
+                    <sasbpmn:promptValueDefinition promptValueRef="WF56E3911B-FBA5-4F89-A80E-BCCADCE28E1D"/>
+                </sasbpmn:promptDefinition>
+                <sasbpmn:promptDefinition promptRef="WF0F10FFB4-D89E-4399-BA75-BAB06210CE6E" required="true">
+                    <sasbpmn:promptValueDefinition promptValueRef="WF087D0B0C-22AF-4F73-8FDE-C68F7568B10F"/>
+                    <sasbpmn:promptValueDefinition promptValueRef="WF4E5E5721-D6C7-42AD-9128-4EDFA0669DD4"/>
+                </sasbpmn:promptDefinition>
+            </extensionElements>
+            <potentialOwner>
+                <resourceAssignmentExpression>
+                    <formalExpression>group(ApplicationAdministrators)</formalExpression>
+                </resourceAssignmentExpression>
+            </potentialOwner>
+        </userTask>
+        <association associationDirection="None" id="WFD328795C-E0FD-477F-8AEA-94868C99DED4" sourceRef="WFB35629E9-CCA4-41B2-9538-B3754F888AC2" targetRef="WF06041CA7-2E07-4D20-B81D-A9F6130F5FCC"/>
+        <association associationDirection="None" id="WF3AA277CE-72B3-4541-BE15-35CC89155B59" sourceRef="WF4A29CBCA-1F92-43A6-8514-CB66C23E2C25" targetRef="WFE6C128E5-1E11-4B8E-84F5-C3579397F363"/>
+        <textAnnotation id="WFB35629E9-CCA4-41B2-9538-B3754F888AC2">
+            <text>Tâche utilisateur permettant la saisie des paramètre du modèle datalab à livrer dans l'environnement de production.</text>
+        </textAnnotation>
+        <textAnnotation id="WF4A29CBCA-1F92-43A6-8514-CB66C23E2C25">
+            <text>Tâche système en charge de livrer le modèle dans le projet cible de l'environnement de production.</text>
+        </textAnnotation>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_WF7BA2D804-8BEB-43E6-B84D-7755002397B6">
+        <bpmndi:BPMNPlane bpmnElement="WF7BA2D804-8BEB-43E6-B84D-7755002397B6" id="BPMNPlane_WF7BA2D804-8BEB-43E6-B84D-7755002397B6">
+            <bpmndi:BPMNShape bpmnElement="WFF156A21E-12C3-4891-87C0-3E2F6BAF423C" id="BPMNShape_WFF156A21E-12C3-4891-87C0-3E2F6BAF423C">
+                <omgdc:Bounds height="16.0" width="16.0" x="230.0" y="-90.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="WF0F5CC010-71B1-4B65-87F7-F8531D3B8774" id="BPMNShape_WF0F5CC010-71B1-4B65-87F7-F8531D3B8774">
+                <omgdc:Bounds height="16.0" width="16.0" x="-540.0" y="-90.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="WFE6C128E5-1E11-4B8E-84F5-C3579397F363" id="BPMNShape_WFE6C128E5-1E11-4B8E-84F5-C3579397F363">
+                <omgdc:Bounds height="80.0" width="258.0" x="20.0" y="-70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="WF06041CA7-2E07-4D20-B81D-A9F6130F5FCC" id="BPMNShape_WF06041CA7-2E07-4D20-B81D-A9F6130F5FCC">
+                <omgdc:Bounds height="80.0" width="215.0" x="-295.0" y="-70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="WFB35629E9-CCA4-41B2-9538-B3754F888AC2" id="BPMNShape_WFB35629E9-CCA4-41B2-9538-B3754F888AC2">
+                <omgdc:Bounds height="81.02272" width="200.0" x="-130.51136000000002" y="-189.5"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="WF4A29CBCA-1F92-43A6-8514-CB66C23E2C25" id="BPMNShape_WF4A29CBCA-1F92-43A6-8514-CB66C23E2C25">
+                <omgdc:Bounds height="80.02272000000002" width="226.0" x="242.48863999999998" y="-180.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="WFAE01F53B-06CA-4222-A6AD-A8629F656A61" id="BPMNEdge_WFAE01F53B-06CA-4222-A6AD-A8629F656A61">
+                <omgdi:waypoint x="149.0" y="-70.0"/>
+                <omgdi:waypoint x="179.0" y="-70.0"/>
+                <omgdi:waypoint x="194.0" y="-70.0"/>
+                <omgdi:waypoint x="194.0" y="-70.0"/>
+                <omgdi:waypoint x="210.0" y="-70.0"/>
+                <omgdi:waypoint x="230.0" y="-70.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="WF300AD7CD-A807-4697-AA95-CFDA4DC65ADC" id="BPMNEdge_WF300AD7CD-A807-4697-AA95-CFDA4DC65ADC">
+                <omgdi:waypoint x="-500.0" y="-70.0"/>
+                <omgdi:waypoint x="-470.0" y="-70.0"/>
+                <omgdi:waypoint x="-446.0" y="-70.0"/>
+                <omgdi:waypoint x="-446.0" y="-70.0"/>
+                <omgdi:waypoint x="-422.0" y="-70.0"/>
+                <omgdi:waypoint x="-402.0" y="-70.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="WF9BB77659-DA04-4398-B5F9-47D997244E6B" id="BPMNEdge_WF9BB77659-DA04-4398-B5F9-47D997244E6B">
+                <omgdi:waypoint x="-187.0" y="-70.0"/>
+                <omgdi:waypoint x="-157.0" y="-70.0"/>
+                <omgdi:waypoint x="-143.0" y="-70.0"/>
+                <omgdi:waypoint x="-143.0" y="-70.0"/>
+                <omgdi:waypoint x="-129.0" y="-70.0"/>
+                <omgdi:waypoint x="-109.0" y="-70.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="WFD328795C-E0FD-477F-8AEA-94868C99DED4" id="BPMNEdge_WFD328795C-E0FD-477F-8AEA-94868C99DED4">
+                <omgdi:waypoint x="-231.0" y="-153.0"/>
+                <omgdi:waypoint x="-295.0" y="-130.0"/>
+                <omgdi:waypoint x="-295.0" y="-110.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="WF3AA277CE-72B3-4541-BE15-35CC89155B59" id="BPMNEdge_WF3AA277CE-72B3-4541-BE15-35CC89155B59">
+                <omgdi:waypoint x="128.0" y="-154.0"/>
+                <omgdi:waypoint x="20.0" y="-130.0"/>
+                <omgdi:waypoint x="20.0" y="-110.0"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>
