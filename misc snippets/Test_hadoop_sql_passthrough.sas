@@ -26,6 +26,10 @@ proc sql;
 	group by product, facility);
 quit;
 
+proc print data=hdplib.megagg;
+run;
+
+
 /* Explicit passthrough */
 
 proc sql;
