@@ -1,4 +1,4 @@
-FROM ses.sas.download/va-125-x64_redhat_linux_7-docker/sas-viya-programming:3.5.13-20210830.1630366147028
+FROM ses.sas.download/va-125-x64_redhat_linux_7-docker/sas-viya-programming:3.6.1-20220525.1653516261395
 
 RUN yum install --assumeyes --noplugins epel-release && \
     yum clean all && \
@@ -8,6 +8,7 @@ RUN yum install --assumeyes --noplugins gcc gcc-c++ openssl python36-devel pytho
     yum clean all && rm -rf /tmp/rpms && \
     rm -rf /root/.cache /var/cache/yum
 
+RUN pip3 install -U pip
 RUN pip3 --no-cache-dir install notebook matplotlib scikit-learn saspy swat sasctl sas-esppy
 RUN pip3 --no-cache-dir install sas_kernel
 
