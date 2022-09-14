@@ -14,6 +14,11 @@ class SASViyaOAuthenticator(GenericOAuthenticator):
             return
  
         spawner.environment['ACCESS_TOKEN'] = auth_state['access_token']
+        
+        # BLOC A ADAPTER
+        spawner.environment['CAS_CLIENT_SSL_CA_LIST'] = '/opt/sas/viya/config/etc/SASSecurityCertificateFramework/cacerts/trustedcerts.pem'
+        # FIN DU BLOC A ADAPTER
+
         self.log.info("Passing refresh token variable to user spawn process %s", auth_state['refresh_token'])
  
     # Refresh user access and refresh tokens (called periodically, defined by auth_refresh_age)
@@ -118,16 +123,17 @@ class SASViyaOAuthenticator(GenericOAuthenticator):
         return refresh_user_return
  
 c.JupyterHub.authenticator_class = SASViyaOAuthenticator
- 
+
+# BLOC A ADAPTER
 c.GenericOAuthenticator.client_id = 'jupyterapp2'
 c.GenericOAuthenticator.client_secret = 'jupsecret'
- 
 c.GenericOAuthenticator.callback_url = 'https://frasepViya35vm1.cloud.com:8443/hub/oauth_callback'
 c.GenericOAuthenticator.token_url = 'https://frasepViya35vm1.cloud.com/SASLogon/oauth/token'
 c.GenericOAuthenticator.authorize_url = 'https://frasepViya35vm1.cloud.com/SASLogon/oauth/authorize'
 c.GenericOAuthenticator.userdata_url = 'https://frasepViya35vm1.cloud.com/SASLogon/userinfo'
 c.GenericOAuthenticator.username_key = 'user_name'
- 
+# FIN DU BLOC A ADAPTER
+
 c.GenericOAuthenticator.auto_login = True
 c.GenericOAuthenticator.auth_refresh_age = 21600
 c.GenericOAuthenticator.refresh_pre_spawn = True
